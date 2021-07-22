@@ -148,7 +148,6 @@
   import debounce from 'throttle-debounce/debounce';
   import Clickoutside from 'setaria-ui/src/utils/clickoutside';
   import { addResizeListener, removeResizeListener } from 'setaria-ui/src/utils/resize-event';
-  import { t } from 'setaria-ui/src/locale';
   import scrollIntoView from 'setaria-ui/src/utils/scroll-into-view';
   import { getValueByPath, valueEquals, isIE, isEdge } from 'setaria-ui/src/utils/util';
   import NavigationMixin from './navigation-mixin';
@@ -238,6 +237,9 @@
         return ['small', 'mini'].indexOf(this.selectSize) > -1
           ? 'mini'
           : 'small';
+      },
+      propPlaceholder() {
+        return typeof this.placeholder !== 'undefined' ? this.placeholder : this.t('el.select.placeholder');
       }
     },
 
@@ -291,9 +293,7 @@
       },
       placeholder: {
         type: String,
-        default() {
-          return t('el.select.placeholder');
-        }
+        required: false
       },
       defaultFirstOption: Boolean,
       reserveKeyword: Boolean,
@@ -342,7 +342,7 @@
         });
       },
 
-      placeholder(val) {
+      propPlaceholder(val) {
         this.cachedPlaceHolder = this.currentPlaceholder = val;
       },
 
@@ -529,7 +529,7 @@
         }
         if (option) return option;
         const label = (!isObject && !isNull && !isUndefined)
-          ? value : '';
+          ? String(value) : '';
         let newOption = {
           value: value,
           currentLabel: label
@@ -848,7 +848,7 @@
     },
 
     created() {
-      this.cachedPlaceHolder = this.currentPlaceholder = this.placeholder;
+      this.cachedPlaceHolder = this.currentPlaceholder = this.propPlaceholder;
       if (this.multiple && !Array.isArray(this.value)) {
         this.$emit('input', []);
       }

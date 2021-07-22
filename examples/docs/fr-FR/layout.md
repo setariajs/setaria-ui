@@ -315,7 +315,7 @@ Se basant sur le design responsive de Bootstrap, il existe cinq breakpoints déj
 Element fournit également une série de classes pour cacher des éléments dans certaines circonstances. Ces classes peuvent être ajoutées à n'importe quel élément du DOM ou composant. Vous devrez importer le fichier CSS suivant pour pouvoir les utiliser:
 
 ```js
-import 'element-ui/lib/theme-chalk/display.css';
+import 'setaria-ui/lib/theme-chalk/display.css';
 ```
 
 Ces classes sont:
@@ -338,7 +338,7 @@ Ces classes sont:
 | gutter | Espacement de la grille. | number | — | 0 |
 | type | Mode de mise en page. Vous pouvez utiliser flex, qui fonctionne sur les navigateurs modernes. | string | — | — |
 | justify | Alignement horizontal pour le mise en page flex. | string | start/end/center/space-around/space-between | start |
-| align | Alignement vertical pour la mise en page flex. | string | top/middle/bottom | top |
+| align | Alignement vertical pour la mise en page flex. | string | top/middle/bottom | — |
 | tag | Élément de tag personnalisé. | string | * | div |
 
 ### Attributs des colonnes

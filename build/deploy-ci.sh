@@ -40,7 +40,7 @@ if [ "$TRAVIS_TAG" ]; then
   # build sub folder
   echo $TRAVIS_TAG
 
-  SUB_FOLDER='1.5'
+  SUB_FOLDER='1.6'
   mkdir $SUB_FOLDER
   rm -rf *.js *.css *.map static
   rm -rf $SUB_FOLDER/**

@@ -33,6 +33,51 @@
       "name": "组件",
       "groups": [
         {
+          "groupName": "Special Feature",
+          "list": [
+            {
+              "path": "/json-form",
+              "title": "[特色]JsonForm Json表单"
+            },
+            {
+              "path": "/pro-form",
+              "title": "[特色]ProForm 高级表单"
+            },
+            {
+              "path": "/pro-table",
+              "title": "[特色]ProTable 高级表格"
+            },
+            {
+              "path": "/query-criteria-form",
+              "title": "[特色]QueryCriteriaForm 标准查询表单"
+            },
+            {
+              "path": "/query-filter",
+              "title": "[特色]QueryFilter 高级筛选器"
+            },
+            {
+              "path": "/json-viewer",
+              "title": "[特色]JsonViewer JSON视图查看"
+            },
+            {
+              "path": "/ellipsis",
+              "title": "[特色]Ellipsis 文本自动省略号"
+            },
+            {
+              "path": "/description",
+              "title": "[特色]Description 描述列表"
+            },
+            {
+              "path": "/statistics",
+              "title": "[特色]Statistics 统计数值"
+            },
+            {
+              "path": "/list",
+              "title": "[特色]List 列表"
+            }
+          ]
+        },
+        {
           "groupName": "Basic",
           "list": [
             {
@@ -135,31 +180,6 @@
             {
               "path": "/form",
               "title": "Form 表单"
-            },
-            {
-              "path": "/json-form",
-              "title": "[特色]JsonForm Json表单"
-            }
-          ]
-        },
-        {
-          "groupName": "ProComponent",
-          "list": [
-            {
-              "path": "/pro-form",
-              "title": "[特色]ProForm 高级表单"
-            },
-            {
-              "path": "/pro-table",
-              "title": "[特色]ProTable 高级表格"
-            },
-            {
-              "path": "/query-criteria-form",
-              "title": "[特色]QueryCriteriaForm 标准查询表单"
-            },
-            {
-              "path": "/query-filter",
-              "title": "[特色]QueryFilter 高级筛选器"
             }
           ]
         },
@@ -204,16 +224,16 @@
               "title": "Badge 标记"
             },
             {
-              "path": "/list",
-              "title": "[特色]List 列表"
-            },
-            {
-              "path": "/json-viewer",
-              "title": "[特色]JsonViewer JSON视图查看"
-            },
-            {
               "path": "/avatar",
               "title": "Avatar 头像"
+            },
+            {
+              "path": "/skeleton",
+              "title": "Skeleton 骨架屏"
+            },
+            {
+              "path": "/empty",
+              "title": "Empty 空状态"
             }
           ]
         },
@@ -329,18 +349,6 @@
             {
               "path": "/drawer",
               "title": "Drawer 抽屉"
-            },
-            {
-              "path": "/ellipsis",
-              "title": "[特色]Ellipsis 文本自动省略号"
-            },
-            {
-              "path": "/description",
-              "title": "[特色]Description 描述列表"
-            },
-            {
-              "path": "/statistics",
-              "title": "[特色]Statistics 统计数值"
             }
           ]
         }
@@ -512,6 +520,14 @@
             {
               "path": "/badge",
               "title": "Badge"
+            },
+            {
+              "path": "/skeleton",
+              "title": "Skeleton"
+            },
+            {
+              "path": "/empty",
+              "title": "Empty"
             }
           ]
         },
@@ -802,6 +818,14 @@
             {
               "path": "/badge",
               "title": "Badge"
+            },
+            {
+              "path": "/skeleton",
+              "title": "Skeleton"
+            },
+            {
+              "path": "/empty",
+              "title": "Empty"
             }
           ]
         },
@@ -1100,6 +1124,14 @@
             {
               "path": "/badge",
               "title": "Badge"
+            },
+            {
+              "path": "/skeleton",
+              "title": "Skeleton"
+            },
+            {
+              "path": "/empty",
+              "title": "Empty"
             }
           ]
         },

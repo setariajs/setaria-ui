@@ -101,6 +101,9 @@ import Statistics from '../packages/statistics/index.js';
 import ProForm from '../packages/pro-form/index.js';
 import ProTable from '../packages/pro-table/index.js';
 import QueryCriteriaForm from '../packages/query-criteria-form/index.js';
+import Skeleton from '../packages/skeleton/index.js';
+import SkeletonItem from '../packages/skeleton-item/index.js';
+import Empty from '../packages/empty/index.js';
 import locale from 'setaria-ui/src/locale';
 import CollapseTransition from 'setaria-ui/src/transitions/collapse-transition';
 import eventManager from 'setaria-ui/src/mixins/event-manager';
@@ -202,6 +205,9 @@ const components = [
   ProForm,
   ProTable,
   QueryCriteriaForm,
+  Skeleton,
+  SkeletonItem,
+  Empty,
   CollapseTransition
 ];
 
@@ -239,7 +245,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.5.47',
+  version: '1.5.48',
   locale: locale.use,
   i18n: locale.i18n,
   install,
@@ -344,5 +350,8 @@ export default {
   Statistics,
   ProForm,
   ProTable,
-  QueryCriteriaForm
+  QueryCriteriaForm,
+  Skeleton,
+  SkeletonItem,
+  Empty
 };

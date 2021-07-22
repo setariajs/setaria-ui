@@ -1,5 +1,64 @@
 ## 更新日志
 
+### 1.6.0
+*2021-07-22*
+#### 新特性
+
+- Skeleton
+  - 新增 Skeleton 组件 (#21038 by @cs1707)
+- Empty
+  - 新增 Empty 组件 (#21080 by @cs1707)
+#### Bug 修复
+
+- Calendar 
+  - 修复 calendar 国际化 bug (#20758 by @iamkun)
+  - 修复 first-day-of-week (#21057 by @cs1707)
+- Carousel
+  - 修复 interval 和 scale bug (#20931 by @cs1707)
+- Cascader
+  - 修复 cascader panel active path (#20730 by @cs1707)
+  - 修复 delete tag bug (#20939 by @cs1707)
+- ColorPicker
+  - 修复 bugs (by @UxieVerity)
+- Drawer
+  - 修复 Drawer bug (by @cs1707)
+  - 修复 focus bug (#20626 by @cs1707)
+  - 支持 overflow auto (#20948 by @cs1707)
+  - 修复 destroy (#20715 by @zj9495)
+- Image
+  - 图片预览优化 (#20652 by @cs1707)
+  - 修复 image object fit ratio 在 IE 下的 bug  (#19583 by @charlie0228)
+  - 修复 z-index 增加 keydown 事件 添加 stopPropagation (#20859 by @cs1707)
+- Input
+  - 修复 password cursor 展示 (#20870 by @cs1707)
+  - 修复 password icon 在 edge 下的展示 (#20902 by @cs1707)
+- Popconfirm
+  - 修复 Popconfirm 国际化 bug by @iamkun
+- Row
+  - 修复 align top (#20963 by @cs1707)
+- Select
+  - 修复 placeholder 国际化 bug (#17644 by @nzh63)
+  - 修复 value 为 Boolean 类型的bug (#21052 by @cs1707)
+- Table
+  - 修复 lazy load data (#21041 by @cs1707)
+- TypeScript
+  - 增加 CascaderPanel 类型导出 (#21070 by @qige2016)
+  - 增加 spinner.d.ts (#21090 by @qige2016)
+- Utils
+  - 修复 fix isScroll (#21065 by @cs1707)
+  - 修复 (utils.dom by @fw6)
+- 其他
+  - 修复 isFunction (#20912 by @cs1707)
+
+#### 优化
+
+- Doc
+  - 更新 Axure 设计资源 v2.1.0 (by @iamkun)
+  - 更新法语文档 datetime-picker.md (#20543 by @lonk)
+  - 更新 Progress 组件文档 (#20641 by @cs1707)
+  - 修改 form 组件 hide-required-asterisk 描述 (#21045 by @cs1707)
+  - 修复 hr 语言 week 翻译 (#21040 by @cs1707)
+  
 ### 1.5.3
 *2021-01-07*
 
