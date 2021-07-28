@@ -80,6 +80,7 @@
               oneOf: [
                 { const: 1, title: 'Male' },
                 { const: 2, title: 'FeMale' },
+                { const: 3, title: 'Other', disabled: true },
               ],
             },
             birth: {

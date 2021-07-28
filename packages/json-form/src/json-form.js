@@ -384,7 +384,8 @@ export default {
               list.forEach(item => {
                 optionList.push({
                   label: item.title,
-                  value: item.const
+                  value: item.const,
+                  disabled: item.disabled
                 });
               });
               if (componentTagName === `${componentPrefix}-select`) {
@@ -394,7 +395,8 @@ export default {
                     {
                       props: {
                         label: item.label,
-                        value: item.value
+                        value: item.value,
+                        disabled: item.disabled
                       }
                     }
                   ));
