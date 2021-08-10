@@ -62,7 +62,7 @@
 import { getValueByPath, isEmpty } from 'setaria-ui/src/utils/util';
 
 export default {
-  name: 'SrPageHeader',
+  name: 'ElPageHeader',
   props: {
     routes: {
       type: Array,
