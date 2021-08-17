@@ -30,13 +30,16 @@
           createDate: [],
           publishFlag: '',
           procurementApplyType: '2',
-          projectName: null,
+          projectName: '',
           location: [],
           dateRange: null,
           amount: undefined,
           createBy: '12'
         },
         normalSchema: {
+          "required": [
+            'procurementType'
+          ],
           "properties": {
             "procurementType": {
               "type": "array",
@@ -48,7 +51,7 @@
               ]
             },
             "projectName": {
-              "type": "number",
+              "type": "string",
               "title": "项目名称"
             }
           }
@@ -77,6 +80,9 @@
           }
         },
         advanceUiSchema: {
+          "createBy": {
+            'ui:disabled': true
+          },
           "createDate": {
             "ui:colspan": 2
           }

@@ -267,11 +267,11 @@ export default {
     /**
      * 渲染允许多选值的条件筛选Label
      */
-    renderMultipleLabelItem(h, key, label, value, isLastChild, isRequired) {
+    renderMultipleLabelItem(h, key, label, value, isLastChild, isShowCloseIcon) {
       return (
         <div class="item-value">
           <span>{label}</span>
-          { !isRequired ? <i class="value-clear-icon el-icon-close" name="close" onClick={this.handleItemClose(key, value)}></i> : null }
+          { isShowCloseIcon ? <i class="value-clear-icon el-icon-close" name="close" onClick={this.handleItemClose(key, value)}></i> : null }
           { isLastChild ? <ElDivider direction="vertical"></ElDivider> : null }
         </div>
       );
@@ -298,6 +298,15 @@ export default {
         if (item.$children) {
           const formItemComponent = item.$children.length > 1 ? item.$children[1] : item.$children[0];
           const childComponentName = formItemComponent.$options.componentName;
+          const isShowCloseIcon = () => {
+            if (formItemComponent && formItemComponent.disabled) {
+              return false;
+            }
+            if (item.isRequired) {
+              return false;
+            }
+            return true;
+          };
           // 可以多选的组件，排除级联选择器
           if (Array.isArray(value) && value.length > 0 &&
             childComponentName !== 'ElCascader' &&
@@ -309,7 +318,7 @@ export default {
               valueList = itemValue.map((v, index) => {
                 const label = formItemComponent.getOption(v).label;
                 if (label && label !== '') {
-                  return this.renderMultipleLabelItem(h, key, label, v, index !== itemValue.length - 1, item.isRequired);
+                  return this.renderMultipleLabelItem(h, key, label, v, index !== itemValue.length - 1, isShowCloseIcon());
                 }
               });
             }
@@ -352,7 +361,7 @@ export default {
                   <span class="item-label">{item.label}：</span>
                   <div class="item-value">
                     <span>{displayValue}</span>
-                    { !item.isRequired ? <i class="value-clear-icon el-icon-close" name="close" onClick={this.handleItemClose(key)}></i> : null }
+                    { isShowCloseIcon() ? <i class="value-clear-icon el-icon-close" name="close" onClick={this.handleItemClose(key)}></i> : null }
                   </div>
                 </div>
               );
