@@ -14,9 +14,9 @@
 :::demo
 ```html
 <template>
-  <sr-page-header :bread-crumb="breadCrumb"
+  <el-page-header :bread-crumb="breadCrumb"
                   title="页头">
-  </sr-page-header>
+  </el-page-header>
 </template>
 <script>
 export default {
@@ -49,7 +49,7 @@ export default {
 :::demo
 ```html
 <template>
-  <sr-page-header :bread-crumb="breadCrumb"
+  <el-page-header :bread-crumb="breadCrumb"
                   title="页头"
                   :tab-list="tabList"
                   :tab-active-key.sync="tabActiveKey">
@@ -68,7 +68,7 @@ export default {
     <template slot="extraContent">
       <img src="https://gw.alipayobjects.com/zos/antfincdn/K%24NnlsB%26hz/pageHeader.svg" width="100%"/>
     </template>
-  </sr-page-header>
+  </el-page-header>
   {{ tabActiveKey }}
 </template>
 <script>
