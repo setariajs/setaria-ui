@@ -13,6 +13,8 @@ const PRO_TABLE_INDEX = 'proTableIndex';
 const UI_OPTIONS = 'ui:options';
 const UI_RENDER = 'ui:render';
 
+// 重构pro-table
+
 /**
  * 根据oneOf或anyOf结构取得值对应的label
  */
