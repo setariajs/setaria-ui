@@ -1,0 +1,10 @@
+@import 'common/var';
+@import 'vxe-table/styles/variable.scss';
+
+$vxe-font-size-mini: 14px;
+$vxe-primary-color: $--color-primary;
+$vxe-success-color: $--color-success;
+$vxe-warning-color: $--color-warning;
+$vxe-danger-color: $--color-danger;
+
+@import 'vxe-table/styles/modules.scss';

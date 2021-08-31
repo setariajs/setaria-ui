@@ -1,16 +1,12 @@
 ## ProTable 高级表格
 
-**开发中，计划使用引入vxe-table以解决数据量大等问题。**
-
 `ProTable` 的诞生是为了解决项目中需要写很多 table 的样板代码的问题，所以在其中做了封装了很多常用的逻辑。这些封装可以简单的分类为预设行为与预设逻辑。
 
-依托于 `ProForm` `的能力，ProForm` 拥有多种形态，可以切换查询表单类型，设置变形成为一个简单的 Form 表单，执行新建等功能。
-
-根据 [JSON-Schema](https://json-schema.org/) 可渲染对应的表单用于数据的展示和编辑
+根据 [JSON-Schema](https://json-schema.org/) 可渲染对应的表单用于数据的展示和编辑。
 
 ### 何时使用
 
-当你的表格需要与服务端进行交互或者需要多种单元格样式时，`ProTable` 是不二选择。
+当希望使用JsonSchema快速渲染表格数据时，`ProTable` 是不二选择。
 
 ### 基本使用
 
@@ -18,26 +14,16 @@
 ```html
 <div>
   <el-pro-table
-    ref="proTable"
-    collapse
     :schema="schema"
     :ui-schema="uiSchema"
     row-key="id"
     multiple-selection
-    :total="totalDataLength"
-    :table-data="data"
+    :data="data"
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
     @selection-change="handleSelectionChange">
-    <template slot="toolbar">
-      <el-button size="mini" type="primary" icon="el-icon-plus">新建</el-button>
-    </template>
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
-    </template>
-    <!-- slot插槽名称需要在schema.properties内进行定义，譬如下例的control -->
-    <template slot="control" slot-scope="scope">
-      <el-button type="text" @click="handleUpdateButtonClick(scope)">修改</el-button>
     </template>
   </el-pro-table>
 </div>
@@ -49,35 +35,96 @@
       return {
         tableData: [],
         multipleSelection: [],
-        schema: {},
-        uiSchema: {
-          "id": {
-            "ui:options": {
-              "width": "100px"
-            }
-          },
-          "age": {
-            "ui:options": {
-              "sortable": true
-            }
-          },
-          "birth": {
-            "ui:options": {
-              "width": "100px",
-              formatter(row, column, value) {
-                return value && value.replace && value.replace(/\-/g, '/');
-              }
-            }
-          },
-          "interest": {
-            "ui:colspan": 2
-          },
-          "comment": {
-            "ui:options": {
-              type: 'textarea'
+        schema: {
+          properties: {
+            Name: {
+              title: '名称',
+              type: 'string',
             },
-            "ui:colspan": 2
-          }
+            Enum: {
+              title: '枚举值',
+              type: 'string',
+              oneOf: [
+                {
+                  const: '1',
+                  title: '枚举值一'
+                },
+                {
+                  const: '2',
+                  title: '枚举值二'
+                }
+              ],
+              updatable: true,
+            },
+            AnyOf: {
+              title: '多选枚举值',
+              type: 'array',
+              anyOf: [
+                {
+                  const: '1',
+                  title: '枚举值一'
+                },
+                {
+                  const: '2',
+                  title: '枚举值二'
+                }
+              ],
+              updatable: true,
+            },
+            MaxLengthString: {
+              title: '字符串输入',
+              type: 'string',
+              updatable: true,
+              maxLength: 5
+            },
+            Number: {
+              title: '数字',
+              type: 'number',
+              updatable: true,
+            },
+            Price: {
+              title: '价格',
+              type: 'number',
+              precision: '16',
+              scale: '2',
+              format: 'price',
+              updatable: true,
+            },
+            Comment: {
+              title: '备注',
+              type: 'string',
+              updatable: true,
+            },
+            Date: {
+              title: '日期',
+              type: 'string',
+              format: 'date',
+              updatable: true,
+            },
+            Time: {
+              title: '时间',
+              type: 'string',
+              format: 'time',
+              updatable: true,
+            },
+            Boolean: {
+              title: '布尔值',
+              type: 'boolean',
+              updatable: true,
+            },
+            CustomSlot: {
+              title: '自定义插槽',
+              type: 'string',
+              updatable: true,
+            },
+            HtmlContent: {
+              title: '自定义渲染',
+              type: 'string'
+            }
+          },
+          required: [ 'MaxLengthString' ],
+        },
+        uiSchema: {
         },
         data: null,
         totalDataLength: total
@@ -89,65 +136,22 @@
       }
     },
     mounted() {
-      this.schema = {
-        "properties": {
-          "id": {
-            "description": "用户ID",
-            "type": "string",
-            "title": "用户ID",
-            "minLength": 3,
-            "maxLength": 6
-          },
-          "age": {
-            "type": "integer",
-            "title": "年龄"
-          },
-          "gender": {
-            "type": "integer",
-            "title": "性别",
-            "oneOf": [
-              {"const": 1, "title": "男"},
-              {"const": 2, "title": "女"}
-            ]
-          },
-          "birth": {
-            "type": "string",
-            "title": "出生年月日",
-            "format": "date"
-          },
-          "time": {
-            "type": "array",
-            "title": "时间",
-            "format": "time"
-          },
-          "dateTime": {
-            "type": "string",
-            "title": "日期时间",
-            "format": "date-time"
-          },
-          "interest": {
-            "type": "array",
-            "title": "兴趣",
-            "anyOf": [
-              {"const": "1", "title": "游戏"},
-              {"const": "2", "title": "音乐"},
-              {"const": "3", "title": "运动"}
-            ]
-          },
-          "control": {
-            "title": "操作"
-          }
-        }
-      };
       const tableData = [];
       for (let i = 0; i < total; i++) {
         tableData.push({
-          no: i,
-          id: `zhangsan${i + 1}`,
-          age: parseInt(Math.random() * 100, 10),
-          gender: (parseInt(Math.random() * 10, 10) % 2) + 1,
-          birth: '1990-10-01',
-          interest: '1'
+          Name: 'XXX',
+          Price: 12345.678,
+          Enum: '2',
+          AnyOf: ['1', '2'],
+          MaxLengthString: null,
+          Number: 98765,
+          Date: '2021-08-31',
+          Time: '11:29:00',
+          Comment: 'setaria-ui',
+          'Boolean': true,
+          CustomSlotCode: '4104.01.03.01.02.05.10',
+          CustomSlot: '装饰线条',
+          HtmlContent: 'Link'
         });
       }
       this.data = tableData;

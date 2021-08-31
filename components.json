@@ -99,6 +99,7 @@
   "statistics": "./packages/statistics/index.js",
   "pro-form": "./packages/pro-form/index.js",
   "pro-table": "./packages/pro-table/index.js",
+  "editable-pro-table": "./packages/editable-pro-table/index.js",
   "query-criteria-form": "./packages/query-criteria-form/index.js",
   "skeleton": "./packages/skeleton/index.js",
   "skeleton-item": "./packages/skeleton-item/index.js",

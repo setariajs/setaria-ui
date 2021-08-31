@@ -66,9 +66,17 @@
     "babel-helper-vue-jsx-merge-props": "^2.0.0",
     "deepmerge": "^1.2.0",
     "draggabilly": "^2.1.1",
+    "moment": "^2.29.1",
     "normalize-wheel": "^1.0.1",
+    "numeral": "^2.0.6",
     "resize-observer-polyfill": "^1.5.0",
-    "throttle-debounce": "^1.0.1"
+    "throttle-debounce": "^1.0.1",
+    "vxe-table": "^3.3.12",
+    "vxe-table-plugin-element": "^1.11.0",
+    "vxe-table-plugin-export-xlsx": "^2.2.1",
+    "vxe-table-plugin-menus": "^1.6.1",
+    "vxe-table-plugin-virtual-tree": "^0.6.7",
+    "xe-utils": "^3.3.1"
   },
   "peerDependencies": {
     "vue": "^2.5.17"

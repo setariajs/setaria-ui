@@ -6488,6 +6488,11 @@ mocha@^6.0.2:
     yargs-parser "11.1.1"
     yargs-unparser "1.5.0"
 
+moment@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.nlark.com/moment/download/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha1-sr52n6MZQL6e7qZGnAdeNQBvo9M=
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -6838,6 +6843,11 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
+
+numeral@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npm.taobao.org/numeral/download/numeral-2.0.6.tgz#4ad080936d443c2561aed9f2197efffe25f4e506"
+  integrity sha1-StCAk21EPCVhrtnyGX7//iX05QY=
 
 oauth-sign@~0.9.0:
   version "0.9.0"
@@ -9930,6 +9940,31 @@ vue@2.5.21:
   resolved "https://registry.nlark.com/vue/download/vue-2.5.21.tgz#3d33dcd03bb813912ce894a8303ab553699c4a85"
   integrity sha1-PTPc0Du4E5Es6JSoMDq1U2mcSoU=
 
+vxe-table-plugin-element@^1.11.0:
+  version "1.11.2"
+  resolved "https://registry.nlark.com/vxe-table-plugin-element/download/vxe-table-plugin-element-1.11.2.tgz#541631d3d39a13a525773da4c6cf4a54722f2f17"
+  integrity sha1-VBYx09OaE6Uldz2kxs9KVHIvLxc=
+
+vxe-table-plugin-export-xlsx@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/vxe-table-plugin-export-xlsx/download/vxe-table-plugin-export-xlsx-2.2.1.tgz#7eba669bd71b7e469b3c9e4d368d98626b837894"
+  integrity sha1-frpmm9cbfkabPJ5NNo2YYmuDeJQ=
+
+vxe-table-plugin-menus@^1.6.1:
+  version "1.6.2"
+  resolved "https://registry.nlark.com/vxe-table-plugin-menus/download/vxe-table-plugin-menus-1.6.2.tgz#858a0eae12d6472e940f8ebc291997fe14ea6fd7"
+  integrity sha1-hYoOrhLWRy6UD468KRmX/hTqb9c=
+
+vxe-table-plugin-virtual-tree@^0.6.7:
+  version "0.6.10"
+  resolved "https://registry.nlark.com/vxe-table-plugin-virtual-tree/download/vxe-table-plugin-virtual-tree-0.6.10.tgz#f6258336983a6c27f10daeaca3dace28c3d44dc5"
+  integrity sha1-9iWDNpg6bCfxDa6so9rOKMPUTcU=
+
+vxe-table@^3.3.12:
+  version "3.3.12"
+  resolved "https://registry.nlark.com/vxe-table/download/vxe-table-3.3.12.tgz#5f624915e5c0834a3e89caa227db9d36d1d7bd1e"
+  integrity sha1-X2JJFeXAg0o+icqiJ9udNtHXvR4=
+
 watchpack@^1.5.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.6.0.tgz#4bc12c2ebe8aa277a71f1d3f14d685c7b446cd00"
@@ -10185,6 +10220,11 @@ ws@~3.3.1:
     async-limiter "~1.0.0"
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
+
+xe-utils@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.nlark.com/xe-utils/download/xe-utils-3.3.1.tgz#77af254b12d5ae2d4d3f32c3df7e3a5ccde1fad8"
+  integrity sha1-d68lSxLVri1NPzLD3346XM3h+tg=
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"

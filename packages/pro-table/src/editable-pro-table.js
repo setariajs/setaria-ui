@@ -1,0 +1,1366 @@
+import _ from 'lodash';
+import Vue from 'vue';
+import XEUtils from 'xe-utils';
+import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import {
+  getSchemaDefaultObjectByFormSchema
+} from './util';
+import tableMixin from './table-mixin';
+import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
+import { getEditRenderByProperty } from './util';
+
+const OPT_ADD = 'C';
+const OPT_DELETE = 'D';
+const OPT_UPDATE = 'U';
+
+// 可编辑列在三列以上的场合，弹窗编辑
+const MAX_ROW_EDIT = 3;
+const PRIMARY_ROW_KEY = '_XID';
+
+export default Vue.extend({
+  name: 'ElEditableProTable',
+  mixins: [tableMixin],
+  props: {
+    ...COMMON_TABLE_PROPS,
+    ...EDIT_TABLE_PROPS,
+    maxHeight: {
+      type: String,
+      default: '700'
+    },
+    defaultEntity: {
+      type: Object,
+      required: false,
+      default: null
+    },
+    isShowDefaultBatchControl: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    // 表格工具栏配置
+    toolbarProps: {
+      type: Object,
+      default() {
+        return {
+          // 新增一行或新增同级按钮是否禁用
+          addRowButtonDisabled: false,
+          // 新增子级按钮是否禁用
+          addChildButtonDisabled: false,
+          // 删除按钮是否禁用
+          deleteRowButtonDisabled: false
+        };
+      }
+    },
+    pageSize: Number,
+    pageSizes: Array
+  },
+  data() {
+    return {
+      isShowForm: false,
+      formData: null,
+      selectRow: null,
+      isShowTable: true,
+      /* 树形列表绑定到vxe-table的数据 */
+      innerTreeDataList: []
+    };
+  },
+  computed: {
+    innerEditConfig() {
+      const { editConfig } = this;
+      const defaultConfig = {
+        trigger: 'manual',
+        mode: 'row',
+        showStatus: true
+      };
+      if (!this.isEditOnRow) {
+        defaultConfig.trigger = 'click';
+      }
+      return _.assign({}, defaultConfig, editConfig);
+    },
+    innerDefaultEntity() {
+      if (this.defaultEntity) {
+        return this.defaultEntity;
+      }
+      return getSchemaDefaultObjectByFormSchema(this.schema);
+    },
+    innerRowKey() {
+      return this.rowKey ? this.rowKey : PRIMARY_ROW_KEY;
+    },
+    innerDataList() {
+      const {
+        data,
+        tableListTransform,
+        changeModeField,
+        autoPagination,
+        innerCurrentPage,
+        innerPageSize,
+        total,
+        innerSortList,
+        isSortAllData,
+        sortData,
+        showPagination
+      } = this;
+      if (_.isEmpty(data)) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.innerTotal = 0;
+        return [];
+      }
+      let tempList = data.filter(
+        (item) => item[changeModeField] !== OPT_DELETE
+      );
+      tempList.map((item) => {
+        const temp = item;
+        if (temp && temp.children) {
+          delete temp.children;
+        }
+        if (!temp[changeModeField]) {
+          temp[changeModeField] = '';
+        }
+        return temp;
+      });
+      if (tableListTransform) {
+        tempList = tableListTransform(tempList);
+      }
+      // 前端排序逻辑
+      if (isSortAllData && !_.isEmpty(innerSortList)) {
+        tempList = sortData(tempList, innerSortList);
+      }
+      // 前端分页逻辑
+      if (showPagination && autoPagination && !_.isEmpty(data)) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.innerTotal = tempList.length;
+        if (tempList && tempList.length && tempList.length > 0) {
+          let fromIndex = (innerCurrentPage - 1) * innerPageSize;
+          if (fromIndex < 0) {
+            fromIndex = 0;
+          }
+          let toIndex = innerCurrentPage * innerPageSize;
+          if (toIndex > total) {
+            toIndex = total + 1;
+          }
+          // 返回新的数组对象
+          return tempList.slice(fromIndex, toIndex);
+        }
+      } else if (_.isEmpty(data)) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.innerTotal = 0;
+      }
+      return tempList;
+    },
+    innerRefField() {
+      const { isTree, innerRowKey, refField } = this;
+      if (!isTree) {
+        return innerRowKey;
+      }
+      return refField || innerRowKey;
+    },
+    editableColumnCount() {
+      const { schema, vxeColumns } = this;
+      let editableColumnCount = 0;
+      vxeColumns.forEach((column) => {
+        const { field } = column;
+        const { creatable, updatable } = schema.properties[field];
+        if (creatable || updatable) {
+          editableColumnCount += 1;
+        }
+      });
+      return editableColumnCount;
+    },
+    isEditOnRow() {
+      if (typeof this.isForceEditInRow === 'boolean') {
+        return this.isForceEditInRow;
+      }
+      return this.editableColumnCount <= MAX_ROW_EDIT;
+    },
+    innerTableColumns() {
+      const {
+        innerUiSchema,
+        isEditOnRow,
+        labelMode,
+        schema,
+        vxeColumns
+      } = this;
+      const resultColumns = [];
+      const columns = vxeColumns;
+      // 取得组件属性
+      const getComponentProps = (render, row) => {
+        const { props } = render;
+        const componentProps = { ...props };
+        const { disabledFunction } = componentProps;
+        if (typeof disabledFunction === 'function') {
+          componentProps.disabled = disabledFunction(row);
+        }
+        return componentProps;
+      };
+      const getComponentAttrs = (render) => {
+        const ret = {};
+        const { attrs } = render;
+        const validAttrArray = ['maxlength'];
+        validAttrArray.forEach((key) => {
+          if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+            ret[key] = attrs[key];
+          }
+        });
+        return ret;
+      };
+      columns.forEach((column) => {
+        const { field } = column;
+        const targetColumn = column;
+        const { creatable, updatable, type } = schema.properties[field];
+        let customRender = null;
+        if (creatable || updatable) {
+          customRender = getEditRenderByProperty(
+            field,
+            schema.properties[field],
+            innerUiSchema[field]
+          );
+        }
+        let slot = null;
+        // vxe-table不支持Element UI的radio和checkbox渲染
+        if (
+          customRender &&
+          (customRender.name === 'ElRadio' ||
+            customRender.name === 'ElCheckbox')
+        ) {
+          slot = (columnVal) => {
+            const { row } = columnVal;
+            let render = null;
+            const inputEvent = (val) => {
+              const currentRow = row;
+              currentRow[field] = val;
+            };
+            const changeEvent = (val) => {
+              this.emitDataChange(field, val, row);
+            };
+            const componentProps = getComponentProps(customRender, row);
+            const componentAttrs = getComponentAttrs(customRender);
+            if (customRender.name === 'ElRadio') {
+              render = (
+                <el-radio-group
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                >
+                  {customRender.options.map((op) => {
+                    const jsx = (
+                      <el-radio label={op.value}>{op.label}</el-radio>
+                    );
+                    return jsx;
+                  })}
+                </el-radio-group>
+              );
+            } else if (customRender.name === 'ElCheckbox') {
+              if (type === 'boolean') {
+                render = (
+                  <el-checkbox
+                    value={row[field]}
+                    on-input={inputEvent}
+                    on-change={changeEvent}
+                    {...{
+                      attrs: componentAttrs,
+                      props: componentProps
+                    }}
+                  />
+                );
+              } else {
+                render = (
+                  <el-checkbox-group
+                    value={row[field]}
+                    on-input={inputEvent}
+                    on-change={changeEvent}
+                    {...{
+                      attrs: componentAttrs,
+                      props: componentProps
+                    }}
+                  >
+                    {customRender.options.map((op) => {
+                      const jsx = (
+                        <el-checkbox label={op.value}>{op.label}</el-checkbox>
+                      );
+                      return jsx;
+                    })}
+                  </el-checkbox-group>
+                );
+              }
+            }
+            return [render];
+          };
+        }
+        // 使在单元格内直接输入的场合，表头显示必须输入标识
+        if (
+          !labelMode &&
+          customRender &&
+          (customRender.name === 'ElSelect' ||
+            customRender.name === 'ElDatePicker' ||
+            customRender.name === 'ElTimePicker' ||
+            customRender.name === 'ElInput' ||
+            customRender.name === 'ElInputNumber')
+        ) {
+          slot = ({ row }) => {
+            let render = null;
+            const inputEvent = (val) => {
+              const currentRow = row;
+              currentRow[field] = val;
+            };
+            const changeEvent = (val) => {
+              this.emitDataChange(field, val, row);
+            };
+            const componentProps = getComponentProps(customRender, row);
+            const componentAttrs = getComponentAttrs(customRender);
+            if (customRender.name === 'ElSelect') {
+              render = (
+                <el-select
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                >
+                  {customRender.options.map((op) => {
+                    const jsx = <el-option value={op.value} label={op.label} />;
+                    return jsx;
+                  })}
+                </el-select>
+              );
+            } else if (customRender.name === 'ElDatePicker') {
+              render = (
+                <el-date-picker
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                />
+              );
+            } else if (customRender.name === 'ElTimePicker') {
+              render = (
+                <el-time-picker
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                />
+              );
+            } else if (customRender.name === 'ElInput') {
+              render = (
+                <el-input
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                />
+              );
+            } else if (customRender.name === 'ElInputNumber') {
+              render = (
+                <el-input-number
+                  value={row[field]}
+                  on-input={inputEvent}
+                  on-change={changeEvent}
+                  {...{
+                    attrs: componentAttrs,
+                    props: componentProps
+                  }}
+                />
+              );
+            }
+            return [render];
+          };
+        }
+        if (slot) {
+          const vxeColumnSlots = {
+            edit: slot
+          };
+          // 行上直接编辑的场合
+          if (isEditOnRow) {
+            vxeColumnSlots.default = slot;
+          }
+          targetColumn.slots = _.assign({}, vxeColumnSlots, targetColumn.slots);
+        }
+        if (targetColumn.slots) {
+          if (labelMode) {
+            if (targetColumn.slots.edit) {
+              delete targetColumn.slots.edit;
+            }
+            if (isEditOnRow && targetColumn.slots.default) {
+              if (!targetColumn.hasCustomSlot) {
+                delete targetColumn.slots.default;
+              }
+            }
+          } else {
+            if (targetColumn.slots.srScopedDefault) {
+              targetColumn.slots.default = targetColumn.slots.srScopedDefault;
+            }
+            if (targetColumn.slots.srScopedEdit) {
+              targetColumn.slots.edit = targetColumn.slots.srScopedEdit;
+            }
+          }
+        }
+        if (customRender) {
+          if (labelMode) {
+            targetColumn.editRender = null;
+          } else {
+            targetColumn.editRender = customRender;
+          }
+        } else if (labelMode && targetColumn.editRender) {
+          targetColumn.editRender = null;
+        }
+        resultColumns.push(targetColumn);
+      });
+      return resultColumns;
+    },
+    innerRules() {
+      const ret = {};
+      const { rules = {}, schema = {}, uiSchema = {} } = this;
+      const { required = [], properties = {} } = schema;
+
+      Object.keys(rules).forEach((key) => {
+        ret[key] = [...rules[key]];
+      });
+      if (!_.isEmpty(required)) {
+        required.forEach((key) => {
+          const property = properties[key] || {};
+          const requireRule = {
+            required: true,
+            message: `请输入${property.title}`,
+            trigger: 'blur'
+          };
+          if (Array.isArray(rules[key])) {
+            ret[key] = [].concat(rules[key]);
+          } else {
+            ret[key] = [];
+          }
+          ret[key].push(requireRule);
+        });
+      }
+      // 自定义规则
+      Object.keys(uiSchema || {}).forEach((key) => {
+        const uiProperty = uiSchema[key];
+        let uiRules = _.get(uiProperty, JSON_FORM_UI.UI_RULES);
+        if (_.isEmpty(ret[key])) {
+          ret[key] = [];
+        }
+        if (!_.isEmpty(uiRules)) {
+          uiRules = _.cloneDeep(uiRules);
+          uiRules.forEach((rule) => {
+            const { validator } = rule;
+            if (validator) {
+              const transformRule = rule;
+              transformRule.validator = (val = {}) => {
+                const promise = new window.Promise((resolve, reject) => {
+                  validator(
+                    val.rule,
+                    val.cellValue,
+                    (callbackFuncVal) => {
+                      if (callbackFuncVal instanceof Error) {
+                        reject(callbackFuncVal);
+                        return;
+                      }
+                      resolve(callbackFuncVal);
+                    },
+                    val.row
+                  );
+                });
+                return promise;
+              };
+            }
+          });
+          ret[key] = ret[key].concat(uiRules);
+        }
+      });
+      return ret;
+    },
+    dialogTitle() {
+      return '编辑';
+    },
+    xTableRef() {
+      return this.$refs.xTable;
+    }
+  },
+  watch: {
+    innerDataList: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        if (this.isTree) {
+          this.innerTreeDataList = val;
+        }
+      }
+    }
+  },
+  methods: {
+    /**
+     * 切换所有行的选中状态
+     * @public
+     */
+    toggleAllSelection(val) {
+      if (this.xTableRef) {
+        this.xTableRef.setAllCheckboxRow(val);
+      }
+    },
+    syncTableDataList(val) {
+      this.$emit('update:data', val);
+    },
+    readFile() {
+      // const { afterImport, importSheetName, vxeTableColumnArray } = this;
+      // this.xTableRef
+      //   .readFile({
+      //     types: ['xls', 'xlsx']
+      //   })
+      //   .then((params) => {
+      //     parseExcelByFile(params.file, [importSheetName], false).then(
+      //       (parsedData) => {
+      //         let ret = [];
+      //         if (!_.isEmpty(parsedData)) {
+      //           const excelData = parsedData[0];
+      //           // 根据table column取得excel中每列的field id
+      //           const [titleArr] = excelData.splice(0, 1);
+      //           const columnFieldArr = [];
+      //           titleArr.forEach((title) => {
+      //             const col = _.find(
+      //               vxeTableColumnArray,
+      //               (tableColumnDef) => tableColumnDef.title === title
+      //             );
+      //             if (col) {
+      //               columnFieldArr.push(col.field);
+      //             } else {
+      //               columnFieldArr.push(title);
+      //             }
+      //           });
+      //           excelData.forEach((rowData) => {
+      //             const item = {};
+      //             rowData.forEach((colData, index) => {
+      //               const field = columnFieldArr[index];
+      //               item[field] = colData;
+      //             });
+      //             ret.push(item);
+      //           });
+      //         }
+      //         // 处理数据自定义后处理
+      //         if (typeof afterImport === 'function') {
+      //           const promise = afterImport(ret, params);
+      //           if (promise.then) {
+      //             promise.then((res) => {
+      //               ret = res;
+      //               this.syncTableDataList(ret);
+      //             });
+      //           } else {
+      //             ret = promise;
+      //             this.syncTableDataList(ret);
+      //           }
+      //         } else {
+      //           this.syncTableDataList(ret);
+      //         }
+      //       }
+      //     );
+      //   });
+    },
+    hideTable(isHide) {
+      this.isShowTable = !isHide;
+    },
+    refreshData() {
+      this.xTableRef.updateData();
+    },
+    /** 获取修改的记录 */
+    getUpdateRecords() {
+      /*
+      if (this.isTree) {
+        return this.data.filter(
+          (item) => item[this.changeModeField] === OPT_UPDATE,
+        );
+      }
+      return this.xTableRef.getUpdateRecords();
+       */
+      return this.data.filter(
+        (item) => item[this.changeModeField] === OPT_UPDATE
+      );
+    },
+    /** 获取新增的记录 */
+    getInsertRecords() {
+      /*
+      if (this.isTree) {
+        return this.data.filter(
+          (item) => item[this.changeModeField] === OPT_ADD,
+        );
+      }
+      return this.xTableRef.getInsertRecords();
+       */
+      return this.data.filter((item) => item[this.changeModeField] === OPT_ADD);
+    },
+    /** 获取删除的记录 */
+    getRemoveRecords() {
+      const { changeModeField, parentField, treeConfig, virtualTree } = this;
+      if (virtualTree) {
+        const removeList = this.getTableActionRef().getRemoveRecords();
+        // !FIXME XEUtil存在bug，filterTree执行后会展开所有节点
+        if (!_.isEmpty(parentField)) {
+          const filterTreeArray = XEUtils.filterTree(
+            removeList,
+            (item) => item[changeModeField] !== OPT_ADD,
+            {
+              children: _.get(treeConfig, 'children', 'children')
+            }
+          );
+          filterTreeArray.forEach((item) => {
+            const arrayItem = item;
+            arrayItem[changeModeField] = OPT_DELETE;
+          });
+          const ret = XEUtils.toArrayTree(filterTreeArray, {
+            parentKey: parentField
+          });
+          return ret;
+        }
+      }
+      return this.data.filter((item) => item[changeModeField] === OPT_DELETE);
+    },
+    /** 获取有变更的所有记录（含新增、删除、修改） */
+    getChangedRecords() {
+      const { changeModeField } = this;
+
+      const fillChangeModeField = (list, changeMode) => {
+        list.forEach((item) => {
+          const temp = item;
+          temp[changeModeField] = changeMode;
+        });
+        return list;
+      };
+      return [
+        ...fillChangeModeField(this.getUpdateRecords(), OPT_UPDATE),
+        ...fillChangeModeField(this.getInsertRecords(), OPT_ADD),
+        ...fillChangeModeField(this.getRemoveRecords(), OPT_DELETE)
+      ];
+    },
+    getCheckboxRecords() {
+      const { isReserve, selectionType } = this;
+      if (selectionType !== 'checkbox') {
+        return [];
+      }
+      if (isReserve) {
+        return [
+          ...this.xTableRef.getCheckboxRecords(),
+          ...this.xTableRef.getCheckboxReserveRecords()
+        ];
+      }
+      return this.xTableRef.getCheckboxRecords();
+    },
+    clearCheckboxRow() {
+      const { isReserve, selectionType } = this;
+      if (selectionType !== 'checkbox') {
+        return;
+      }
+      if (isReserve) {
+        this.xTableRef.clearCheckboxRow();
+        this.xTableRef.clearCheckboxReserve();
+        return;
+      }
+      this.xTableRef.clearCheckboxRow();
+    },
+    /**
+     * 设置展开树形节点
+     * @param {object | array} rows 想要展开的行
+     * @param {boolean} checked 这一行展开与否
+     * @returns Promise
+     */
+    setTreeExpand(rows, checked) {
+      return this.xTableRef.setTreeExpand(rows, checked);
+    },
+    /**
+     * 切换展开树形节点的状态
+     * @public
+     * @param {object} row
+     * @returns Promise
+     */
+    toggleTreeExpand(row) {
+      return this.xTableRef.toggleTreeExpand(row);
+    },
+    /**
+     * 根据 row 获取相对于 data 中的索引
+     * @param {object} row 行数据对象
+     * @returns 索引值
+     */
+    getRowIndex(row) {
+      return this.xTableRef.getRowIndex(row);
+    },
+    /**
+     * 取得所有记录
+     * @param {Object} val
+     * @returns
+     */
+    getRecordset(val) {
+      const recordSet = this.xTableRef.getRecordset(val) || {};
+      // 取得时去除主键字段，减少传输量
+      Object.keys(recordSet).forEach((key) => {
+        if (!_.isEmpty(recordSet[key])) {
+          recordSet[key].forEach((item) => {
+            const rowItem = item;
+            if (rowItem[PRIMARY_ROW_KEY]) {
+              delete rowItem[PRIMARY_ROW_KEY];
+            }
+          });
+        }
+      });
+      return recordSet;
+    },
+    isRowActive({ row }) {
+      const { xTable } = this.$refs;
+      return xTable && xTable.isActiveByRow(row);
+    },
+    validate() {
+      return this.xTableRef.validate(true);
+    },
+    onTableRowEditorClose({ row }) {
+      console.log('editor close', row);
+    },
+    /**
+     * 表格在编辑状态下触发数据变动事件处理
+     */
+    emitDataChange(key, val, row) {
+      // if (this.isTree) {
+      if (row[this.changeModeField] !== OPT_ADD) {
+        const target = row;
+        target[this.changeModeField] = OPT_UPDATE;
+      }
+      // }
+      this.$emit('data-change', key, val, row);
+    },
+    /** "新增同级"按钮点击事件 */
+    onTableAddCurrentClick() {
+      const { onAddCurrentClick } = this;
+      if (onAddCurrentClick != null && _.isFunction(onAddCurrentClick)) {
+        onAddCurrentClick();
+        return;
+      }
+      this.tableAddCurrent();
+    },
+    tableAddCurrent() {
+      const {
+        innerDefaultEntity,
+        data,
+        innerSelection,
+        parentField,
+        beforeAddCurrent,
+        changeModeField,
+        innerRowKey,
+        innerRefField,
+        virtualTree
+      } = this;
+
+      const targetItem = _.cloneDeep(innerDefaultEntity);
+      if (beforeAddCurrent && _.isFunction(beforeAddCurrent)) {
+        const selected =
+          innerSelection && innerSelection.length === 1
+            ? innerSelection[0]
+            : null;
+        beforeAddCurrent(selected, targetItem);
+      }
+
+      if (data.length === 0) {
+        const defaultItem = {
+          ...targetItem,
+          [parentField]: '',
+          [changeModeField]: OPT_ADD
+        };
+        data.push(defaultItem);
+        return;
+      }
+
+      if (!innerSelection || innerSelection.length !== 1) {
+        console.error('只能选择一条记录');
+        return;
+      }
+
+      // 寻找当前选中节点的位置
+      const index = data.findIndex(
+        (item) =>
+          item[innerRowKey] === innerSelection[0][innerRefField] &&
+          item[changeModeField] !== OPT_DELETE
+      );
+
+      // 构造新的节点
+      const defaultItem = {
+        ...targetItem,
+        [changeModeField]: OPT_ADD
+      };
+      if (!_.isEmpty(parentField)) {
+        defaultItem[parentField] = innerSelection[0][parentField];
+      }
+      if (virtualTree) {
+        this.getTableActionRef().insertAt(defaultItem, innerSelection[0]);
+      } else {
+        data.splice(index + 1, 0, defaultItem);
+      }
+    },
+    /** "新增子级"按钮点击事件 */
+    onTableAddChildClick() {
+      const { onAddChildClick } = this;
+      if (onAddChildClick != null && _.isFunction(onAddChildClick)) {
+        onAddChildClick();
+        return;
+      }
+      this.tableAddChild();
+    },
+    tableAddChild() {
+      const {
+        innerDefaultEntity,
+        innerSelection,
+        innerRefField,
+        parentField,
+        beforeAddChild,
+        changeModeField,
+        treeConfig,
+        virtualTree
+      } = this;
+      const tableActionRef = this.getTableActionRef();
+      if (!innerSelection || innerSelection.length !== 1) {
+        console.error('只能选择一条记录');
+      }
+      const childrenKey = _.get(treeConfig, 'children', 'children');
+      if (!innerSelection[0][childrenKey]) {
+        innerSelection[0][childrenKey] = [];
+      }
+      const targetItem = JSON.parse(JSON.stringify(innerDefaultEntity));
+      if (beforeAddChild && _.isFunction(beforeAddChild)) {
+        beforeAddChild(innerSelection[0], targetItem);
+      }
+
+      const defaultItem = {
+        ...targetItem,
+        [changeModeField]: OPT_ADD
+      };
+      if (!_.isEmpty(parentField)) {
+        defaultItem[parentField] = innerSelection[0][innerRefField];
+      }
+      if (virtualTree) {
+        // !FIXME 节点展开的场合，新增的子级数据没有显示，此处通过手动收起父节点的方式实现刷新
+        if (tableActionRef.isTreeExpandByRow(innerSelection[0])) {
+          tableActionRef.setTreeExpand(innerSelection[0], false);
+        }
+        const { _X_LEVEL } = innerSelection[0];
+        // eslint-disable-next-line no-underscore-dangle
+        defaultItem._X_LEVEL = _X_LEVEL + 1;
+        innerSelection[0][childrenKey].unshift(defaultItem);
+      } else {
+        this.data.push(defaultItem);
+      }
+      this.$nextTick(() => {
+        // 刷新节点&展开
+        tableActionRef.setTreeExpand(innerSelection[0], false);
+        tableActionRef.setTreeExpand(innerSelection[0], true);
+      });
+    },
+    /** "新增一行"按钮点击事件 */
+    onTableAddRowClick() {
+      const { onAddRowClick } = this;
+      if (onAddRowClick != null && _.isFunction(onAddRowClick)) {
+        onAddRowClick();
+        return;
+      }
+      this.tableAddRow();
+    },
+    tableAddRow(position) {
+      const { innerDefaultEntity, beforeAddRow, changeModeField } = this;
+
+      let item = _.cloneDeep(innerDefaultEntity);
+      if (typeof beforeAddRow === 'function') {
+        item = beforeAddRow(item);
+      }
+
+      const defaultItem = {
+        ...item,
+        [changeModeField]: OPT_ADD
+      };
+      this.data.splice(position || 0, 0, defaultItem);
+      // this.xTableRef.insert(item);
+    },
+    /** "批量删除"按钮点击事件 */
+    onTableDeleteClick() {
+      const { onDeleteClick, innerSelection } = this;
+      if (onDeleteClick != null && _.isFunction(onDeleteClick)) {
+        onDeleteClick(innerSelection);
+        return;
+      }
+      this.tableDelete();
+    },
+    tableDelete(rows) {
+      if (rows && _.isArray(rows) && rows.length > 0) {
+        rows.forEach((item) => {
+          this.deleteItem(item);
+        });
+      } else {
+        const { innerSelection } = this;
+        if (!innerSelection || innerSelection.length <= 0) {
+          return;
+        }
+
+        innerSelection.forEach((item) => {
+          this.deleteItem(item);
+        });
+      }
+
+      this.xTableRef.updateData();
+      this.emitSelectionChange([]);
+      // this.xTableRef.remove(innerSelection);
+    },
+    deleteItem(item) {
+      const { data, changeModeField, innerRowKey, isTree, virtualTree } = this;
+      const temp = item;
+      if (virtualTree) {
+        const primaryKey = _.get(item || {}, innerRowKey, null);
+        if (primaryKey === null) {
+          this.getTableActionRef().removeCheckboxRow();
+        } else {
+          this.getTableActionRef().remove([item]);
+        }
+      } else {
+        const index = data.findIndex(
+          (obj) =>
+            obj[innerRowKey] === temp[innerRowKey] &&
+            obj[changeModeField] !== OPT_DELETE
+        );
+        // 如果是新添加的记录，直接从data中删除
+        if (temp[changeModeField] === OPT_ADD) {
+          if (index > -1) {
+            data.splice(index, 1);
+          }
+        } else {
+          // changeMode标识为 DELETE
+          temp[changeModeField] = OPT_DELETE;
+          data.splice(index, 1, temp);
+        }
+
+        if (isTree) {
+          this.deleteChildren(item);
+        }
+      }
+    },
+    deleteChildren(item) {
+      if (item && item.children && item.children.length > 0) {
+        item.children.forEach((child) => {
+          this.deleteItem(child);
+        });
+      }
+    },
+    /**
+     * 对树进行深度搜索
+     * @param keyword 搜索关键字
+     * @param searchProps 搜索的字段数组
+     */
+    treeSearch(keyword, searchProps = []) {
+      const filterName = XEUtils.toValueString(keyword).trim();
+      if (filterName) {
+        const options = { children: 'children' };
+        // const searchProps = ['name'];
+        this.innerTreeDataList = XEUtils.searchTree(
+          this.innerDataList,
+          (item) =>
+            searchProps.some(
+              (key) => XEUtils.toValueString(item[key]).indexOf(filterName) > -1
+            ),
+          options
+        );
+      } else {
+        this.innerTreeDataList = this.innerDataList;
+      }
+      // 搜索之后默认展开所有子节点
+      this.$nextTick(() => {
+        this.xTableRef.setAllTreeExpand(true);
+      });
+    },
+    /** 展开层级 */
+    onTableExpandRowsClick() {
+      this.xTableRef.setAllTreeExpand(true);
+    },
+    onTableCollapseRowsClick() {
+      this.xTableRef.setAllTreeExpand(false);
+    },
+    onRowDataFormSubmit() {
+      return new window.Promise((resolve) => {
+        resolve();
+      });
+    },
+    onDialogSaveButtonClick() {
+      this.$refs.dialogForm.validate((isValid) => {
+        if (isValid) {
+          _.assign(this.selectRow, this.formData);
+          this.isShowForm = false;
+        }
+      });
+    },
+    onDialogCancelButtonClick() {
+      this.isShowForm = false;
+    },
+    recalculate(refull) {
+      this.xTableRef.recalculate(refull);
+    }
+  },
+  render() {
+    const {
+      $slots,
+      innerDataList,
+      innerTreeDataList,
+      dialogTitle,
+      formData,
+      isShowForm,
+      innerRules,
+      innerEditConfig,
+      vxeTableColumnArray,
+      innerSeqConfig,
+      innerCheckboxConfig,
+      innerExpandConfig,
+      innerRadioConfig,
+      innerTreeConfig,
+      innerSortConfig,
+      innerCustomConfig,
+      innerExportConfig,
+      innerRowKey,
+      height,
+      maxHeight,
+      schema,
+      innerUiSchema,
+      onTableCheckboxChange,
+      onTableRadioChange,
+      onTableCheckboxAll,
+      onTableRowEditorClose,
+      onDialogSaveButtonClick,
+      onDialogCancelButtonClick,
+      isTree,
+      isShowDefaultBatchControl,
+      innerSelection,
+      onTableAddCurrentClick,
+      onTableAddChildClick,
+      onTableAddRowClick,
+      onTableDeleteClick,
+      onTableExpandRowsClick,
+      onTableCollapseRowsClick,
+      innerPageSize,
+      innerPageSizes,
+      innerCurrentPage,
+      innerTotal,
+      layouts,
+      onPageChange,
+      labelMode,
+      showPagination,
+      isShowTable,
+      toolbarProps,
+      onCellClick,
+      innerMergeCells,
+      menuConfig,
+      onCellMenu,
+      onMenuClick,
+      mergeFooterItems,
+      footerMethod,
+      showFooter,
+      virtualTree,
+      onSortChange,
+      tableId,
+      getColumnSettingRender,
+      showExpandAllBtn,
+      showCollapseAllBtn,
+      onGridNativeClick,
+      rowClassName
+    } = this;
+    const dialogOnListener = {
+      'update:visible': (val) => {
+        this.isShowForm = val;
+      }
+    };
+    // Tree模式下是否禁用新增同级按钮
+    let isAddRowButtonDisabledInTreeMode = false;
+    // Tree模式下是否禁用新增子级按钮
+    let isAddChildButtonDisabledInTreeMode = false;
+    // Tree模式的场合
+    if (isTree) {
+      const { addRowButtonDisabled } = toolbarProps;
+      if (addRowButtonDisabled) {
+        isAddRowButtonDisabledInTreeMode = true;
+      } else {
+        isAddRowButtonDisabledInTreeMode =
+          innerDataList.length > 0 && innerSelection.length !== 1;
+      }
+      const { addChildButtonDisabled } = toolbarProps;
+      if (addChildButtonDisabled) {
+        isAddChildButtonDisabledInTreeMode = true;
+      } else {
+        isAddChildButtonDisabledInTreeMode = innerSelection.length !== 1;
+      }
+    }
+    // 是否禁用删除按钮
+    let isDeleteButtonDisabled = false;
+    const { deleteRowButtonDisabled } = toolbarProps;
+    if (deleteRowButtonDisabled) {
+      isDeleteButtonDisabled = true;
+    } else {
+      isDeleteButtonDisabled = innerSelection.length <= 0;
+    }
+    const getCommonToolbarButton = () => {
+      const ret = [];
+      if (isShowDefaultBatchControl && !labelMode) {
+        // 显示树形结构数据的场合
+        if (isTree) {
+          // 新增同级按钮
+          const addCurrentButton = (
+            <el-button
+              type="text"
+              on-click={onTableAddCurrentClick}
+              disabled={isAddRowButtonDisabledInTreeMode}
+            >
+              新增同级
+            </el-button>
+          );
+          ret.push(addCurrentButton);
+          // 新增子级按钮
+          const addChildButton = (
+            <el-button
+              type="text"
+              on-click={onTableAddChildClick}
+              disabled={isAddChildButtonDisabledInTreeMode}
+            >
+              新增子级
+            </el-button>
+          );
+          ret.push(addChildButton);
+          // 显示flat数据的场合
+        } else {
+          const addRowButton = (
+            <el-button
+              type="text"
+              on-click={onTableAddRowClick}
+              disabled={toolbarProps.addRowButtonDisabled}
+            >
+              新增一行
+            </el-button>
+          );
+          ret.push(addRowButton);
+        }
+        const deleteRowButton = (
+          <el-button
+            type="text"
+            on-click={onTableDeleteClick}
+            disabled={isDeleteButtonDisabled}
+          >
+            删除
+          </el-button>
+        );
+        ret.push(deleteRowButton);
+      }
+      if (isTree) {
+        if (showExpandAllBtn) {
+          const expandAllButton = (
+            <el-button type="text" on-click={onTableExpandRowsClick}>
+              全部展开
+            </el-button>
+          );
+          ret.push(expandAllButton);
+        }
+        if (showCollapseAllBtn) {
+          const collapseAllButton = (
+            <el-button type="text" on-click={onTableCollapseRowsClick}>
+              全部收缩
+            </el-button>
+          );
+          ret.push(collapseAllButton);
+        }
+      }
+      return ret;
+    };
+    // 表格工具栏
+    const tableToolbar = () => {
+      const ret = (
+        <div class="el-pro-table__toolbar">
+          <div>
+            {$slots.batchControl}
+            {getCommonToolbarButton()}
+          </div>
+          <div class="toolbar__table-common">{getColumnSettingRender()}</div>
+        </div>
+      );
+      return ret;
+    };
+    const tablePagination = () => {
+      if (showPagination) {
+        return (
+          <vxe-pager
+            background
+            size="small"
+            class="el-pro-table__pager"
+            current-page={innerCurrentPage}
+            layouts={layouts}
+            page-size={innerPageSize}
+            page-sizes={innerPageSizes}
+            total={innerTotal}
+            on-page-change={onPageChange}
+          />
+        );
+      }
+      return null;
+    };
+    const grid = (
+      <div class="el-table-container">
+        {tableToolbar()}
+        <div class="el-pro-table__main">
+          <vxe-grid
+            ref="xTable"
+            class="el-pro-table el-editable-pro-table"
+            size="mini"
+            v-show={isShowTable}
+            id={tableId}
+            border
+            resizable
+            auto-resize
+            show-overflow
+            highlight-hover-row
+            highlight-current-row
+            edit-config={innerEditConfig}
+            data={isTree ? innerTreeDataList : innerDataList}
+            height={height}
+            max-height={maxHeight}
+            edit-rules={innerRules}
+            columns={vxeTableColumnArray}
+            seq-config={innerSeqConfig}
+            checkbox-config={innerCheckboxConfig}
+            expand-config={innerExpandConfig}
+            radio-config={innerRadioConfig}
+            tree-config={innerTreeConfig}
+            sort-config={innerSortConfig}
+            custom-config={innerCustomConfig}
+            menu-config={menuConfig}
+            export-config={innerExportConfig}
+            row-id={innerRowKey}
+            scroll-y={{ gt: 20 }}
+            merge-cells={innerMergeCells}
+            show-footer={showFooter}
+            footer-method={footerMethod}
+            merge-footer-items={mergeFooterItems}
+            nativeOnClick={onGridNativeClick}
+            row-class-name={rowClassName}
+            on-cell-click={onCellClick}
+            on-radio-change={onTableRadioChange}
+            on-checkbox-change={onTableCheckboxChange}
+            on-checkbox-all={onTableCheckboxAll}
+            on-edit-closed={onTableRowEditorClose}
+            on-cell-menu={onCellMenu}
+            on-menu-click={onMenuClick}
+            on-sort-change={onSortChange}
+          />
+        </div>
+        {formData ? (
+          <el-dialog
+            class="editable-pro-table__dialog"
+            visible={isShowForm}
+            {...{ on: dialogOnListener }}
+            title={dialogTitle}
+          >
+            <el-json-form
+              ref="dialogForm"
+              model={formData}
+              model-data={formData}
+              schema={schema}
+              rules={innerRules}
+              ui-schema={innerUiSchema}
+              columns={2}
+              label-width="auto"
+            />
+            <span slot="footer" class="editable-pro-table__dialog-footer">
+              <el-button type="primary" on-click={onDialogSaveButtonClick}>
+                保存
+              </el-button>
+              <el-button on-click={onDialogCancelButtonClick}>取消</el-button>
+            </span>
+          </el-dialog>
+        ) : null}
+        {tablePagination()}
+      </div>
+    );
+    const virtualTreeNode = (
+      <div class="el-table-container">
+        {tableToolbar()}
+        <div class="el-pro-table__main">
+          <vxe-virtual-tree
+            ref="xTable"
+            id={tableId}
+            class="el-pro-table el-editable-pro-table"
+            size="mini"
+            v-show={isShowTable}
+            border
+            resizable
+            auto-resize
+            show-overflow
+            highlight-hover-row
+            highlight-current-row
+            edit-config={innerEditConfig}
+            data={isTree ? innerTreeDataList : innerDataList}
+            height={height}
+            max-height={maxHeight}
+            edit-rules={innerRules}
+            columns={vxeTableColumnArray}
+            seq-config={innerSeqConfig}
+            checkbox-config={innerCheckboxConfig}
+            radio-config={innerRadioConfig}
+            custom-config={innerCustomConfig}
+            export-config={innerExportConfig}
+            row-id={innerRowKey}
+            on-radio-change={onTableRadioChange}
+            on-checkbox-change={onTableCheckboxChange}
+            on-checkbox-all={onTableCheckboxAll}
+            on-edit-closed={onTableRowEditorClose}
+            tree-config={innerTreeConfig}
+            scroll-y={{ gt: 20 }}
+            on-cell-click={onCellClick}
+            merge-cells={innerMergeCells}
+            menu-config={menuConfig}
+            on-cell-menu={onCellMenu}
+            on-menu-click={onMenuClick}
+            show-footer={showFooter}
+            footer-method={footerMethod}
+            merge-footer-items={mergeFooterItems}
+            row-class-name={rowClassName}
+          />
+        </div>
+        {formData ? (
+          <el-dialog
+            class="editable-pro-table__dialog"
+            visible={isShowForm}
+            {...{ on: dialogOnListener }}
+            title={dialogTitle}
+          >
+            <el-json-form
+              ref="dialogForm"
+              model={formData}
+              model-data={formData}
+              schema={schema}
+              rules={innerRules}
+              ui-schema={innerUiSchema}
+              columns={2}
+              label-width="auto"
+            />
+            <span slot="footer" class="editable-pro-table__dialog-footer">
+              <el-button type="primary" on-click={onDialogSaveButtonClick}>
+                保存
+              </el-button>
+              <el-button on-click={onDialogCancelButtonClick}>取消</el-button>
+            </span>
+          </el-dialog>
+        ) : null}
+        {tablePagination()}
+      </div>
+    );
+    this.$nextTick(() => {
+      // 表格状态发生变化时，临时合并失效，需要重新合并
+      this.refreshTempState();
+    });
+    return !virtualTree ? grid : virtualTreeNode;
+  }
+});

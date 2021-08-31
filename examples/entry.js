@@ -3,6 +3,9 @@ import entry from './app';
 import VueRouter from 'vue-router';
 import Element from 'main/index.js';
 import hljs from 'highlight.js';
+import ProTable from 'packages/pro-table/index.js';
+import EditableProTable from 'packages/editable-pro-table/index.js';
+import ProTableCommonInstall from 'packages/pro-table/src/common-install.js';
 import routes from './route.config';
 import demoBlock from './components/demo-block';
 import MainFooter from './components/footer';
@@ -12,6 +15,9 @@ import FooterNav from './components/footer-nav';
 import title from './i18n/title';
 
 import 'packages/theme-chalk/src/index.scss';
+import 'packages/theme-chalk/src/vxe-table.scss';
+import 'packages/theme-chalk/src/pro-table.scss';
+import 'packages/theme-chalk/src/editable-pro-table.scss';
 import './demo-styles/index.scss';
 import './assets/styles/common.css';
 import './assets/styles/fonts/style.css';
@@ -21,6 +27,9 @@ Vue.use(Element, {
   size: 'small'
 });
 Vue.use(VueRouter);
+Vue.use(ProTableCommonInstall.install);
+Vue.component('el-pro-table', ProTable);
+Vue.component('el-editable-pro-table', EditableProTable);
 Vue.component('demo-block', demoBlock);
 Vue.component('main-footer', MainFooter);
 Vue.component('main-header', MainHeader);

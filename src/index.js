@@ -100,6 +100,7 @@ import TagSelectItem from '../packages/tag-select-item/index.js';
 import Statistics from '../packages/statistics/index.js';
 import ProForm from '../packages/pro-form/index.js';
 import ProTable from '../packages/pro-table/index.js';
+import EditableProTable from '../packages/editable-pro-table/index.js';
 import QueryCriteriaForm from '../packages/query-criteria-form/index.js';
 import Skeleton from '../packages/skeleton/index.js';
 import SkeletonItem from '../packages/skeleton-item/index.js';
@@ -204,6 +205,7 @@ const components = [
   Statistics,
   ProForm,
   ProTable,
+  EditableProTable,
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,
@@ -350,6 +352,7 @@ export default {
   Statistics,
   ProForm,
   ProTable,
+  EditableProTable,
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,

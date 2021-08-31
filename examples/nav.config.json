@@ -48,6 +48,10 @@
               "title": "[特色]ProTable 高级表格"
             },
             {
+              "path": "/editable-pro-table",
+              "title": "[特色]EditableProTable 可编辑表格"
+            },
+            {
               "path": "/query-criteria-form",
               "title": "[特色]QueryCriteriaForm 标准查询表单"
             },
