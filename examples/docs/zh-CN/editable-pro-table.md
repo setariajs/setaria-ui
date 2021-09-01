@@ -1,6 +1,6 @@
 ## EditableProTable 高级表格
 
-可编辑表格 EditableProTable 与 ProTable 的功能基本相同，为了方便使用 EditableProTable 增加了一些预设，修改了 value 和 onChange 使其可以方便的继承到 setaria-ui 的 JsonForm 中。
+可编辑表格 EditableProTable 与 ProTable 的功能基本相同，为了方便使用 EditableProTable 增加了一些预设，修改了 data 和 onChange 使其可以方便的继承到 setaria-ui 的 JsonForm 中。
 
 ### 基本用法
 
@@ -16,7 +16,6 @@
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
-    show-overflow
     row-key="id"
     multiple-selection
     @row-button-click="onRowButtonClick"
@@ -213,7 +212,7 @@ export default {
       return [
         {
           key: '1',
-          label: `按钮${rowIndex}`,
+          label: `修改${rowIndex}`,
         },
       ];
     },
