@@ -347,7 +347,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
     }
     componentTagName = 'el-input-number';
   } else if (property.type === 'boolean' && uiProperty[JSON_FORM_UI.UI_WIDGET] === undefined) {
-    componentTagName = 'elCheckbox';
+    componentTagName = 'el-checkbox';
   }
   componentProps.props = props;
   componentProps.on = events.on;

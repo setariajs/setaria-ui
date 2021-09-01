@@ -9,14 +9,6 @@ import VxeColumn from './vxe-column';
 const SLOT_NAME_EXPAND_CONTENT = 'content';
 const SLOT_NAME_HEADER_PREFIX = 'header.';
 
-// UI Property
-
-// 默认日期格式
-const DEFAULT_DATE_FORMAT = 'yyyy-MM-dd';
-const DEFAULT_DATE_TIME_FORMAT = `${DEFAULT_DATE_FORMAT} HH:mm:ss`;
-// 默认时间格式
-const DEFAULT_TIME_FORMAT = 'HH:mm:ss';
-
 /**
  * 根据字符串数组取得对应的schema对象
  * @param {Object} schema
@@ -67,60 +59,6 @@ export function priceFormatter(val, config) {
     return arr.join('.');
   }
   return format(current);
-}
-
-/**
- * 将字符串格式金额转换为数字格式
- * @param {string} val
- * @returns
- */
-export function priceParser(val) {
-  return val.replace(/(,*)/g, '');
-}
-
-/**
- * 根据property获取组件属性
- * 请注意，函数具有副作用，会修改uiProperty
- * @param {*} property
- * @param {*} uiProperty
- */
-export function createComponentOptions(property = {}, uiProperty) {
-  let ret = {};
-  const uiOptions = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
-  ret = _.merge({}, uiOptions);
-  const { format, type } = property;
-  if (type === 'number' || type === 'integer') {
-    // 小数位
-    const { scale } = property;
-    const scaleNum = _.toNumber(scale);
-    const originPrecision = _.get(ret, 'precision', '');
-    // 没有进行自定义的场合
-    if (originPrecision === '' && (_.isNumber(scaleNum) && !Number.isNaN(scaleNum))) {
-      ret.precision = scaleNum;
-    }
-    // 金额格式
-    if (format === 'price') {
-      const formatter = _.get(ret, 'formatter');
-      // 没有进行自定义的场合
-      if (typeof formatter !== 'function') {
-        const config = {};
-        // 已定义小数位的场合
-        if (_.isNumber(ret.precision)) {
-          config.maximumFractionDigits = ret.precision;
-        }
-        ret.formatter = (val) => {
-          const result = priceFormatter(val, config);
-          return result;
-        };
-      }
-      const parser = _.get(ret, 'parser');
-      // 没有进行自定义的场合
-      if (typeof parser !== 'function') {
-        ret.parser = priceParser;
-      }
-    }
-  }
-  return ret;
 }
 
 /**
@@ -424,8 +362,6 @@ export function convertSchemaToColumns(
  * @param {*} uiProperty
  */
 export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
-  const componentPrefix = 'El';
-  let componentTagName = null;
   let props = {
     events: {}
   };
@@ -434,146 +370,8 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
   } else if (typeof uiProperty[JSON_FORM_UI.UI_DISABLED] === 'boolean') {
     props.disabled = uiProperty[JSON_FORM_UI.UI_DISABLED];
   }
-  const attrs = {};
-  // 只对 componentTagName=ElSelect 有效，下拉组件选项列表
-  const options = [];
-  if (property.enum || property.oneOf || property.anyOf) {
-    if (property.oneOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'radio') {
-      componentTagName = `${componentPrefix}Radio`;
-    } else if (
-      property.anyOf &&
-      uiProperty[JSON_FORM_UI.UI_WIDGET] === 'checkbox' &&
-      property.type === 'array'
-    ) {
-      componentTagName = `${componentPrefix}Checkbox`;
-    } else {
-      componentTagName = `${componentPrefix}Select`;
-      props.multiple = false;
-    }
-    // 取得选择项一览
-    let list = null;
-    if (property.oneOf) {
-      list = property.oneOf;
-    } else if (property.anyOf) {
-      list = property.anyOf;
-      if (componentTagName === `${componentPrefix}Select`) {
-        props.multiple = true;
-      }
-    } else {
-      list = property.enum.map((e) => {
-        const ret = {
-          title: e,
-          const: e
-        };
-        return ret;
-      });
-    }
-    const optionList = [];
-    list.forEach((item) => {
-      optionList.push({
-        label: item.title,
-        value: item.const
-      });
-    });
-    if (componentTagName === `${componentPrefix}Select`) {
-      optionList.forEach((item) => {
-        options.push({
-          label: item.label,
-          value: item.value
-        });
-      });
-      // 不支持RadioGroup在表格内的显示
-    } else if (componentTagName === `${componentPrefix}Radio`) {
-      optionList.forEach((item) => {
-        options.push({
-          label: item.label,
-          value: item.value
-        });
-      });
-      // 不支持CheckboxGroup在表格内的显示
-    } else if (componentTagName === `${componentPrefix}Checkbox`) {
-      optionList.forEach((item) => {
-        options.push({
-          label: item.label,
-          value: item.value
-        });
-      });
-    }
-  } else if (property.format === 'date' || property.format === 'date-time') {
-    componentTagName = `${componentPrefix}DatePicker`;
-    if (property.type === 'string') {
-      props.type = property.format.replace(/-/g, '');
-    } else if (property.type === 'array') {
-      props.type = `${property.format}-range`.replace(/-/g, '');
-    }
-    if (
-      uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined &&
-      uiProperty[JSON_FORM_UI.UI_FORMAT] !== null
-    ) {
-      props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
-    } else if (property.format === 'date' || property.format === 'date-range') {
-      props['value-format'] = DEFAULT_DATE_FORMAT;
-    } else if (
-      property.format === 'date-time' ||
-      property.format === 'date-time-range'
-    ) {
-      props['value-format'] = DEFAULT_DATE_TIME_FORMAT;
-    }
-  } else if (property.format === 'time') {
-    componentTagName = `${componentPrefix}TimePicker`;
-    if (property.type === 'array') {
-      props['is-range'] = true;
-    }
-    if (
-      uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined &&
-      uiProperty[JSON_FORM_UI.UI_FORMAT] !== null
-    ) {
-      props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
-    } else if (property.format === 'time' || property.format === 'time-range') {
-      props['value-format'] = DEFAULT_TIME_FORMAT;
-    }
-  } else if (property.type === 'string') {
-    componentTagName = `${componentPrefix}Input`;
-    // 组件类型
-    const widgetType = uiProperty[JSON_FORM_UI.UI_WIDGET];
-    if (widgetType !== undefined) {
-      if (widgetType === 'password') {
-        props.type = 'password';
-      } else if (widgetType === 'textarea') {
-        props.type = 'textarea';
-        const uiOptions = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
-        if (typeof uiOptions.rows === 'number') {
-          attrs.rows = uiOptions.rows;
-        }
-      }
-    }
-    if (typeof property.maxLength === 'number') {
-      attrs.maxlength = property.maxLength;
-    }
-  } else if (property.type === 'integer' || property.type === 'number') {
-    componentTagName = `${componentPrefix}InputNumber`;
-    // !FIXME
-    let uproperty = uiProperty;
-    if (uproperty === null || uproperty === undefined) {
-      uproperty = {};
-    }
-    const uiCompProps = createComponentOptions(property, uproperty);
-    if (!_.isEmpty(uiCompProps)) {
-      props = _.merge(props, uiCompProps);
-    }
-    // 布尔类型字段默认使用checkbox渲染
-  } else if (
-    property.type === 'boolean' &&
-    uiProperty[JSON_FORM_UI.UI_WIDGET] === undefined
-  ) {
-    componentTagName = `${componentPrefix}Checkbox`;
-  }
   const component = createElementByProperty(key, property, uiProperty, {}, () => {});
-  console.log('componentTagName', componentTagName, component.componentTagName);
-  console.log('attrs', attrs, component.componentProps.attrs);
-  console.log('props', props, component.componentProps.props);
-  console.log('options', options, component.componentChildrenOptions);
-  console.log('--------------------------------------------------');
+  props = Object.assign({}, props, component.componentProps.props);
   if (uiProperty[JSON_FORM_UI.UI_ON]) {
     const uiOn = uiProperty[JSON_FORM_UI.UI_ON];
     // 合并事件定义
@@ -604,17 +402,11 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
       }
     });
   }
-  // 合并ui:options属性至组件属性中
-  // 用户自定义的options属性为最优先
-  const mergedProps = {
-    ...props,
-    ...(uiProperty[JSON_FORM_UI.UI_OPTIONS] || {})
-  };
   return {
-    name: componentTagName,
-    attrs,
-    props: mergedProps,
-    options
+    name: component.componentTagName,
+    attrs: component.componentProps.attrs,
+    props,
+    options: component.componentChildrenOptions
   };
 }
 

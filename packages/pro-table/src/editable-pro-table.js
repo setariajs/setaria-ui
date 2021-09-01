@@ -159,8 +159,8 @@ export default Vue.extend({
       let editableColumnCount = 0;
       vxeColumns.forEach((column) => {
         const { field } = column;
-        const { creatable, updatable } = schema.properties[field];
-        if (creatable || updatable) {
+        const { editable } = schema.properties[field];
+        if (editable) {
           editableColumnCount += 1;
         }
       });
@@ -206,9 +206,9 @@ export default Vue.extend({
       columns.forEach((column) => {
         const { field } = column;
         const targetColumn = column;
-        const { creatable, updatable, type } = schema.properties[field];
+        const { editable, type } = schema.properties[field];
         let customRender = null;
-        if (creatable || updatable) {
+        if (editable) {
           customRender = getEditRenderByProperty(
             field,
             schema.properties[field],
@@ -219,8 +219,8 @@ export default Vue.extend({
         // vxe-table不支持Element UI的radio和checkbox渲染
         if (
           customRender &&
-          (customRender.name === 'ElRadio' ||
-            customRender.name === 'ElCheckbox')
+          (customRender.name === 'el-radio' ||
+            customRender.name === 'el-checkbox')
         ) {
           slot = (columnVal) => {
             const { row } = columnVal;
@@ -234,10 +234,10 @@ export default Vue.extend({
             };
             const componentProps = getComponentProps(customRender, row);
             const componentAttrs = getComponentAttrs(customRender);
-            if (customRender.name === 'ElRadio') {
+            componentProps.value = row[field];
+            if (customRender.name === 'el-radio') {
               render = (
                 <el-radio-group
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -253,11 +253,10 @@ export default Vue.extend({
                   })}
                 </el-radio-group>
               );
-            } else if (customRender.name === 'ElCheckbox') {
+            } else if (customRender.name.indexOf('el-checkbox') === 0) {
               if (type === 'boolean') {
                 render = (
                   <el-checkbox
-                    value={row[field]}
                     on-input={inputEvent}
                     on-change={changeEvent}
                     {...{
@@ -269,7 +268,6 @@ export default Vue.extend({
               } else {
                 render = (
                   <el-checkbox-group
-                    value={row[field]}
                     on-input={inputEvent}
                     on-change={changeEvent}
                     {...{
@@ -294,11 +292,11 @@ export default Vue.extend({
         if (
           !labelMode &&
           customRender &&
-          (customRender.name === 'ElSelect' ||
-            customRender.name === 'ElDatePicker' ||
-            customRender.name === 'ElTimePicker' ||
-            customRender.name === 'ElInput' ||
-            customRender.name === 'ElInputNumber')
+          (customRender.name === 'el-select' ||
+            customRender.name === 'el-date-picker' ||
+            customRender.name === 'el-time-picker' ||
+            customRender.name === 'el-input' ||
+            customRender.name === 'el-input-number')
         ) {
           slot = ({ row }) => {
             let render = null;
@@ -311,10 +309,10 @@ export default Vue.extend({
             };
             const componentProps = getComponentProps(customRender, row);
             const componentAttrs = getComponentAttrs(customRender);
-            if (customRender.name === 'ElSelect') {
+            componentProps.value = row[field];
+            if (customRender.name === 'el-select') {
               render = (
                 <el-select
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -328,10 +326,9 @@ export default Vue.extend({
                   })}
                 </el-select>
               );
-            } else if (customRender.name === 'ElDatePicker') {
+            } else if (customRender.name === 'el-date-picker') {
               render = (
                 <el-date-picker
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -340,10 +337,9 @@ export default Vue.extend({
                   }}
                 />
               );
-            } else if (customRender.name === 'ElTimePicker') {
+            } else if (customRender.name === 'el-time-picker') {
               render = (
                 <el-time-picker
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -352,10 +348,9 @@ export default Vue.extend({
                   }}
                 />
               );
-            } else if (customRender.name === 'ElInput') {
+            } else if (customRender.name === 'el-input') {
               render = (
                 <el-input
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -364,10 +359,9 @@ export default Vue.extend({
                   }}
                 />
               );
-            } else if (customRender.name === 'ElInputNumber') {
+            } else if (customRender.name === 'el-input-number') {
               render = (
                 <el-input-number
-                  value={row[field]}
                   on-input={inputEvent}
                   on-change={changeEvent}
                   {...{
@@ -1181,8 +1175,8 @@ export default Vue.extend({
       const ret = (
         <div class="el-pro-table__toolbar">
           <div>
-            {$slots.batchControl}
             {getCommonToolbarButton()}
+            {$slots.batchControl}
           </div>
           <div class="toolbar__table-common">{getColumnSettingRender()}</div>
         </div>

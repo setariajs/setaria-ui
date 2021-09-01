@@ -342,7 +342,6 @@ export default {
       if (this.multipleSelection || this.selectionType === 'checkbox') {
         return true;
       }
-      console.log(this.vxeTableColumnArray);
       const index = this.vxeTableColumnArray.findIndex((col) => col.type === 'checkbox');
       const ret = index !== -1;
       return ret;

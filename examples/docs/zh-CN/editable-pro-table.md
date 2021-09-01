@@ -22,11 +22,11 @@
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
   >
-    <template slot="titleBar">
+    <template slot="batchControl">
       <el-button type="text">自定义按钮</el-button>
     </template>
-    <template slot="Name" slot-scope="scope">
-      <el-button type="text">{{ scope.row.Name }}</el-button>
+    <template slot="index" slot-scope="scope">
+      <el-button type="text">{{ scope.rowIndex }}</el-button>
     </template>
     <template slot="CustomSlot" slot-scope="scope">
       <el-rate :disabled="scope.rowStatus !== 'edit'"
@@ -41,10 +41,14 @@ export default {
       labelMode: true,
       schema: {
         properties: {
+          index: {
+            title: '序号',
+            type: 'index'
+          },
           Name: {
             title: '名称',
             type: 'string',
-            updatable: true,
+            editable: true,
           },
           Enum: {
             title: '枚举值',
@@ -59,7 +63,7 @@ export default {
                 title: '枚举值二'
               }
             ],
-            updatable: true,
+            editable: true,
           },
           AnyOf: {
             title: '多选枚举值',
@@ -74,12 +78,12 @@ export default {
                 title: '枚举值二'
               }
             ],
-            updatable: true,
+            editable: true,
           },
           Number: {
             title: '数字',
             type: 'number',
-            updatable: true,
+            editable: true,
           },
           Price: {
             title: '价格',
@@ -87,37 +91,37 @@ export default {
             precision: '16',
             scale: '2',
             format: 'price',
-            updatable: true,
+            editable: true,
           },
           Comment: {
             title: '备注',
             type: 'string',
-            updatable: true,
+            editable: true,
           },
           Date: {
             title: '日期',
             type: 'string',
             format: 'date',
-            updatable: true,
+            editable: true,
           },
           Time: {
             title: '时间',
             type: 'string',
             format: 'time',
-            updatable: true,
+            editable: true,
           },
           Boolean: {
             title: '布尔值',
             type: 'boolean',
-            updatable: true,
+            editable: true,
           },
           CustomSlot: {
             title: '自定义插槽',
             type: 'string',
-            updatable: true,
+            editable: true,
           }
         },
-        required: [ 'Name' ],
+        required: [ 'Enum' ],
       },
       uiSchema: {
         index: {
