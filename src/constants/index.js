@@ -7,7 +7,11 @@ export const JSON_FORM_UI = {
   UI_ON: 'ui:on',
   UI_NATIVE_ON: 'ui:nativeOn',
   UI_PARENT_COLUMN_ID: 'ui:parentColumnId',
-  UI_RULES: 'ui:rules'
+  UI_RULES: 'ui:rules',
+  UI_PLACEHOLDER: 'ui:placeholder',
+  UI_COLSPAN: 'ui:colspan',
+  UI_RULE: 'ui:rules',
+  UI_RENDER: 'ui:render'
 };
 
 export const COLUMN_TYPE = {

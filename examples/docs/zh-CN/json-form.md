@@ -122,6 +122,12 @@
             agree: {
               type: 'boolean',
               title: 'agree'
+            },
+            price: {
+              type: 'number',
+              title: '金额',
+              precision: 3,
+              format: 'price'
             }
           },
         },
@@ -148,7 +154,8 @@
         profession: '',
         dateTime: '',
         time: '',
-        agree: true
+        agree: true,
+        price: 99991.23456
       };
     },
     methods: {

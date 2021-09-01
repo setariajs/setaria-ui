@@ -25,6 +25,9 @@
     <template slot="titleBar">
       <el-button type="text">自定义按钮</el-button>
     </template>
+    <template slot="Name" slot-scope="scope">
+      <el-button type="text">{{ scope.row.Name }}</el-button>
+    </template>
     <template slot="CustomSlot" slot-scope="scope">
       <el-rate :disabled="scope.rowStatus !== 'edit'"
                v-model="scope.row.CustomSlotCode"></el-rate>
@@ -112,10 +115,6 @@ export default {
             title: '自定义插槽',
             type: 'string',
             updatable: true,
-          },
-          HtmlContent: {
-            title: '自定义渲染',
-            type: 'string'
           }
         },
         required: [ 'Name' ],
@@ -196,8 +195,7 @@ export default {
       Comment: 'setaria-ui',
       'Boolean': true,
       CustomSlotCode: 4.3,
-      CustomSlot: '装饰线条',
-      HtmlContent: 'Link'
+      CustomSlot: '装饰线条'
     };
     for (let i = 0; i < 5; i += 1) {
       this.data.push({

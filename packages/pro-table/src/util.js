@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';
 import { COLUMN_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { createElementByProperty } from 'setaria-ui/src/utils/schema';
 import VxeColumn from './vxe-column';
 
 // SLOT_EXPAND
@@ -83,7 +84,7 @@ export function priceParser(val) {
  * @param {*} property
  * @param {*} uiProperty
  */
-export function getUiComponentProps(property = {}, uiProperty) {
+export function createComponentOptions(property = {}, uiProperty) {
   let ret = {};
   const uiOptions = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
   ret = _.merge({}, uiOptions);
@@ -556,7 +557,7 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
     if (uproperty === null || uproperty === undefined) {
       uproperty = {};
     }
-    const uiCompProps = getUiComponentProps(property, uproperty);
+    const uiCompProps = createComponentOptions(property, uproperty);
     if (!_.isEmpty(uiCompProps)) {
       props = _.merge(props, uiCompProps);
     }
@@ -567,6 +568,12 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
   ) {
     componentTagName = `${componentPrefix}Checkbox`;
   }
+  const component = createElementByProperty(key, property, uiProperty, {}, () => {});
+  console.log('componentTagName', componentTagName, component.componentTagName);
+  console.log('attrs', attrs, component.componentProps.attrs);
+  console.log('props', props, component.componentProps.props);
+  console.log('options', options, component.componentChildrenOptions);
+  console.log('--------------------------------------------------');
   if (uiProperty[JSON_FORM_UI.UI_ON]) {
     const uiOn = uiProperty[JSON_FORM_UI.UI_ON];
     // 合并事件定义
