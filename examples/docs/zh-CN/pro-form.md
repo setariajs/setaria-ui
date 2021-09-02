@@ -22,6 +22,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :rules="rules"
     label-width="100px"
     @change="handleChange"
+    :before-submit="beforeSubmit"
     :after-submit="onSubmit">
     <template slot="comment" slot-scope="scope">
       <el-input v-model="scope.data.comment" suffix-icon="el-icon-search"/>
@@ -129,6 +130,15 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     methods: {
       handleChange(key, value, model) {
         console.log('change', key, value, model);
+      },
+      beforeSubmit() {
+        return new Promise((resolve) => {
+          this.$confirm('确认提交吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            resolve();
+          }).catch(() => {});
+        });
       },
       onSubmit() {
         return new Promise((resolve) => {
@@ -520,6 +530,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | type    | 高级表单的类型 | string | queryFilter/modalForm/cardForm | — |
 | schema | JSON Schema对象 | object | — | - |
 | ui-schema | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表) | Object | — | — |
+| before-submit | 表单提交前回调，支持返回Promise | Function | — | — |
 | after-submit | 表单提交时回调，需要返回Promise | Function | — | — |
 | expand | `type` 为 `queryFilter` 时有效，是否显示全部查询条件。 | Boolean | false | - |
 | title | `type` 为 `cardForm` 或 `modalForm` 时有效，优先级比 `card-attrs` 或 `modal-attrs` 内定义对应的标题属性低 | string | — | — |

@@ -74,6 +74,7 @@ export default {
         return {};
       }
     },
+    beforeSubmit: Function,
     afterSubmit: Function
   },
 
@@ -373,33 +374,6 @@ export default {
     },
 
     /**
-     * 渲染普通搜索项目
-     * @param {*} schema schema
-     * @param {*} uiSchema uiSchema
-     * @param {*} value 值
-     */
-    renderNormalCondition(schema, uiSchema, $scopedSlots, handleSearch, handleClear, handleFormChange, value) {
-      if (schema) {
-        return (
-          <ElProForm
-            {...proFormInitialOptions}
-            model={value}
-            ref="normalConditionForm"
-            class="normal-condition-form"
-            schema={schema}
-            uiSchema={uiSchema}
-            after-submit={handleSearch}
-            columns={3}
-            scopedSlots={$scopedSlots}
-            on-change={handleFormChange}
-            on-clear={() => { handleClear('normalConditionForm'); }}>
-          </ElProForm>
-        );
-      }
-      return null;
-    },
-
-    /**
      * 渲染搜索项目当前输入值
      * @param {*} h h
      * @param {*} conditionValue 当前查询项目的值
@@ -428,23 +402,37 @@ export default {
       advanceUiSchema = {},
       conditionResultItemKey,
       conditionFormKey,
+      beforeSubmit,
       handleSearch,
       handleClear,
       handleFormChange,
-      renderConditionResultList,
-      renderNormalCondition
+      renderConditionResultList
     } = this;
+    const renderNormalCondition = () => {
+      if (normalSchema) {
+        return (
+          <ElProForm
+            {...proFormInitialOptions}
+            model={conditionValue}
+            ref="normalConditionForm"
+            class="normal-condition-form"
+            schema={normalSchema}
+            uiSchema={normalUiSchema}
+            before-submit={beforeSubmit}
+            after-submit={handleSearch}
+            columns={3}
+            scopedSlots={$scopedSlots}
+            on-change={handleFormChange}
+            on-clear={() => { handleClear('normalConditionForm'); }}>
+          </ElProForm>
+        );
+      }
+      return null;
+    };
     // 普通搜索
     let normalConditionNode = $slots.normalCondition
       ? $slots.normalCondition
-      : renderNormalCondition(
-        normalSchema,
-        normalUiSchema,
-        $scopedSlots,
-        handleSearch,
-        handleClear,
-        handleFormChange,
-        conditionValue);
+      : renderNormalCondition();
     // 不存在普通搜索的场合，高级搜索默认展开
     if (normalConditionNode === undefined || normalConditionNode === null) {
       this.innerExpand = true;
@@ -459,7 +447,8 @@ export default {
         key={conditionFormKey}
         ref="advanceConditionForm"
         class="advance-condition-form"
-        afterSubmit={handleSearch}
+        before-submit={beforeSubmit}
+        after-submit={handleSearch}
         schema={advanceSchema}
         uiSchema={advanceUiSchema}
         columns={columns}

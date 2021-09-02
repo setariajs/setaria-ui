@@ -16,6 +16,7 @@
                    :normal-ui-schema="normalUiSchema"
                    :advance-schema="advanceSchema"
                    :advance-ui-schema="advanceUiSchema"
+                   :before-submit="beforeSubmit"
                    :after-submit="afterSubmit"
                    @change="handleChange"
                    @clear="handleClear">
@@ -92,6 +93,15 @@
     mounted() {
     },
     methods: {
+      beforeSubmit() {
+        return new Promise((resolve) => {
+          this.$confirm('当前查询需要花费一定时间，确认执行查询吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            resolve();
+          }).catch(() => {});
+        });
+      },
       afterSubmit(val) {
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -265,6 +275,7 @@
 | normal-ui-schema | 普通搜索UiSchema | Object | — | — |
 | advance-schema | 高级搜索Schema | Object | — | — |
 | advance-ui-schema | 高级搜索UiSchema | Object | — | — |
+| before-submit | 表单提交前回调，支持返回Promise | Function | — | — |
 | after-submit | 搜索按钮点击后的回调函数，函数需要返回Promise | Function | — | — |
 ### QueryFilter Events
 
