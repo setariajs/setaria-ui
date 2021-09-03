@@ -1,8 +1,12 @@
 import _ from 'lodash';
-import moment from 'moment';
-import numeral from 'numeral';
 import { COLUMN_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
-import { createElementByProperty } from 'setaria-ui/src/utils/schema';
+import {
+  createElementByProperty,
+  createFormatter,
+  booleanFormatter,
+  dateFormatter,
+  dateTimeFormatter
+} from 'setaria-ui/src/utils/schema';
 import VxeColumn from './vxe-column';
 
 // SLOT_EXPAND
@@ -38,151 +42,6 @@ export function getSchemaByKeyArray(schema, arr) {
       ...ret
     }
   };
-}
-
-/**
- * 转换为金额格式
- * @param {string | number} val
- */
-export function priceFormatter(val, config) {
-  const current = `${val}`;
-  if (_.isEmpty(current)) {
-    return val;
-  }
-  const format = (v) => {
-    const ret = v.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return ret;
-  };
-  if (current.indexOf('.')) {
-    const arr = current.split('.');
-    arr[0] = format(arr[0]);
-    return arr.join('.');
-  }
-  return format(current);
-}
-
-/**
- * 设置默认formatter
- */
-export function createFormatter(property) {
-  const {
-    format,
-    oneOf,
-    anyOf,
-    type,
-    // precision,
-    // 小数位
-    scale
-  } = property;
-  // 日期转换
-  // if (format === 'date') {
-  //   return function formatter({ cellValue }) {
-  //     if (_.isEmpty(cellValue)) {
-  //       return '';
-  //     }
-  //     return odataDateToString(cellValue);
-  //   };
-  // }
-  if (type === 'boolean') {
-    return function formatter({ cellValue }) {
-      return cellValue ? '是' : '否';
-    };
-  }
-  if (format === 'time') {
-    return function formatter({ cellValue }) {
-      if (_.isEmpty(cellValue)) {
-        return '';
-      }
-      return cellValue;
-    };
-  }
-  // 枚举值处理
-  const dictList = oneOf || anyOf;
-  if (!_.isEmpty(dictList)) {
-    const getDisplayDictLabel = (val) => {
-      const dict = _.find(dictList, (item) => item.const === val);
-      return dict ? dict.title : val;
-    };
-    return function formatter({ cellValue }) {
-      if (typeof cellValue === 'string') {
-        return getDisplayDictLabel(cellValue);
-      }
-      if (Array.isArray(cellValue)) {
-        const res = cellValue
-          .map((cv) => {
-            const displayDictLabel = getDisplayDictLabel(cv);
-            return displayDictLabel;
-          })
-          .join(', ');
-        return res;
-      }
-      return cellValue;
-    };
-  }
-  if (format === 'price') {
-    return function formatter({ cellValue }) {
-      const config = {};
-      let scaleNum = _.toNumber(scale);
-      if (typeof scaleNum === 'number') {
-        config.maximumFractionDigits = scaleNum;
-      } else {
-        scaleNum = 0;
-      }
-      const val = _.toNumber(cellValue);
-      if (!_.isNumber) {
-        return cellValue;
-      }
-      const displayVal = priceFormatter(val, config);
-      if (scaleNum === 0) {
-        return displayVal;
-      }
-      // 因numeral在输入框内格式化值存在问题，且inputnumber组件会默认对小数位进行处理
-      // 所以此处只处理只读状态下label的显示值
-      if (
-        (_.isNumber(displayVal) && !_.isNaN(displayVal)) ||
-        (!_.isEmpty(displayVal) && displayVal !== 'NaN')
-      ) {
-        let digitVal = numeral(displayVal).value();
-        digitVal = `${digitVal.toFixed(scaleNum)}`;
-        return `${displayVal.split('.')[0]}.${digitVal.split('.')[1]}`;
-      }
-      return cellValue;
-    };
-  }
-  return null;
-}
-
-function formatDate(odataDate, format) {
-  if (!odataDate) {
-    return '';
-  }
-  const temp = odataDate.match(/^\/Date\((.*)\)\/$/);
-  if (!temp || !temp[1]) {
-    return odataDate;
-  }
-  const timestamp = temp[1];
-  if (!timestamp) {
-    return '';
-  }
-  return moment(_.toNumber(timestamp)).format(format);
-}
-
-function dateFormatter({ cellValue }) {
-  return formatDate(cellValue, 'YYYY-MM-DD');
-}
-
-function dateTimeFormatter({ cellValue }) {
-  return formatDate(cellValue, 'YYYY-MM-DD HH:mm:ss');
-}
-
-function booleanFormatter({ cellValue }) {
-  if (cellValue === null || cellValue === undefined) {
-    return '';
-  }
-  if (cellValue === true || cellValue === 'true') {
-    return '是';
-  }
-  return '否';
 }
 
 function byteLength(str) {
@@ -290,7 +149,12 @@ export function convertSchemaToColumns(
         }
       } else {
         // 设置默认formatter
-        column.formatter = createFormatter(property);
+        const formatter = createFormatter(property);
+        if (formatter) {
+          column.formatter = ({ cellValue }) => {
+            return formatter(cellValue);
+          };
+        }
       }
     }
     if (uiProperty.fixed) {
@@ -534,20 +398,8 @@ export function getSchemaDefaultObjectByFormSchema(formSchema, schema) {
 //   });
 // }
 
-// /**
-//  * 将sap odata date转换为格林威治时间数值
-//  */
-// export function odataDate2TimeNumber(val) {
-//   if (_.isEmpty(val)) {
-//     return 0;
-//   }
-//   const date = odataDateToString(val);
-//   return new Date(date).getTime();
-// }
-
 export default {
   convertSchemaToColumns,
   getEditRenderByProperty,
   calculateSchema
-  // odataDate2TimeNumber
 };

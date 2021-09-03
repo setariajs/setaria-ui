@@ -101,6 +101,7 @@ import Statistics from '../packages/statistics/index.js';
 import ProForm from '../packages/pro-form/index.js';
 import ProTable from '../packages/pro-table/index.js';
 import EditableProTable from '../packages/editable-pro-table/index.js';
+import ProDescription from '../packages/pro-description/index.js';
 import QueryCriteriaForm from '../packages/query-criteria-form/index.js';
 import Skeleton from '../packages/skeleton/index.js';
 import SkeletonItem from '../packages/skeleton-item/index.js';
@@ -206,6 +207,7 @@ const components = [
   ProForm,
   ProTable,
   EditableProTable,
+  ProDescription,
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,
@@ -247,7 +249,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.6.2',
+  version: '1.6.3',
   locale: locale.use,
   i18n: locale.i18n,
   install,
@@ -353,6 +355,7 @@ export default {
   ProForm,
   ProTable,
   EditableProTable,
+  ProDescription,
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,

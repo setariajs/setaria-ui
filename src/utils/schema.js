@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import numeral from 'numeral';
+import moment from 'moment';
 import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
 import { isEmpty } from 'setaria-ui/src/utils/util';
 
@@ -405,6 +407,134 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
     componentProps,
     componentChildrenOptions
   };
+}
+
+/**
+ * 设置默认formatter
+ */
+export function createFormatter(property) {
+  const {
+    format,
+    oneOf,
+    anyOf,
+    type,
+    // precision,
+    // 小数位
+    scale
+  } = property;
+  // 日期转换
+  // if (format === 'date') {
+  //   return function formatter(value) {
+  //     if (_.isEmpty(value)) {
+  //       return '';
+  //     }
+  //     return odataDateToString(value);
+  //   };
+  // }
+  if (type === 'boolean') {
+    return function formatter(value) {
+      return value ? '是' : '否';
+    };
+  }
+  if (format === 'time') {
+    return function formatter(value) {
+      if (_.isEmpty(value)) {
+        return '';
+      }
+      return value;
+    };
+  }
+  // 枚举值处理
+  const dictList = oneOf || anyOf;
+  if (!_.isEmpty(dictList)) {
+    const getDisplayDictLabel = (val) => {
+      const dict = _.find(dictList, (item) => item.const === val);
+      return dict ? dict.title : val;
+    };
+    return function formatter(value) {
+      if (typeof value === 'string') {
+        return getDisplayDictLabel(value);
+      }
+      if (Array.isArray(value)) {
+        const res = value
+          .map((cv) => {
+            const displayDictLabel = getDisplayDictLabel(cv);
+            return displayDictLabel;
+          })
+          .join(', ');
+        return res;
+      }
+      return value;
+    };
+  }
+  if (format === 'price') {
+    return function formatter(value) {
+      const config = {};
+      let scaleNum = _.toNumber(scale);
+      if (typeof scaleNum === 'number') {
+        config.maximumFractionDigits = scaleNum;
+      } else {
+        scaleNum = 0;
+      }
+      const val = _.toNumber(value);
+      if (!_.isNumber) {
+        return value;
+      }
+      const displayVal = priceFormatter(val, config);
+      if (scaleNum === 0) {
+        return displayVal;
+      }
+      // 因numeral在输入框内格式化值存在问题，且inputnumber组件会默认对小数位进行处理
+      // 所以此处只处理只读状态下label的显示值
+      if (
+        (_.isNumber(displayVal) && !_.isNaN(displayVal)) ||
+        (!_.isEmpty(displayVal) && displayVal !== 'NaN')
+      ) {
+        let digitVal = numeral(displayVal).value();
+        digitVal = `${digitVal.toFixed(scaleNum)}`;
+        return `${displayVal.split('.')[0]}.${digitVal.split('.')[1]}`;
+      }
+      return value;
+    };
+  }
+  // if (format === 'regex' && !isEmpty(pattern)) {
+  //   return function formatter(value) {
+  //   };
+  // }
+  return null;
+}
+
+function formatDate(odataDate, format) {
+  if (!odataDate) {
+    return '';
+  }
+  const temp = odataDate.match(/^\/Date\((.*)\)\/$/);
+  if (!temp || !temp[1]) {
+    return odataDate;
+  }
+  const timestamp = temp[1];
+  if (!timestamp) {
+    return '';
+  }
+  return moment(_.toNumber(timestamp)).format(format);
+}
+
+export function dateFormatter({ cellValue }) {
+  return formatDate(cellValue, 'YYYY-MM-DD');
+}
+
+export function dateTimeFormatter({ cellValue }) {
+  return formatDate(cellValue, 'YYYY-MM-DD HH:mm:ss');
+}
+
+export function booleanFormatter({ cellValue }) {
+  if (cellValue === null || cellValue === undefined) {
+    return '';
+  }
+  if (cellValue === true || cellValue === 'true') {
+    return '是';
+  }
+  return '否';
 }
 
 export default {
