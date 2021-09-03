@@ -48,6 +48,10 @@
               "title": "[特色]ProTable 高级表格"
             },
             {
+              "path": "/pro-description",
+              "title": "[特色]ProDescription 高级定义列表"
+            },
+            {
               "path": "/query-criteria-form",
               "title": "[特色]QueryCriteriaForm 标准查询表单"
             },
