@@ -337,18 +337,20 @@ export default {
           offset={queryFilterColumnConfig.offset}
           slot="formItems"
           class="el-pro-form__control">
-          <el-button
-            type="primary"
-            icon="el-icon-search"
-            onClick={handleSubmit}
-            loading={isSubmiting}>搜索</el-button>
-          <el-button onClick={handleReset} icon="el-icon-refresh-left">重置</el-button>
-          <el-button
-            type="text"
-            onClick={handleExpand}
-            class="control__expand-button">
-            {totalColSpan >= currentColumns ? getExpandTextLabel() : null}
-          </el-button>
+          <el-form-item label="&nbsp;">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              onClick={handleSubmit}
+              loading={isSubmiting}>搜索</el-button>
+            <el-button onClick={handleReset} icon="el-icon-refresh-left">重置</el-button>
+            <el-button
+              type="text"
+              onClick={handleExpand}
+              class="control__expand-button">
+              {totalColSpan >= currentColumns ? getExpandTextLabel() : null}
+            </el-button>
+          </el-form-item>
         </el-col>
       );
     };

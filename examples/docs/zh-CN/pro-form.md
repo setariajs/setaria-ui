@@ -165,6 +165,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :schema="schema"
     :ui-schema="uiSchema"
     label-width="100px"
+    label-position="top"
     :after-submit="onSubmit">
   </el-pro-form>
   <p>result:</p>
@@ -194,7 +195,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
           ],
           "properties": {
             "id": {
-              "description": "用户ID",
+              "description": "此处可定义额外辅助信息",
               "type": "string",
               "title": "用户ID",
               "minLength": 3,

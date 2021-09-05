@@ -75,7 +75,11 @@ export default {
       }
     },
     beforeSubmit: Function,
-    afterSubmit: Function
+    afterSubmit: Function,
+    showResult: {
+      type: Boolean,
+      default: true
+    }
   },
 
   data() {
@@ -406,7 +410,8 @@ export default {
       handleSearch,
       handleClear,
       handleFormChange,
-      renderConditionResultList
+      renderConditionResultList,
+      showResult
     } = this;
     const renderNormalCondition = () => {
       if (normalSchema) {
@@ -457,6 +462,19 @@ export default {
         on-clear={() => { handleClear('advanceConditionForm'); }}>
       </ElProForm>);
     }
+    let filterResult = null;
+    if (showResult) {
+      filterResult = (
+        <div class="query-result">
+          <div class="query-result__icon">
+            <i class="el-icon-search"></i>
+          </div>
+          <div class="query-result__detail" key={conditionResultItemKey}>
+            {renderConditionResultList(h, conditionValue)}
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         class={[
@@ -480,14 +498,7 @@ export default {
           </div>
         ) : null }
         <div class="el-query-filter__advance">
-          <div class="query-result">
-            <div class="query-result__icon">
-              <i class="el-icon-search"></i>
-            </div>
-            <div class="query-result__detail" key={conditionResultItemKey}>
-              {renderConditionResultList(h, conditionValue)}
-            </div>
-          </div>
+          { filterResult }
           <ElCollapseTransition>
             <div v-show={innerExpand} class="el-query-filter__advance-expand-container">
               { advanceConditionForm }
