@@ -13,7 +13,7 @@
       float: none;
       display: inline-block;
       text-align: left;
-      padding: 0 0 10px 0;
+      padding: 0;
     }
   }
   @include m(inline) {
@@ -67,7 +67,7 @@
       margin-bottom: 15px;
     }
     .el-form-item__error {
-      padding-top: 0;
+      padding-top: 3px;
     }
   }
   @include m(mini) {
