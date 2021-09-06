@@ -290,11 +290,16 @@ export default {
     vxeTableColumnArray() {
       const {
         getDefaultControlColumn,
-        isMultipleSelect,
+        multipleSelection,
+        selectionType,
         innerDefaultAllColumnSort
       } = this;
       let columns = this.innerTableColumns || [];
-      const selectionColumn = this.getSelectionColumn(isMultipleSelect ? 'checkbox' : 'radio');
+      let selectColumn = selectionType;
+      if (multipleSelection) {
+        selectColumn = 'checkbox';
+      }
+      const selectionColumn = this.createSelectionColumn(selectColumn);
       if (columns && selectionColumn) {
         // !FIXME 组件创建后，更改selectionType时不会触发重新构建VxeColumn计算属性。
         const index = _.findIndex(
@@ -528,7 +533,7 @@ export default {
     getTableRef() {
       return this.$refs.xTable;
     },
-    getSelectionColumn(selectionType) {
+    createSelectionColumn(selectionType) {
       const { checkboxConfig, radioConfig } = this;
       const getSelectionColumnWidth = (cbConfig, rConfig, st) => {
         const DEFAULT_WIDTH = 40;

@@ -12,12 +12,12 @@
   </div>
   <el-editable-pro-table
     :label-mode="labelMode"
+    multiple-selection
     :get-row-button="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
     row-key="id"
-    multiple-selection
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
   >
