@@ -10,7 +10,7 @@ import ElTagSelectItem from 'setaria-ui/packages/tag-select-item';
 import ElTooltip from 'setaria-ui/packages/tooltip';
 import ElProForm from 'setaria-ui/packages/pro-form';
 import { arrayFind, arrayFindIndex, coerceTruthyValueToArray } from 'setaria-ui/src/utils/util';
-
+import { camelCase } from 'setaria-ui/src/utils/dom';
 const NON_INITIAL = 'nonInitial';
 const INITIALED = 'initialed';
 
@@ -18,7 +18,8 @@ const proFormInitialOptions = {
   attrs: {
     labelSuffix: '：',
     labelPosition: 'left',
-    labelWidth: 'auto'
+    labelWidth: 'auto',
+    columns: 3
   },
   props: {
     type: 'queryFilter',
@@ -74,12 +75,7 @@ export default {
         return {};
       }
     },
-    beforeSubmit: Function,
-    afterSubmit: Function,
-    showResult: {
-      type: Boolean,
-      default: true
-    }
+    afterSubmit: Function
   },
 
   data() {
@@ -378,6 +374,33 @@ export default {
     },
 
     /**
+     * 渲染普通搜索项目
+     * @param {*} schema schema
+     * @param {*} uiSchema uiSchema
+     * @param {*} value 值
+     */
+    renderNormalCondition(schema, uiSchema, $scopedSlots, handleSearch, handleClear, handleFormChange, value, attrs) {
+      if (schema) {
+        return (
+          <ElProForm
+            {...proFormInitialOptions}
+            {...{ attrs }}
+            model={value}
+            ref="normalConditionForm"
+            class="normal-condition-form"
+            schema={schema}
+            uiSchema={uiSchema}
+            after-submit={handleSearch}
+            scopedSlots={$scopedSlots}
+            on-change={handleFormChange}
+            on-clear={() => { handleClear('normalConditionForm'); }}>
+          </ElProForm>
+        );
+      }
+      return null;
+    },
+
+    /**
      * 渲染搜索项目当前输入值
      * @param {*} h h
      * @param {*} conditionValue 当前查询项目的值
@@ -398,6 +421,7 @@ export default {
       columns,
       $slots,
       $scopedSlots,
+      $attrs,
       innerExpand,
       conditionValue = {},
       normalSchema,
@@ -406,38 +430,29 @@ export default {
       advanceUiSchema = {},
       conditionResultItemKey,
       conditionFormKey,
-      beforeSubmit,
       handleSearch,
       handleClear,
       handleFormChange,
       renderConditionResultList,
-      showResult
+      renderNormalCondition
     } = this;
-    const renderNormalCondition = () => {
-      if (normalSchema) {
-        return (
-          <ElProForm
-            {...proFormInitialOptions}
-            model={conditionValue}
-            ref="normalConditionForm"
-            class="normal-condition-form"
-            schema={normalSchema}
-            uiSchema={normalUiSchema}
-            before-submit={beforeSubmit}
-            after-submit={handleSearch}
-            columns={3}
-            scopedSlots={$scopedSlots}
-            on-change={handleFormChange}
-            on-clear={() => { handleClear('normalConditionForm'); }}>
-          </ElProForm>
-        );
-      }
-      return null;
-    };
+    // 格式化attrs为驼峰Key
+    const attrs = Object.keys($attrs).reduce((res, key) => {
+      res[camelCase(key)] = $attrs[key];
+      return res;
+    }, {});
+
     // 普通搜索
     let normalConditionNode = $slots.normalCondition
       ? $slots.normalCondition
-      : renderNormalCondition();
+      : renderNormalCondition(
+        normalSchema,
+        normalUiSchema,
+        $scopedSlots,
+        handleSearch,
+        handleClear,
+        handleFormChange,
+        conditionValue, attrs);
     // 不存在普通搜索的场合，高级搜索默认展开
     if (normalConditionNode === undefined || normalConditionNode === null) {
       this.innerExpand = true;
@@ -448,12 +463,12 @@ export default {
     if (isExistAdvanceSchema) {
       advanceConditionForm = (<ElProForm
         {...proFormInitialOptions}
+        {...{ attrs }}
         model={conditionValue}
         key={conditionFormKey}
         ref="advanceConditionForm"
         class="advance-condition-form"
-        before-submit={beforeSubmit}
-        after-submit={handleSearch}
+        afterSubmit={handleSearch}
         schema={advanceSchema}
         uiSchema={advanceUiSchema}
         columns={columns}
@@ -461,19 +476,6 @@ export default {
         on-change={handleFormChange}
         on-clear={() => { handleClear('advanceConditionForm'); }}>
       </ElProForm>);
-    }
-    let filterResult = null;
-    if (showResult) {
-      filterResult = (
-        <div class="query-result">
-          <div class="query-result__icon">
-            <i class="el-icon-search"></i>
-          </div>
-          <div class="query-result__detail" key={conditionResultItemKey}>
-            {renderConditionResultList(h, conditionValue)}
-          </div>
-        </div>
-      );
     }
     return (
       <div
@@ -498,7 +500,14 @@ export default {
           </div>
         ) : null }
         <div class="el-query-filter__advance">
-          { filterResult }
+          <div class="query-result">
+            <div class="query-result__icon">
+              <i class="el-icon-search"></i>
+            </div>
+            <div class="query-result__detail" key={conditionResultItemKey}>
+              {renderConditionResultList(h, conditionValue)}
+            </div>
+          </div>
           <ElCollapseTransition>
             <div v-show={innerExpand} class="el-query-filter__advance-expand-container">
               { advanceConditionForm }

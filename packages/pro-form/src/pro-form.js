@@ -48,9 +48,6 @@ export default {
         return {};
       }
     },
-    beforeSubmit: {
-      type: Function
-    },
     afterSubmit: {
       type: Function
     },
@@ -216,42 +213,27 @@ export default {
     handleExpand() {
       this.innerExpand = !this.innerExpand;
     },
-    submit() {
-      const { afterSubmit, model, type } = this;
-      this.isSubmiting = true;
-      if (typeof afterSubmit === 'function') {
-        const result = afterSubmit(model);
-        if (result.then) {
-          result.then(() => {
-            this.isSubmiting = false;
-            if (type === 'modalForm' && this.isShowModalForm) {
-              this.isShowModalForm = false;
-            }
-          });
-        }
-      }
-      this.$emit('submit');
-    },
     /**
      * 表单提交事件处理
      * @public
      */
     handleSubmit() {
-      const { beforeSubmit, model, submit } = this;
+      const { afterSubmit, model, type } = this;
       this.$refs.proForm.validate((isValid) => {
         if (isValid) {
-          if (typeof beforeSubmit === 'function') {
-            const res = beforeSubmit(model);
-            if (res.then) {
-              res.then(() => {
-                submit();
+          this.isSubmiting = true;
+          if (typeof afterSubmit === 'function') {
+            const result = afterSubmit(model);
+            if (result.then) {
+              result.then(() => {
+                this.isSubmiting = false;
+                if (type === 'modalForm' && this.isShowModalForm) {
+                  this.isShowModalForm = false;
+                }
               });
-            } else {
-              submit();
             }
-          } else {
-            this.submit();
           }
+          this.$emit('submit');
         }
       });
     },
@@ -330,14 +312,15 @@ export default {
      * 渲染查询筛选的操作区域
      */
     const getQueryFillterControlContainer = () => {
-      const { handleSubmit, handleReset } = this;
+      const { handleSubmit, handleReset, $attrs } = this;
       return (
         <el-col
           span={queryFilterColumnConfig.span}
           offset={queryFilterColumnConfig.offset}
           slot="formItems"
           class="el-pro-form__control">
-          <el-form-item label="&nbsp;">
+          <el-form-item >
+            <span slot="label" v-if={$attrs.labelPosition === 'top'}> </span>
             <el-button
               type="primary"
               icon="el-icon-search"
