@@ -17,7 +17,7 @@ const INITIALED = 'initialed';
 const proFormInitialOptions = {
   attrs: {
     labelSuffix: '：',
-    labelPosition: 'left',
+    labelPosition: 'top',
     labelWidth: 'auto',
     columns: 3
   },

@@ -320,7 +320,9 @@ export default {
           slot="formItems"
           class="el-pro-form__control">
           <el-form-item >
-            <span slot="label" v-if={$attrs.labelPosition === 'top'}> </span>
+            { $attrs.labelPosition === 'top' ? (
+              <span slot="label"> </span>
+            ) : null }
             <el-button
               type="primary"
               icon="el-icon-search"
