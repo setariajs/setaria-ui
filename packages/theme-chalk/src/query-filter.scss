@@ -14,7 +14,7 @@
       flex: 1;
 
       .el-form-item {
-        margin-bottom: 0;
+        margin-bottom: 10px;
       }
     }
 
@@ -30,12 +30,14 @@
     .normal__toolbar {
       justify-content: flex-end;
       display: flex;
-      align-items: center;
-
+      align-items: flex-start;
+      margin-left: 10px;
       .toolbar__expand-button {
       }
       .toolbar-icon {
         margin-left: 5px;
+        padding: 8px 0;
+        margin-top: -2px;
       }
     }
   }

@@ -29,13 +29,15 @@
         value: {
           procurementType: '1',
           createDate: [],
+          projectNo: '',
           publishFlag: '',
           procurementApplyType: '2',
           projectName: '',
           location: [],
           dateRange: null,
           amount: undefined,
-          createBy: '12'
+          createBy: '12',
+          applyUser: '',
         },
         normalSchema: {
           "required": [
@@ -54,7 +56,15 @@
             "projectName": {
               "type": "string",
               "title": "项目名称"
-            }
+            },
+            "projectNo": {
+              "type": "string",
+              "title": "项目No"
+            },
+            "applyUser": {
+              "type": "string",
+              "title": "审核人"
+            },
           }
         },
         normalUiSchema: {
