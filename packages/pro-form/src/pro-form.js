@@ -321,7 +321,7 @@ export default {
           class="el-pro-form__control">
           <el-form-item >
             { $attrs.labelPosition === 'top' ? (
-              <span slot="label"> </span>
+              <span slot="label">&nbsp;</span>
             ) : null }
             <el-button
               type="primary"

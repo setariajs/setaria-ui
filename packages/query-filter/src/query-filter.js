@@ -62,6 +62,10 @@ export default {
         return null;
       }
     },
+    showResult: {
+      type: Boolean,
+      default: true
+    },
     columns: {
       type: Number,
       default: 3
@@ -434,7 +438,8 @@ export default {
       handleClear,
       handleFormChange,
       renderConditionResultList,
-      renderNormalCondition
+      renderNormalCondition,
+      showResult
     } = this;
     // 格式化attrs为驼峰Key
     const attrs = Object.keys($attrs).reduce((res, key) => {
@@ -500,14 +505,17 @@ export default {
           </div>
         ) : null }
         <div class="el-query-filter__advance">
-          <div class="query-result">
-            <div class="query-result__icon">
-              <i class="el-icon-search"></i>
+          { showResult ? (
+            <div class="query-result">
+              <div class="query-result__icon">
+                <i class="el-icon-search"></i>
+              </div>
+              <div class="query-result__detail" key={conditionResultItemKey}>
+                {renderConditionResultList(h, conditionValue)}
+              </div>
             </div>
-            <div class="query-result__detail" key={conditionResultItemKey}>
-              {renderConditionResultList(h, conditionValue)}
-            </div>
-          </div>
+
+          ) : null }
           <ElCollapseTransition>
             <div v-show={innerExpand} class="el-query-filter__advance-expand-container">
               { advanceConditionForm }
