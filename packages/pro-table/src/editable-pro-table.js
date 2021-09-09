@@ -77,9 +77,15 @@ export default Vue.extend({
       const defaultConfig = {
         trigger: 'manual',
         mode: 'row',
-        showIcon: false
+        showIcon: false,
+        showAsterisk: false
       };
       if (this.isEditOnRow === true) {
+        // 是否显示必填字段的红色星号
+        defaultConfig.showAsterisk = true;
+        // 是否显示列头编辑图标
+        defaultConfig.showIcon = true;
+        // 触发方式
         defaultConfig.trigger = 'click';
       }
       return _.assign({}, defaultConfig, editConfig);
