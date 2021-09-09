@@ -1,8 +1,13 @@
 import _ from 'lodash';
+import { EDIT_TYPE } from 'setaria-ui/src/constants/index';
 import XEUtils from 'xe-utils';
 import { convertSchemaToColumns } from './util';
 
 const COLUMN_CONTROL_TITLE = '操作';
+const MODIFY_BUTTON = {
+  key: 'ept-modify',
+  label: '修改'
+};
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
@@ -561,7 +566,12 @@ export default {
       return selectionColumn;
     },
     getDefaultControlColumn() {
-      const { getRowButton, onCustomButtonClick, controlColumnWidth } = this;
+      const {
+        controlColumnWidth,
+        getRowButton,
+        labelMode,
+        onCustomButtonClick
+      } = this;
       if (typeof getRowButton !== 'function') {
         return null;
       }
@@ -573,7 +583,10 @@ export default {
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];
-            const rowButtonList = getRowButton(scope);
+            const rowButtonList = getRowButton(scope) || [];
+            if (labelMode !== true) {
+              rowButtonList.unshift(MODIFY_BUTTON);
+            }
             if (!_.isEmpty(rowButtonList)) {
               if (rowButtonList.length <= 2) {
                 rowButtonList.forEach(({ key, label }) => {
@@ -666,9 +679,14 @@ export default {
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
-        // deprecated row-control-button-click
-        this.$emit('row-control-button-click', key, scope);
-        this.$emit('row-button-click', key, scope);
+        if (key === MODIFY_BUTTON.key) {
+          this.controlStatus = EDIT_TYPE.MODIFY;
+          this.isShowForm = true;
+          this.formData = scope.row;
+        } else {
+          this.$emit('row-control-button-click', key, scope);
+          this.$emit('row-button-click', key, scope);
+        }
       };
     },
     /**

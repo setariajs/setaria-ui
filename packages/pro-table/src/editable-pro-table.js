@@ -1,13 +1,11 @@
 import _ from 'lodash';
 import Vue from 'vue';
 import XEUtils from 'xe-utils';
-import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
-import {
-  getSchemaDefaultObjectByFormSchema
-} from './util';
+import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { createDefaultObjectBySchema } from 'setaria-ui/src/utils/schema';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
-import { getEditRenderByProperty } from './util';
+import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
 
 const OPT_ADD = 'C';
 const OPT_DELETE = 'D';
@@ -52,7 +50,14 @@ export default Vue.extend({
       }
     },
     pageSize: Number,
-    pageSizes: Array
+    pageSizes: Array,
+    dataAddPosition: {
+      type: String,
+      default: 'end',
+      validator(val) {
+        return ['end', 'begin', null].indexOf(val) > -1;
+      }
+    }
   },
   data() {
     return {
@@ -61,7 +66,9 @@ export default Vue.extend({
       selectRow: null,
       isShowTable: true,
       /* 树形列表绑定到vxe-table的数据 */
-      innerTreeDataList: []
+      innerTreeDataList: [],
+      isSaveLoading: false,
+      controlStatus: null
     };
   },
   computed: {
@@ -70,9 +77,9 @@ export default Vue.extend({
       const defaultConfig = {
         trigger: 'manual',
         mode: 'row',
-        showStatus: true
+        showIcon: false
       };
-      if (!this.isEditOnRow) {
+      if (this.isEditOnRow === true) {
         defaultConfig.trigger = 'click';
       }
       return _.assign({}, defaultConfig, editConfig);
@@ -160,14 +167,14 @@ export default Vue.extend({
       vxeColumns.forEach((column) => {
         const { field } = column;
         const { editable } = schema.properties[field];
-        if (editable) {
+        if (editable !== false) {
           editableColumnCount += 1;
         }
       });
       return editableColumnCount;
     },
     isEditOnRow() {
-      if (typeof this.isForceEditInRow === 'boolean') {
+      if (this.isForceEditInRow) {
         return this.isForceEditInRow;
       }
       return this.editableColumnCount <= MAX_ROW_EDIT;
@@ -208,7 +215,7 @@ export default Vue.extend({
         const targetColumn = column;
         const { editable, type } = schema.properties[field];
         let customRender = null;
-        if (editable) {
+        if (editable !== false) {
           customRender = getEditRenderByProperty(
             field,
             schema.properties[field],
@@ -857,12 +864,23 @@ export default Vue.extend({
     },
     /** "新增一行"按钮点击事件 */
     onTableAddRowClick() {
-      const { onAddRowClick } = this;
+      const { onAddRowClick, isEditOnRow, schema } = this;
+      this.controlStatus = EDIT_TYPE.ADD;
       if (onAddRowClick != null && _.isFunction(onAddRowClick)) {
         onAddRowClick();
         return;
       }
-      this.tableAddRow();
+      if (isEditOnRow) {
+        this.tableAddRow();
+      } else {
+        // 填充表单默认数据
+        if (typeof this.beforeAddRow === 'function') {
+          this.formData = this.beforeAddRow();
+        } else if (!_.isEmpty(this.innerDataList)) {
+          this.formData = createDefaultObjectBySchema(schema);
+        }
+        this.isShowForm = true;
+      }
     },
     tableAddRow(position) {
       const { innerDefaultEntity, beforeAddRow, changeModeField } = this;
@@ -986,10 +1004,39 @@ export default Vue.extend({
       });
     },
     onDialogSaveButtonClick() {
+      const { controlStatus, data, dataAddPosition, formData, save, selectRow } = this;
+      const afterExec = () => {
+        if (controlStatus === EDIT_TYPE.ADD) {
+          if (dataAddPosition === 'begin') {
+            data.unshift(formData);
+          } else {
+            data.push(formData);
+          }
+        } else {
+          _.assign(selectRow, formData);
+        }
+        this.isShowForm = false;
+      };
       this.$refs.dialogForm.validate((isValid) => {
         if (isValid) {
-          _.assign(this.selectRow, this.formData);
-          this.isShowForm = false;
+          this.isSaveLoading = true;
+          if (typeof save === 'function') {
+            const res = save(formData, controlStatus, this.$refs.dialogForm);
+            if (res.then) {
+              res.then(() => {
+                afterExec();
+                this.isSaveLoading = false;
+              }).catch(() => {
+                this.isSaveLoading = false;
+              });
+            } else if (res) {
+              afterExec();
+              this.isSaveLoading = false;
+            }
+          } else {
+            afterExec();
+            this.isSaveLoading = false;
+          }
         }
       });
     },
@@ -1064,12 +1111,16 @@ export default Vue.extend({
       showExpandAllBtn,
       showCollapseAllBtn,
       onGridNativeClick,
-      rowClassName
+      rowClassName,
+      isSaveLoading
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
         this.isShowForm = val;
       }
+    };
+    const dialogFormProps = {
+      model: formData
     };
     // Tree模式下是否禁用新增同级按钮
     let isAddRowButtonDisabledInTreeMode = false;
@@ -1134,7 +1185,7 @@ export default Vue.extend({
               on-click={onTableAddRowClick}
               disabled={toolbarProps.addRowButtonDisabled}
             >
-              新增一行
+              新增数据
             </el-button>
           );
           ret.push(addRowButton);
@@ -1145,7 +1196,7 @@ export default Vue.extend({
             on-click={onTableDeleteClick}
             disabled={isDeleteButtonDisabled}
           >
-            删除
+            批量删除
           </el-button>
         );
         ret.push(deleteRowButton);
@@ -1259,8 +1310,7 @@ export default Vue.extend({
           >
             <el-json-form
               ref="dialogForm"
-              model={formData}
-              model-data={formData}
+              {...{ props: dialogFormProps }}
               schema={schema}
               rules={innerRules}
               ui-schema={innerUiSchema}
@@ -1268,7 +1318,7 @@ export default Vue.extend({
               label-width="auto"
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">
-              <el-button type="primary" on-click={onDialogSaveButtonClick}>
+              <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
                 保存
               </el-button>
               <el-button on-click={onDialogCancelButtonClick}>取消</el-button>
@@ -1332,8 +1382,7 @@ export default Vue.extend({
           >
             <el-json-form
               ref="dialogForm"
-              model={formData}
-              model-data={formData}
+              {...{ props: dialogFormProps }}
               schema={schema}
               rules={innerRules}
               ui-schema={innerUiSchema}
@@ -1341,7 +1390,7 @@ export default Vue.extend({
               label-width="auto"
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">
-              <el-button type="primary" on-click={onDialogSaveButtonClick}>
+              <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
                 保存
               </el-button>
               <el-button on-click={onDialogCancelButtonClick}>取消</el-button>

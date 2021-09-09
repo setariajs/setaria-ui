@@ -244,7 +244,9 @@ export const EDIT_TABLE_PROPS = {
   // 导入后自定义数据处理
   afterImport: Function,
   // 可编辑配置项
-  editConfig: Object
+  editConfig: Object,
+  // 点击对话框的表单保存按钮后执行，可返回Promise或Boolean
+  save: Function
 };
 
 export default {

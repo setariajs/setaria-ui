@@ -194,162 +194,168 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
     nativeOn: {}
   };
   const componentChildrenOptions = [];
-  // 因render 函数中没有与 v-model 相应的 api, 实现v-model逻辑。
-  events.on.input = (val) => {
-    model[key] = val;
-    emit('input', key, val, model);
-  };
-  events.on.change = (val) => {
-    emit('change', key, val, model);
-  };
-  if (property.enum || property.oneOf || property.anyOf) {
-    if (property.oneOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'radio') {
-      componentTagName = 'el-radio-group';
-    } else if (property.anyOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'checkbox' && property.type === 'array') {
-      componentTagName = 'el-checkbox-group';
-    } else {
-      componentTagName = 'el-select';
-      props.multiple = false;
-    }
-    // 取得选择项一览
-    let list = null;
-    if (property.oneOf) {
-      list = property.oneOf;
-    } else if (property.anyOf) {
-      list = property.anyOf;
-      if (componentTagName === 'el-select') {
-        props.multiple = true;
+  if (property.editable === false) {
+    componentTagName = 'div';
+    const formater = createFormatter(property);
+    domProps.innerHTML = formater ? formater(props.value) : props.value;
+  } else {
+    // 因render 函数中没有与 v-model 相应的 api, 实现v-model逻辑。
+    events.on.input = (val) => {
+      model[key] = val;
+      emit('input', key, val, model);
+    };
+    events.on.change = (val) => {
+      emit('change', key, val, model);
+    };
+    if (property.enum || property.oneOf || property.anyOf) {
+      if (property.oneOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'radio') {
+        componentTagName = 'el-radio-group';
+      } else if (property.anyOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'checkbox' && property.type === 'array') {
+        componentTagName = 'el-checkbox-group';
+      } else {
+        componentTagName = 'el-select';
+        props.multiple = false;
       }
-    } else {
-      list = property.enum.map(e => {
-        return { title: e, 'const': e };
-      });
-    }
-    const optionList = [];
-    list.forEach(item => {
-      optionList.push({
-        label: item.title,
-        value: item.const,
-        disabled: item.disabled
-      });
-    });
-    if (componentTagName === 'el-select') {
-      optionList.forEach(item => {
-        componentChildrenOptions.push({
-          label: item.label,
-          value: item.value,
+      // 取得选择项一览
+      let list = null;
+      if (property.oneOf) {
+        list = property.oneOf;
+      } else if (property.anyOf) {
+        list = property.anyOf;
+        if (componentTagName === 'el-select') {
+          props.multiple = true;
+        }
+      } else {
+        list = property.enum.map(e => {
+          return { title: e, 'const': e };
+        });
+      }
+      const optionList = [];
+      list.forEach(item => {
+        optionList.push({
+          label: item.title,
+          value: item.const,
           disabled: item.disabled
         });
       });
-    } else if (componentTagName === 'el-radio-group') {
-      optionList.forEach(item => {
-        componentChildrenOptions.push({
-          label: item.label,
-          value: item.value
+      if (componentTagName === 'el-select') {
+        optionList.forEach(item => {
+          componentChildrenOptions.push({
+            label: item.label,
+            value: item.value,
+            disabled: item.disabled
+          });
         });
-      });
-    } else if (componentTagName === 'el-checkbox-group') {
-      optionList.forEach(item => {
-        componentChildrenOptions.push({
-          label: item.label,
-          value: item.value
+      } else if (componentTagName === 'el-radio-group') {
+        optionList.forEach(item => {
+          componentChildrenOptions.push({
+            label: item.label,
+            value: item.value
+          });
         });
-      });
-    }
-  } else if (property.format === 'date' ||
-    property.format === 'date-time') {
-    componentTagName = 'el-date-picker';
-    if (property.type === 'string') {
-      props.type = property.format.replace(/-/g, '');
-    } else if (property.type === 'array') {
-      props.type = `${property.format}-range`.replace(/-/g, '');
-    }
-    if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
-      props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
-    } else if (property.format === 'date' || property.format === 'date-range') {
-      props['value-format'] = DEFAULT_DATE_FORMAT;
-    } else if (property.format === 'date-time' || property.format === 'date-time-range') {
-      props['value-format'] = DEFAULT_DATE_TIME_FORMAT;
-    }
-  } else if (property.format === 'time') {
-    componentTagName = 'el-time-picker';
-    if (property.type === 'array') {
-      props['is-range'] = true;
-    }
-    if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
-      props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
-    } else if (property.format === 'time' || property.format === 'time-range') {
-      props['value-format'] = DEFAULT_TIME_FORMAT;
-    }
-  } else if (property.type === 'string') {
-    componentTagName = 'el-input';
-    // 组件类型
-    const widgetType = uiProperty[JSON_FORM_UI.UI_WIDGET];
-    if (widgetType !== undefined) {
-      if (widgetType === 'password') {
-        props.type = 'password';
-      } else if (widgetType === 'textarea') {
-        props.type = 'textarea';
-        const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
-        if (typeof options.rows === 'number') {
-          attrs.rows = options.rows;
+      } else if (componentTagName === 'el-checkbox-group') {
+        optionList.forEach(item => {
+          componentChildrenOptions.push({
+            label: item.label,
+            value: item.value
+          });
+        });
+      }
+    } else if (property.format === 'date' ||
+      property.format === 'date-time') {
+      componentTagName = 'el-date-picker';
+      if (property.type === 'string') {
+        props.type = property.format.replace(/-/g, '');
+      } else if (property.type === 'array') {
+        props.type = `${property.format}-range`.replace(/-/g, '');
+      }
+      if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
+        props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
+      } else if (property.format === 'date' || property.format === 'date-range') {
+        props['value-format'] = DEFAULT_DATE_FORMAT;
+      } else if (property.format === 'date-time' || property.format === 'date-time-range') {
+        props['value-format'] = DEFAULT_DATE_TIME_FORMAT;
+      }
+    } else if (property.format === 'time') {
+      componentTagName = 'el-time-picker';
+      if (property.type === 'array') {
+        props['is-range'] = true;
+      }
+      if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
+        props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
+      } else if (property.format === 'time' || property.format === 'time-range') {
+        props['value-format'] = DEFAULT_TIME_FORMAT;
+      }
+    } else if (property.type === 'string') {
+      componentTagName = 'el-input';
+      // 组件类型
+      const widgetType = uiProperty[JSON_FORM_UI.UI_WIDGET];
+      if (widgetType !== undefined) {
+        if (widgetType === 'password') {
+          props.type = 'password';
+        } else if (widgetType === 'textarea') {
+          props.type = 'textarea';
+          const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
+          if (typeof options.rows === 'number') {
+            attrs.rows = options.rows;
+          }
         }
       }
-    }
-    if (typeof property.maxLength === 'number') {
-      attrs.maxlength = property.maxLength;
-    }
-    componentProps.style = {
-      width: '100%'
-    };
-  } else if (property.type === 'integer' || property.type === 'number') {
-    events.on.input = (val) => {
-      let ret = val;
-      if (typeof val === 'string') {
-        ret = parseFloat(val);
-        if (isNaN(ret)) {
-          ret = null;
+      if (typeof property.maxLength === 'number') {
+        attrs.maxlength = property.maxLength;
+      }
+      componentProps.style = {
+        width: '100%'
+      };
+    } else if (property.type === 'integer' || property.type === 'number') {
+      events.on.input = (val) => {
+        let ret = val;
+        if (typeof val === 'string') {
+          ret = parseFloat(val);
+          if (isNaN(ret)) {
+            ret = null;
+          }
+        }
+        model[key] = ret;
+        emit('input', key, ret, model);
+      };
+      const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
+      // 小数位
+      const { format, precision, scale } = property;
+      const scaleNum = _.toNumber(scale);
+      if (typeof precision === 'number') {
+        props.precision = precision;
+      }
+      // ui:options的precision属性为最优先
+      const originPrecision = _.get(options, 'precision', '');
+      if (originPrecision === '' && (_.isNumber(scaleNum) && !Number.isNaN(scaleNum))) {
+        props.precision = scaleNum;
+      }
+      // 金额格式
+      if (format === 'price') {
+        const formatter = _.get(options, 'formatter');
+        // 没有进行自定义组件formatter属性的场合
+        if (typeof formatter !== 'function') {
+          const config = {};
+          // 已定义小数位的场合
+          if (_.isNumber(props.precision)) {
+            config.maximumFractionDigits = props.precision;
+          }
+          props.formatter = (val) => {
+            const result = priceFormatter(val, config);
+            return result;
+          };
+        }
+        const parser = _.get(options, 'parser');
+        // 没有进行自定义组件parser属性的场合
+        if (typeof parser !== 'function') {
+          props.parser = priceParser;
         }
       }
-      model[key] = ret;
-      emit('input', key, ret, model);
-    };
-    const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
-    // 小数位
-    const { format, precision, scale } = property;
-    const scaleNum = _.toNumber(scale);
-    if (typeof precision === 'number') {
-      props.precision = precision;
+      componentTagName = 'el-input-number';
+    } else if (property.type === 'boolean' && uiProperty[JSON_FORM_UI.UI_WIDGET] === undefined) {
+      componentTagName = 'el-checkbox';
     }
-    // ui:options的precision属性为最优先
-    const originPrecision = _.get(options, 'precision', '');
-    if (originPrecision === '' && (_.isNumber(scaleNum) && !Number.isNaN(scaleNum))) {
-      props.precision = scaleNum;
-    }
-    // 金额格式
-    if (format === 'price') {
-      const formatter = _.get(options, 'formatter');
-      // 没有进行自定义组件formatter属性的场合
-      if (typeof formatter !== 'function') {
-        const config = {};
-        // 已定义小数位的场合
-        if (_.isNumber(props.precision)) {
-          config.maximumFractionDigits = props.precision;
-        }
-        props.formatter = (val) => {
-          const result = priceFormatter(val, config);
-          return result;
-        };
-      }
-      const parser = _.get(options, 'parser');
-      // 没有进行自定义组件parser属性的场合
-      if (typeof parser !== 'function') {
-        props.parser = priceParser;
-      }
-    }
-    componentTagName = 'el-input-number';
-  } else if (property.type === 'boolean' && uiProperty[JSON_FORM_UI.UI_WIDGET] === undefined) {
-    componentTagName = 'el-checkbox';
   }
   componentProps.props = props;
   componentProps.on = events.on;
@@ -537,7 +543,30 @@ export function booleanFormatter({ cellValue }) {
   return '否';
 }
 
+/**
+ * 取得指定Property的初始值
+ * @param {Object} property
+ * @returns
+ */
+function getItemDefaultValue() {
+  return null;
+}
+
+/**
+ * 根据schema定义生成对应的初始化对象
+ * @param {Object} schema
+ * @returns
+ */
+export function createDefaultObjectBySchema(schema = {}) {
+  const ret = {};
+  Object.keys(schema.properties).forEach((key) => {
+    ret[key] = getItemDefaultValue(schema.properties[key]);
+  });
+  return ret;
+}
+
 export default {
   createElementByProperty,
-  createFormRulesBySchema
+  createFormRulesBySchema,
+  createDefaultObjectBySchema
 };

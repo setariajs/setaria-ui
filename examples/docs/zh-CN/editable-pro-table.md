@@ -20,6 +20,7 @@
     row-key="id"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
+    :save="save"
   >
     <template slot="batchControl">
       <el-button type="text">自定义按钮</el-button>
@@ -47,7 +48,6 @@ export default {
           Name: {
             title: '名称',
             type: 'string',
-            editable: true,
           },
           Enum: {
             title: '枚举值',
@@ -62,7 +62,6 @@ export default {
                 title: '枚举值二'
               }
             ],
-            editable: true,
           },
           AnyOf: {
             title: '多选枚举值',
@@ -77,12 +76,10 @@ export default {
                 title: '枚举值二'
               }
             ],
-            editable: true,
           },
           Number: {
             title: '数字',
             type: 'number',
-            editable: true,
           },
           Price: {
             title: '价格',
@@ -90,37 +87,36 @@ export default {
             precision: '16',
             scale: '2',
             format: 'price',
-            editable: true,
           },
           Comment: {
             title: '备注',
             type: 'string',
-            editable: true,
           },
           Date: {
             title: '日期',
             type: 'string',
             format: 'date',
-            editable: true,
           },
           Time: {
             title: '时间',
             type: 'string',
             format: 'time',
-            editable: true,
           },
           Boolean: {
             title: '布尔值',
             type: 'boolean',
-            editable: true,
           },
           CustomSlot: {
             title: '自定义插槽',
             type: 'string',
-            editable: true,
+          },
+          Readonly: {
+            title: '只读项目',
+            type: 'string',
+            editable: false,
           }
         },
-        required: [ 'Enum' ],
+        required: [ 'Name' ],
       },
       uiSchema: {
         index: {
@@ -180,6 +176,11 @@ export default {
           'ui:options': {
             minWidth: '230px'
           },
+        },
+        Readonly: {
+          'ui:options': {
+            minWidth: '150px'
+          },
         }
       },
       data: [],
@@ -198,12 +199,17 @@ export default {
       Comment: 'setaria-ui',
       'Boolean': true,
       CustomSlotCode: 4.3,
-      CustomSlot: '装饰线条'
+      CustomSlot: '装饰线条',
+      Readonly: '信息不可修改'
     };
     for (let i = 0; i < 5; i += 1) {
+      const data = {
+        ...this.headInfoData
+      };
+      data.Name = `${data.Name}-${i}`;
       this.data.push({
         id: i,
-        ...this.headInfoData
+        ...data
       }); 
     }
   },
@@ -212,7 +218,7 @@ export default {
       return [
         {
           key: '1',
-          label: `修改${rowIndex}`,
+          label: `删除${rowIndex}`,
         },
       ];
     },
@@ -221,6 +227,14 @@ export default {
     },
     onSelectionChange(val) {
       console.log(val);
+    },
+    save(data, mode) {
+      return new window.Promise((resolve) => {
+        setTimeout(() => {
+          console.log(data, mode);
+          resolve({});
+        }, 1000);
+      })
     }
   }
 };

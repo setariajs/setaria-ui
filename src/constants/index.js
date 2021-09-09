@@ -18,5 +18,11 @@ export const COLUMN_TYPE = {
   INDEX: 'index'
 };
 
+export const EDIT_TYPE = {
+  ADD: 'add',
+  DELETE: 'delete',
+  MODIFY: 'modify'
+};
+
 export default {
 };

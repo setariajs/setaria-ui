@@ -65,6 +65,7 @@
             lastName: {
               type: 'string',
               title: 'Last name',
+              editable: false
             },
             password: {
               type: 'string',
@@ -132,9 +133,6 @@
           },
         },
         uiSchema: {
-          lastName: {
-            'ui:disabled': false
-          },
           gender: {
             'ui:widget': 'select'
           }
@@ -195,7 +193,6 @@
   }
 </script>
 ```
-
 :::
 
 ### 定制化表单
@@ -581,7 +578,6 @@
   }
 </script>
 ```
-
 :::
 
 ### Form Attributes
