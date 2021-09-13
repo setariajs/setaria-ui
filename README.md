@@ -76,6 +76,11 @@ Detailed changes for each release are documented in the [release notes](https://
 
 We have collected some [frequently asked questions](https://github.com/bluejfox/setaria-ui/blob/master/FAQ.md). Before reporting an issue, please search if the FAQ has the answer to your problem.
 
+## 感谢 JetBrains 免费的开源授权
+
+<a href="https://www.jetbrains.com/?from=setaria-ui" target="_blank">
+<img src="https://user-images.githubusercontent.com/1787798/69898077-4f4e3d00-138f-11ea-81f9-96fb7c49da89.png" height="200"/></a>
+
 ## LICENSE
 
 [MIT](LICENSE)
