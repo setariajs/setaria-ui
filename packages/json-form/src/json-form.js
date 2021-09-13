@@ -64,10 +64,10 @@ export default {
       this.$emit('submit');
     },
     validate(callback) {
-      this.$refs.form.validate(callback);
+      return this.$refs.form.validate(callback);
     },
     validateField(props, cb) {
-      this.$refs.form.validateField(props, cb);
+      return this.$refs.form.validateField(props, cb);
     },
     resetFields() {
       this.$refs.form.resetFields();

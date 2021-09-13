@@ -251,7 +251,7 @@ export default {
       this.isShowModalForm = !this.isShowModalForm;
     },
     validate(callbackFunc) {
-      this.$refs.proForm.validate(callbackFunc);
+      return this.$refs.proForm.validate(callbackFunc);
     }
   },
   render(h) {
