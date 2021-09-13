@@ -18,6 +18,7 @@
     :ui-schema="uiSchema"
     :data="data"
     row-key="id"
+    :before-add-row="beforeAddRow"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
     :save="save"
@@ -227,6 +228,22 @@ export default {
     },
     onSelectionChange(val) {
       console.log(val);
+    },
+    beforeAddRow() {
+      return {
+        Name: 'YYY',
+        Price: null,
+        Enum: null,
+        AnyOf: null,
+        Number: null,
+        Date: null,
+        Time: null,
+        Comment: null,
+        'Boolean': true,
+        CustomSlotCode: null,
+        CustomSlot: null,
+        Readonly: '只读信息只读信息'
+      };
     },
     save(data, mode) {
       return new window.Promise((resolve) => {
