@@ -52,7 +52,10 @@ export default {
       return merge({}, ret, rules);
     },
     fields() {
-      return this.$refs.form.fields;
+      if (this.$refs.form) {
+        return this.$refs.form.fields;
+      }
+      return [];
     }
   },
   created() {
