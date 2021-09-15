@@ -155,7 +155,7 @@ export const COMMON_TABLE_PROPS = {
     required: false,
     default: true
   },
-  isShowColumnSetting: {
+  showColumnSetting: {
     type: Boolean,
     default: true
   },

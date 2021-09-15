@@ -900,9 +900,9 @@ export default {
         columnSettingDefaultCheckedKeys,
         isAllColumnShow,
         isParticalColumnShow,
-        isShowColumnSetting
+        showColumnSetting
       } = this;
-      if (isShowColumnSetting === false) {
+      if (showColumnSetting === false) {
         return null;
       }
       const renderContent = (h, { node }) => {
