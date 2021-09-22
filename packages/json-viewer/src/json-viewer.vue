@@ -82,7 +82,7 @@
     },
     computed: {
       jsonData() {
-        const jsonObj = JSON.parse(this.data);
+        let jsonObj = typeof this.data === 'string' ? JSON.parse(this.data) : this.data;
         if (this.isValue(jsonObj)) {
           return [this.transformValue(jsonObj)];
         }

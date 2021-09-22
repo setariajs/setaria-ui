@@ -24,6 +24,6 @@
 
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
-| data  | JSON文本    | string   |  —  |  —  |
+| data  | JSON文本    | string/object   |  —  |  —  |
 | collapse-string-size  | 值过长时截取的长度(-1时为不对值进行截取)    | number   |  —  |  —  |
 | copy  | 是否显示值复制按钮    | boolean   |  —  | true   |
