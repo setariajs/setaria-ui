@@ -27,7 +27,7 @@
     data() {
       return {
         value: {
-          procurementType: '1',
+          procurementType: null,
           createDate: [],
           projectNo: '',
           publishFlag: '',

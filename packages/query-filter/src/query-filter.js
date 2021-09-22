@@ -154,27 +154,7 @@ export default {
       this.handleSearch();
     },
     handleSearch() {
-      return new window.Promise((resolve, reject) => {
-        const { afterSubmit, conditionValue } = this;
-        this.validate().then((isValid) => {
-          if (!isValid) {
-            reject();
-            return;
-          }
-          if (typeof afterSubmit === 'function') {
-            const promise = afterSubmit(conditionValue);
-            if (promise && promise.then) {
-              promise.then(() => {
-                resolve();
-              }).catch((err) => {
-                reject(err);
-              });
-            }
-            return;
-          }
-          resolve();
-        });
-      });
+      return typeof this.afterSubmit === 'function' ? this.afterSubmit() : true;
     },
     validate() {
       const validateAdvanceForm = (callback) => {
