@@ -1056,6 +1056,7 @@ export default Vue.extend({
   render() {
     const {
       $slots,
+      $scopedSlots,
       innerDataList,
       innerTreeDataList,
       dialogTitle,
@@ -1314,15 +1315,21 @@ export default Vue.extend({
             {...{ on: dialogOnListener }}
             title={dialogTitle}
           >
-            <el-json-form
-              ref="dialogForm"
-              {...{ props: dialogFormProps }}
-              schema={schema}
-              rules={innerRules}
-              ui-schema={innerUiSchema}
-              columns={2}
-              label-width="auto"
-            />
+            {
+              $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
+                data: formData
+              }) : (
+                <el-json-form
+                  ref="dialogForm"
+                  {...{ props: dialogFormProps }}
+                  schema={schema}
+                  rules={innerRules}
+                  ui-schema={innerUiSchema}
+                  columns={2}
+                  label-width="auto"
+                />
+              )
+            }
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
                 保存

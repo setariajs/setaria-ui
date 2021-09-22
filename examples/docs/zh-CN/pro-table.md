@@ -282,7 +282,6 @@ Vue.component('el-pro-table', ProTable);
 |---------- |-------- |---------- |
 | current-change  | 当前页变更 | val 当前页变更值 |
 | size-change  | pageSize 改变时会触发 | val pageSize变更值 |
-| row-control-button-click  | 自定义操作按钮点击事件 | key 定义的key  scope 当前scope信息 |
 | row-button-click | 自定义操作按钮点击事件 | key 定义的key  scope 当前scope信息 |
 | select-all | 选中所有 | records 选中所有数据 |
 | selection-change | 选中变更 | selectionArray 选中的数据 |

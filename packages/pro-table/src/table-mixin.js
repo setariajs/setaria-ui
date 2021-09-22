@@ -683,10 +683,8 @@ export default {
           this.controlStatus = EDIT_TYPE.MODIFY;
           this.isShowForm = true;
           this.formData = scope.row;
-        } else {
-          this.$emit('row-control-button-click', key, scope);
-          this.$emit('row-button-click', key, scope);
         }
+        this.$emit('row-button-click', key, scope);
       };
     },
     /**
