@@ -139,7 +139,7 @@ export const COMMON_TABLE_PROPS = {
   // 控制列宽度
   controlColumnWidth: {
     type: String,
-    default: '120'
+    default: '160'
   },
   // 表格ID，主要用于对表格的配置进行缓存
   tableId: String,

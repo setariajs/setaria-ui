@@ -33,13 +33,18 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :ui-schema="uiSchema"
     :data="data"
     row-key="id"
+    :can-add="canAdd"
+    :can-update="canUpdate"
+    :can-delete="canDelete"
     :before-add-row="beforeAddRow"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
     :save="save"
   >
-    <template slot="batchControl">
-      <el-button type="text">自定义按钮</el-button>
+    <template slot="batchControl" v-if="!labelMode">
+      <el-button type="text" @click="canAdd=!canAdd">{{ canAdd ? '禁止' : '允许' }}新增</el-button>
+      <el-button type="text" @click="canUpdate=!canUpdate">{{ canUpdate ? '禁止' : '允许' }}修改</el-button>
+      <el-button type="text" @click="canDelete=!canDelete">{{ canDelete ? '禁止' : '允许' }}删除</el-button>
     </template>
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -200,6 +205,9 @@ export default {
         }
       },
       data: [],
+      canAdd: true,
+      canUpdate: true,
+      canDelete: true
     };
   },
   created() {
@@ -234,7 +242,11 @@ export default {
       return [
         {
           key: '1',
-          label: `删除${rowIndex}`,
+          label: `按钮A${rowIndex}`,
+        },
+        {
+          key: '2',
+          label: `按钮B${rowIndex}`,
         },
       ];
     },
@@ -582,7 +594,10 @@ export default {
 | showExpandAllBtn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | showCollapseAllBtn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | showColumnSetting    | 是否显示右上角的列设置 | Boolean | — | true |
-| rowClassName    | 待补充 | String | — | —  |
+| can-add    | 是否可新增数据 | Boolean | — | true |
+| can-update    | 是否可修改数据 | Boolean | — | true |
+| can-delete    | 是否可删除数据 | Boolean | — | true |
+| row-class-name    | 待补充 | String | — | —  |
 
 ### 插槽
 

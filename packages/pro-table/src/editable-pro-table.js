@@ -35,19 +35,21 @@ export default Vue.extend({
       required: false,
       default: true
     },
-    // 表格工具栏配置
-    toolbarProps: {
-      type: Object,
-      default() {
-        return {
-          // 新增一行或新增同级按钮是否禁用
-          addRowButtonDisabled: false,
-          // 新增子级按钮是否禁用
-          addChildButtonDisabled: false,
-          // 删除按钮是否禁用
-          deleteRowButtonDisabled: false
-        };
-      }
+    canAdd: {
+      type: Boolean,
+      default: true
+    },
+    canAddChild: {
+      type: Boolean,
+      default: true
+    },
+    canUpdate: {
+      type: Boolean,
+      default: true
+    },
+    canDelete: {
+      type: Boolean,
+      default: true
     },
     pageSize: Number,
     pageSizes: Array,
@@ -72,6 +74,16 @@ export default Vue.extend({
     };
   },
   computed: {
+    innerCanDelete() {
+      return this.canDelete && this.innerSelection.length >= 1;
+    },
+    innerCanAddTree() {
+      return this.canAdd;
+    },
+    innerCanAddChild() {
+      const { innerSelection } = this;
+      return this.canAdd && this.canAddChild && innerSelection.length === 1;
+    },
     innerEditConfig() {
       const { editConfig } = this;
       const defaultConfig = {
@@ -1086,7 +1098,6 @@ export default Vue.extend({
       onDialogCancelButtonClick,
       isTree,
       isShowDefaultBatchControl,
-      innerSelection,
       onTableAddCurrentClick,
       onTableAddChildClick,
       onTableAddRowClick,
@@ -1102,7 +1113,6 @@ export default Vue.extend({
       labelMode,
       showPagination,
       isShowTable,
-      toolbarProps,
       onCellClick,
       innerMergeCells,
       menuConfig,
@@ -1119,7 +1129,11 @@ export default Vue.extend({
       showCollapseAllBtn,
       onGridNativeClick,
       rowClassName,
-      isSaveLoading
+      isSaveLoading,
+      canAdd,
+      innerCanDelete,
+      innerCanAddTree,
+      innerCanAddChild
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1129,34 +1143,6 @@ export default Vue.extend({
     const dialogFormProps = {
       model: formData
     };
-    // Tree模式下是否禁用新增同级按钮
-    let isAddRowButtonDisabledInTreeMode = false;
-    // Tree模式下是否禁用新增子级按钮
-    let isAddChildButtonDisabledInTreeMode = false;
-    // Tree模式的场合
-    if (isTree) {
-      const { addRowButtonDisabled } = toolbarProps;
-      if (addRowButtonDisabled) {
-        isAddRowButtonDisabledInTreeMode = true;
-      } else {
-        isAddRowButtonDisabledInTreeMode =
-          innerDataList.length > 0 && innerSelection.length !== 1;
-      }
-      const { addChildButtonDisabled } = toolbarProps;
-      if (addChildButtonDisabled) {
-        isAddChildButtonDisabledInTreeMode = true;
-      } else {
-        isAddChildButtonDisabledInTreeMode = innerSelection.length !== 1;
-      }
-    }
-    // 是否禁用删除按钮
-    let isDeleteButtonDisabled = false;
-    const { deleteRowButtonDisabled } = toolbarProps;
-    if (deleteRowButtonDisabled) {
-      isDeleteButtonDisabled = true;
-    } else {
-      isDeleteButtonDisabled = innerSelection.length <= 0;
-    }
     const getCommonToolbarButton = () => {
       const ret = [];
       if (isShowDefaultBatchControl && !labelMode) {
@@ -1164,47 +1150,51 @@ export default Vue.extend({
         if (isTree) {
           // 新增同级按钮
           const addCurrentButton = (
-            <el-button
-              type="text"
-              on-click={onTableAddCurrentClick}
-              disabled={isAddRowButtonDisabledInTreeMode}
-            >
-              新增同级
-            </el-button>
+            innerCanAddTree ? (
+              <el-button
+                type="text"
+                on-click={onTableAddCurrentClick}
+              >
+                新增同级
+              </el-button>
+            ) : null
           );
           ret.push(addCurrentButton);
           // 新增子级按钮
           const addChildButton = (
-            <el-button
-              type="text"
-              on-click={onTableAddChildClick}
-              disabled={isAddChildButtonDisabledInTreeMode}
-            >
-              新增子级
-            </el-button>
+            innerCanAddChild ? (
+              <el-button
+                type="text"
+                on-click={onTableAddChildClick}
+              >
+                新增子级
+              </el-button>
+            ) : null
           );
           ret.push(addChildButton);
           // 显示flat数据的场合
         } else {
           const addRowButton = (
-            <el-button
-              type="text"
-              on-click={onTableAddRowClick}
-              disabled={toolbarProps.addRowButtonDisabled}
-            >
-              新增数据
-            </el-button>
+            canAdd ? (
+              <el-button
+                type="text"
+                on-click={onTableAddRowClick}
+              >
+                新增数据
+              </el-button>
+            ) : null
           );
           ret.push(addRowButton);
         }
         const deleteRowButton = (
-          <el-button
-            type="text"
-            on-click={onTableDeleteClick}
-            disabled={isDeleteButtonDisabled}
-          >
-            批量删除
-          </el-button>
+          innerCanDelete ? (
+            <el-button
+              type="text"
+              on-click={onTableDeleteClick}
+            >
+              批量删除
+            </el-button>
+          ) : null
         );
         ret.push(deleteRowButton);
       }

@@ -8,6 +8,10 @@ const MODIFY_BUTTON = {
   key: 'ept-modify',
   label: '修改'
 };
+const DELETE_BUTTON = {
+  key: 'ept-delete',
+  label: '删除'
+};
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
@@ -570,7 +574,9 @@ export default {
         controlColumnWidth,
         getRowButton,
         labelMode,
-        onCustomButtonClick
+        onCustomButtonClick,
+        canUpdate,
+        canDelete
       } = this;
       if (typeof getRowButton !== 'function') {
         return null;
@@ -585,10 +591,15 @@ export default {
             const controlColumnDefaultSlot = [];
             const rowButtonList = getRowButton(scope) || [];
             if (labelMode !== true) {
-              rowButtonList.unshift(MODIFY_BUTTON);
+              if (canUpdate) {
+                rowButtonList.unshift(MODIFY_BUTTON);
+              }
+              if (canDelete) {
+                rowButtonList.unshift(DELETE_BUTTON);
+              }
             }
             if (!_.isEmpty(rowButtonList)) {
-              if (rowButtonList.length <= 2) {
+              if (rowButtonList.length <= 3) {
                 rowButtonList.forEach(({ key, label }) => {
                   controlColumnDefaultSlot.push(
                     <el-button
@@ -600,15 +611,18 @@ export default {
                   );
                 });
               } else {
-                const btnFirst = rowButtonList[0];
-                controlColumnDefaultSlot.push(
-                  <el-button
-                    type="text"
-                    on-click={onCustomButtonClick(btnFirst.key, scope)}
-                  >
-                    {btnFirst.label}
-                  </el-button>
-                );
+                let i;
+                for (i = 0; i < 2; i += 1) {
+                  const btnFirst = rowButtonList[i];
+                  controlColumnDefaultSlot.push(
+                    <el-button
+                      type="text"
+                      on-click={onCustomButtonClick(btnFirst.key, scope)}
+                    >
+                      {btnFirst.label}
+                    </el-button>
+                  );
+                }
                 const moreElt = (
                   <el-dropdown style="margin-left: 15px">
                     <el-button type="text">
@@ -616,7 +630,7 @@ export default {
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                       {rowButtonList.map(({ key, label }, index) => {
-                        if (index > 0) {
+                        if (index >= i) {
                           return (
                             <el-dropdown-item>
                               <el-button
@@ -683,6 +697,10 @@ export default {
           this.controlStatus = EDIT_TYPE.MODIFY;
           this.isShowForm = true;
           this.formData = scope.row;
+        }
+        if (key === DELETE_BUTTON.key) {
+          this.controlStatus = EDIT_TYPE.DELETE;
+          this.deleteItem(scope.row);
         }
         this.$emit('row-button-click', key, scope);
       };
