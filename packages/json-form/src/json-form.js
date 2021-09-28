@@ -189,7 +189,13 @@ export default {
         // title不为空的场合，基于schema进行渲染
         if (!isEmpty(property.title)) {
           const formItemChildren = [];
-          if ($scopedSlots[key] === undefined) {
+          if (typeof $scopedSlots[key] === 'function') {
+            const childrenCustomRender = $scopedSlots[key]({
+              data: model,
+              status: 'edit'
+            });
+            formItemChildren.push(childrenCustomRender);
+          } else {
             const className = ui[CLASSNAME] || '';
             const component = createElementByProperty(key, property, ui, model, this.$emit);
             if (component) {
@@ -232,9 +238,6 @@ export default {
               });
               formItemChildren.push(h(componentTagName, componentProps, componentChildren));
             }
-          } else {
-            const childrenCustomRender = $scopedSlots[key]({data: model});
-            formItemChildren.push(childrenCustomRender);
           }
           const labelSlot = self.getFormLabelSlot(h, property, self.columnMaxLabelLength, colSpan);
           const colSpan = ui[JSON_FORM_UI.UI_COLSPAN];

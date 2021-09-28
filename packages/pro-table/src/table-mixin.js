@@ -26,6 +26,8 @@ export default {
   },
   data() {
     return {
+      originFormData: null,
+      currentFormData: null,
       // 当前选中的行
       innerSelection: [],
       // 当前排序状态
@@ -591,11 +593,11 @@ export default {
             const controlColumnDefaultSlot = [];
             const rowButtonList = getRowButton(scope) || [];
             if (labelMode !== true) {
-              if (canUpdate) {
-                rowButtonList.unshift(MODIFY_BUTTON);
-              }
               if (canDelete) {
                 rowButtonList.unshift(DELETE_BUTTON);
+              }
+              if (canUpdate) {
+                rowButtonList.unshift(MODIFY_BUTTON);
               }
             }
             if (!_.isEmpty(rowButtonList)) {
@@ -683,6 +685,13 @@ export default {
         xTable.reloadColumn(this.vxeTableColumnArray);
       }
     },
+    initialDialogFormData(data) {
+      this.originFormData = data;
+      this.currentFormData = _.cloneDeep(this.originFormData);
+    },
+    syncEditData() {
+      _.assign(this.originFormData, this.currentFormData);
+    },
     /**
      * 自定义操作按钮点击事件
      * @param {*} key
@@ -696,7 +705,7 @@ export default {
         if (key === MODIFY_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.MODIFY;
           this.isShowForm = true;
-          this.formData = scope.row;
+          this.initialDialogFormData(scope.row);
         }
         if (key === DELETE_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.DELETE;

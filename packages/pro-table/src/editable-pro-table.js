@@ -64,7 +64,6 @@ export default Vue.extend({
   data() {
     return {
       isShowForm: false,
-      formData: null,
       selectRow: null,
       isShowTable: true,
       /* 树形列表绑定到vxe-table的数据 */
@@ -891,12 +890,14 @@ export default Vue.extend({
       if (isEditOnRow) {
         this.tableAddRow();
       } else {
+        let data = null;
         // 填充表单默认数据
         if (typeof this.beforeAddRow === 'function') {
-          this.formData = this.beforeAddRow();
+          data = this.beforeAddRow();
         } else if (!_.isEmpty(this.innerDataList)) {
-          this.formData = createDefaultObjectBySchema(schema);
+          data = createDefaultObjectBySchema(schema);
         }
+        this.initialDialogFormData(data);
         this.isShowForm = true;
       }
     },
@@ -1022,16 +1023,25 @@ export default Vue.extend({
       });
     },
     onDialogSaveButtonClick() {
-      const { controlStatus, data, dataAddPosition, formData, save, selectRow } = this;
+      const {
+        controlStatus,
+        data,
+        dataAddPosition,
+        currentFormData,
+        originFormData,
+        save,
+        selectRow
+      } = this;
       const afterExec = () => {
+        this.syncEditData();
         if (controlStatus === EDIT_TYPE.ADD) {
           if (dataAddPosition === 'begin') {
-            data.unshift(formData);
+            data.unshift(originFormData);
           } else {
-            data.push(formData);
+            data.push(originFormData);
           }
         } else {
-          _.assign(selectRow, formData);
+          _.assign(selectRow, originFormData);
         }
         this.isShowForm = false;
       };
@@ -1039,7 +1049,8 @@ export default Vue.extend({
         if (isValid) {
           this.isSaveLoading = true;
           if (typeof save === 'function') {
-            const res = save(formData, controlStatus, this.$refs.dialogForm);
+            // 传递编辑中数据以避免失败时需要进行回退
+            const res = save(currentFormData, controlStatus, this.$refs.dialogForm);
             if (res.then) {
               res.then(() => {
                 afterExec();
@@ -1072,7 +1083,7 @@ export default Vue.extend({
       innerDataList,
       innerTreeDataList,
       dialogTitle,
-      formData,
+      currentFormData,
       isShowForm,
       innerRules,
       innerEditConfig,
@@ -1141,7 +1152,7 @@ export default Vue.extend({
       }
     };
     const dialogFormProps = {
-      model: formData
+      model: currentFormData
     };
     const getCommonToolbarButton = () => {
       const ret = [];
@@ -1298,7 +1309,7 @@ export default Vue.extend({
             on-sort-change={onSortChange}
           />
         </div>
-        {formData ? (
+        {currentFormData ? (
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
@@ -1307,7 +1318,7 @@ export default Vue.extend({
           >
             {
               $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
-                data: formData
+                data: currentFormData
               }) : (
                 <el-json-form
                   ref="dialogForm"
@@ -1317,6 +1328,7 @@ export default Vue.extend({
                   ui-schema={innerUiSchema}
                   columns={2}
                   label-width="auto"
+                  scopedSlots={$scopedSlots}
                 />
               )
             }
@@ -1376,7 +1388,7 @@ export default Vue.extend({
             row-class-name={rowClassName}
           />
         </div>
-        {formData ? (
+        {currentFormData ? (
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}

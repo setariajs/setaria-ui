@@ -50,10 +50,13 @@ Vue.component('el-editable-pro-table', EditableProTable);
       <el-button type="text">{{ scope.rowIndex }}</el-button>
     </template>
     <template slot="CustomSlot" slot-scope="scope">
-      <el-rate :disabled="scope.rowStatus !== 'edit'"
-               v-model="scope.row.CustomSlotCode"></el-rate>
+      <el-rate :disabled="scope.status !== 'edit'"
+               v-model="scope.data.CustomSlotCode"></el-rate>
     </template>
   </el-editable-pro-table>
+  <div>
+    <el-json-viewer :data="data"></el-json-viewer>
+  </div>
 </template>
 <script>
 export default {
@@ -286,8 +289,7 @@ export default {
 ```
 :::
 
-
-### 自定义修改弹窗内容
+### 编辑弹窗完全自定义
 
 :::demo
 ```html
@@ -315,7 +317,7 @@ export default {
       <el-button type="text">{{ scope.rowIndex }}</el-button>
     </template>
     <template slot="CustomSlot" slot-scope="scope">
-      <el-rate :disabled="scope.rowStatus !== 'edit'"
+      <el-rate :disabled="scope.status !== 'edit'"
                v-model="scope.row.CustomSlotCode"></el-rate>
     </template>
     <template slot="modifyDialog" slot-scope="scope">

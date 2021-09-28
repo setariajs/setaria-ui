@@ -166,13 +166,15 @@ export function convertSchemaToColumns(
       column.hasCustomSlot = true;
       const defaultSlot = (scope) => {
         const s = scope;
-        s.rowStatus = 'default';
+        s.data = s.row;
+        s.status = 'default';
         const render = scopedSlots[key](s);
         return render;
       };
       const editSlot = (scope) => {
         const s = scope;
-        s.rowStatus = 'edit';
+        s.data = s.row;
+        s.status = 'edit';
         const render = scopedSlots[key](s);
         return render;
       };
