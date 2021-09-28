@@ -707,8 +707,7 @@ export default {
           this.isShowForm = true;
           this.initialDialogFormData(scope.row);
           this.$emit('row-button-click', key, scope);
-        }
-        if (key === DELETE_BUTTON.key) {
+        } else if (key === DELETE_BUTTON.key) {
           this.$confirm('确认删除数据吗？', '提示', {
             type: 'warning'
           }).then(() => {
@@ -716,6 +715,8 @@ export default {
             this.deleteItem(scope.row);
             this.$emit('row-button-click', key, scope);
           }).catch(() => {});
+        } else {
+          this.$emit('row-button-click', key, scope);
         }
       };
     },
