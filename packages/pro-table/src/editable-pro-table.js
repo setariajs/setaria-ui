@@ -918,12 +918,16 @@ export default Vue.extend({
     },
     /** "批量删除"按钮点击事件 */
     onTableDeleteClick() {
-      const { onDeleteClick, innerSelection } = this;
-      if (onDeleteClick != null && _.isFunction(onDeleteClick)) {
-        onDeleteClick(innerSelection);
-        return;
-      }
-      this.tableDelete();
+      this.$confirm('确认删除数据吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+        const { onDeleteClick, innerSelection } = this;
+        if (onDeleteClick != null && _.isFunction(onDeleteClick)) {
+          onDeleteClick(innerSelection);
+          return;
+        }
+        this.tableDelete();
+      }).catch(() => {});
     },
     tableDelete(rows) {
       if (rows && _.isArray(rows) && rows.length > 0) {

@@ -706,12 +706,17 @@ export default {
           this.controlStatus = EDIT_TYPE.MODIFY;
           this.isShowForm = true;
           this.initialDialogFormData(scope.row);
+          this.$emit('row-button-click', key, scope);
         }
         if (key === DELETE_BUTTON.key) {
-          this.controlStatus = EDIT_TYPE.DELETE;
-          this.deleteItem(scope.row);
+          this.$confirm('确认删除数据吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            this.controlStatus = EDIT_TYPE.DELETE;
+            this.deleteItem(scope.row);
+            this.$emit('row-button-click', key, scope);
+          }).catch(() => {});
         }
-        this.$emit('row-button-click', key, scope);
       };
     },
     /**

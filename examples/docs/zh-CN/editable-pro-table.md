@@ -591,7 +591,7 @@ export default {
 | pageNum    | 当前页号 | Number | — | — |
 | pageSize    | 每页显示数据数量 | Number | — | — |
 | total    | 数据总数量 | Number | — | — |
-| controlColumnWidth    | 控制列宽度 | String | — | '120' |
+| controlColumnWidth    | 控制列宽度 | String | — | '160' |
 | tableId    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
 | showExpandAllBtn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | showCollapseAllBtn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
