@@ -259,3 +259,22 @@ export const cutStrByFullLength = function(str = '', maxLength) {
     return pre;
   }, '');
 };
+
+export const callbackExec = function(func) {
+  return new window.Promise((resolve, reject) => {
+    if (typeof func === 'function') {
+      const funcExecResult = func.apply(null, Array.prototype.slice.call(arguments, 1));
+      if (funcExecResult.then) {
+        funcExecResult.then(() => {
+          resolve();
+        }).catch((err) => {
+          reject(err);
+        });
+      } else {
+        funcExecResult ? resolve() : reject();
+      }
+    } else {
+      resolve(true);
+    }
+  });
+};

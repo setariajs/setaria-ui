@@ -916,19 +916,6 @@ export default Vue.extend({
       this.data.splice(position || 0, 0, defaultItem);
       // this.xTableRef.insert(item);
     },
-    /** "批量删除"按钮点击事件 */
-    onTableDeleteClick() {
-      this.$confirm('确认删除数据吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-        const { onDeleteClick, innerSelection } = this;
-        if (onDeleteClick != null && _.isFunction(onDeleteClick)) {
-          onDeleteClick(innerSelection);
-          return;
-        }
-        this.tableDelete();
-      }).catch(() => {});
-    },
     tableDelete(rows) {
       if (rows && _.isArray(rows) && rows.length > 0) {
         rows.forEach((item) => {
@@ -947,7 +934,6 @@ export default Vue.extend({
 
       this.xTableRef.updateData();
       this.emitSelectionChange([]);
-      // this.xTableRef.remove(innerSelection);
     },
     deleteItem(item) {
       const { data, changeModeField, innerRowKey, isTree, virtualTree } = this;
@@ -1078,6 +1064,9 @@ export default Vue.extend({
     },
     recalculate(refull) {
       this.xTableRef.recalculate(refull);
+    },
+    onBatchDeleteData() {
+      this.onTableDeleteClick(this.innerSelection);
     }
   },
   render() {
@@ -1116,7 +1105,7 @@ export default Vue.extend({
       onTableAddCurrentClick,
       onTableAddChildClick,
       onTableAddRowClick,
-      onTableDeleteClick,
+      onBatchDeleteData,
       onTableExpandRowsClick,
       onTableCollapseRowsClick,
       innerPageSize,
@@ -1205,7 +1194,7 @@ export default Vue.extend({
           innerCanDelete ? (
             <el-button
               type="text"
-              on-click={onTableDeleteClick}
+              on-click={onBatchDeleteData}
             >
               批量删除
             </el-button>

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { EDIT_TYPE } from 'setaria-ui/src/constants/index';
+import { callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
 import { convertSchemaToColumns } from './util';
 
@@ -692,6 +693,26 @@ export default {
     syncEditData() {
       _.assign(this.originFormData, this.currentFormData);
     },
+    /** "批量删除"按钮点击事件 */
+    onTableDeleteClick(val) {
+      return new window.Promise((resolve, reject) => {
+        const { save } = this;
+        this.$confirm('确认删除数据吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          callbackExec(save, val, EDIT_TYPE.DELETE)
+            .then(() => {
+              // 从表格中删除指定行
+              this.tableDelete(val);
+              resolve();
+            }).catch(() => {
+              reject();
+            });
+        }).catch(() => {
+          reject();
+        });
+      });
+    },
     /**
      * 自定义操作按钮点击事件
      * @param {*} key
@@ -699,6 +720,7 @@ export default {
      * @returns
      */
     onCustomButtonClick(key, scope) {
+      const { onTableDeleteClick } = this;
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -708,11 +730,8 @@ export default {
           this.initialDialogFormData(scope.row);
           this.$emit('row-button-click', key, scope);
         } else if (key === DELETE_BUTTON.key) {
-          this.$confirm('确认删除数据吗？', '提示', {
-            type: 'warning'
-          }).then(() => {
-            this.controlStatus = EDIT_TYPE.DELETE;
-            this.deleteItem(scope.row);
+          this.controlStatus = EDIT_TYPE.DELETE;
+          onTableDeleteClick([scope.row]).then(() => {
             this.$emit('row-button-click', key, scope);
           }).catch(() => {});
         } else {

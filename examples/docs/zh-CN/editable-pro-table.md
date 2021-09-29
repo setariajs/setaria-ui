@@ -32,7 +32,6 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
-    row-key="id"
     :can-add="canAdd"
     :can-update="canUpdate"
     :can-delete="canDelete"
@@ -276,10 +275,38 @@ export default {
       };
     },
     save(data, mode) {
-      return new window.Promise((resolve) => {
+      return new window.Promise((resolve, reject) => {
+        const loading = this.$loading();
         setTimeout(() => {
-          console.log(data, mode);
-          resolve({});
+          if (mode === 'delete') {
+            if (data.findIndex(item => item.id === 1) === -1) {
+              resolve();
+            } else {
+              this.$message.warning('不允许删除id为1的数据');
+              reject();
+              loading.close();
+              return;
+            }
+          } else {
+            resolve({});
+          }
+          loading.close();
+          let label = '';
+          switch(mode) {
+            case 'add':
+              label = '新增';
+              break;
+            case 'modify':
+              label = '修改';
+              break;
+            case 'delete':
+              label = '删除';
+              break;
+            default:
+              label = '保存';
+          }
+          const saveData = Array.isArray(data) ? data : [data];
+          this.$message.success(`id为 ${saveData.map(item => item.id).join(',')} 的数据已成功${label}。`);
         }, 1000);
       })
     }
@@ -514,7 +541,7 @@ export default {
       ];
     },
     onRowButtonClick(key, { row }) {
-      this.$message.info(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);
+      console.log(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);
     },
     onSelectionChange(val) {
       console.log(val);
