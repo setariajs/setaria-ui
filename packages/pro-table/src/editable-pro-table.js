@@ -745,14 +745,8 @@ export default Vue.extend({
     /**
      * 表格在编辑状态下触发数据变动事件处理
      */
-    emitDataChange(key, val, row) {
-      // if (this.isTree) {
-      if (row[this.changeModeField] !== OPT_ADD) {
-        const target = row;
-        target[this.changeModeField] = OPT_UPDATE;
-      }
-      // }
-      this.$emit('data-change', key, val, row);
+    emitDataChange(key, val, row, originData) {
+      this.$emit('data-change', key, val, row, originData);
     },
     /** "新增同级"按钮点击事件 */
     onTableAddCurrentClick() {
@@ -1067,6 +1061,9 @@ export default Vue.extend({
     },
     onBatchDeleteData() {
       this.onTableDeleteClick(this.innerSelection);
+    },
+    handleFormChange(key, val) {
+      this.emitDataChange(key, val, this.currentFormData, this.originFormData);
     }
   },
   render() {
@@ -1137,7 +1134,8 @@ export default Vue.extend({
       canAdd,
       innerCanDelete,
       innerCanAddTree,
-      innerCanAddChild
+      innerCanAddChild,
+      handleFormChange
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1322,6 +1320,7 @@ export default Vue.extend({
                   columns={2}
                   label-width="auto"
                   scopedSlots={$scopedSlots}
+                  on-change={handleFormChange}
                 />
               )
             }

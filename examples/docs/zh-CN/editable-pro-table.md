@@ -36,6 +36,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :can-update="canUpdate"
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
+    @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
     :save="save"
@@ -251,6 +252,9 @@ export default {
           label: `按钮B${rowIndex}`,
         },
       ];
+    },
+    onDataChange(key, val, data, originData) {
+      console.log(`项目${key}修改为${val}`, data, originData);
     },
     onRowButtonClick(key, { row }) {
       this.$message.info(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);
@@ -646,11 +650,10 @@ export default {
 | select-all | 选中所有 | records 选中所有数据 |
 | selection-change | 选中变更 | selectionArray 选中的数据 |
 | cell-click | 单元格点击 | val 单元格数据 |
-| menu-click | 待补充 | val 待补充 |
-| cell-menu | 待补充 | val 待补充 |
-| sort-change | 待补充 | val 待补充 |
+| menu-click | 只对 menu-config 配置时有效，当点击快捷菜单时会触发该事件 | { menu, type, row, rowIndex, column, columnIndex, $event } |
+| cell-menu | 只对 menu-config 配置时有效，单元格被鼠标右键时触发该事件 | { type, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event } |
+| sort-change | 当排序条件发生变化时会触发该事件 | { column, property, order, sortBy, sortList, $event } |
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
-| cell-link-click | 待补充 | - |
-| data-change | 待补充 | - |
+| data-change | 行项目修改后(原始组件change事件)触发 | key 表单字段的 Key, val 表单字段的值, data 当前修改的数据（行编辑模式时为行数据，弹窗编辑模式时为展开的表单数据）, originData 行编辑前数据，仅为行编辑模式时存在 |
 
 

@@ -1123,7 +1123,8 @@ export default {
     },
     onGridNativeClick(evt) {
       if (this.isCellButtonClick(evt)) {
-        this.$emit('cell-link-click');
+        // 用于单元格内按钮点击后，同时触发行选中的问题排查
+        this.$emit('cell-link-click', evt);
       }
     }
   }
