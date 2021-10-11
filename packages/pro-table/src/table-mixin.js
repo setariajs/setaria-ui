@@ -581,8 +581,9 @@ export default {
         canUpdate,
         canDelete
       } = this;
-      if (typeof getRowButton !== 'function') {
-        return null;
+      // 当自定义按钮为空且是label模式时，直接隐藏操作列
+      if (typeof getRowButton !== 'function' && labelMode) {
+        return;
       }
       return {
         title: COLUMN_CONTROL_TITLE,
@@ -592,7 +593,10 @@ export default {
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];
-            const rowButtonList = getRowButton(scope) || [];
+            let rowButtonList = [];
+            if (typeof getRowButton === 'function') {
+              rowButtonList = getRowButton(scope) || [];
+            }
             if (labelMode !== true) {
               if (canDelete) {
                 rowButtonList.unshift(DELETE_BUTTON);

@@ -331,7 +331,6 @@ export default {
   <el-editable-pro-table
     :label-mode="labelMode"
     multiple-selection
-    :get-row-button="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
