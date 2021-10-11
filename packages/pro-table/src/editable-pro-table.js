@@ -517,6 +517,12 @@ export default Vue.extend({
           this.innerTreeDataList = val;
         }
       }
+    },
+    isShowForm(val) {
+      // dialog的open在第一次打开窗口时不触发，所以在此处监听dialog显示状态，触发对话框打开逻辑
+      if (val) {
+        this.handleFormDialogOpen();
+      }
     }
   },
   methods: {
@@ -1064,6 +1070,9 @@ export default Vue.extend({
     },
     handleFormChange(key, val) {
       this.emitDataChange(key, val, this.currentFormData, this.originFormData);
+    },
+    handleFormDialogOpen() {
+      this.$emit('dialog-open', this.currentFormData);
     }
   },
   render() {
