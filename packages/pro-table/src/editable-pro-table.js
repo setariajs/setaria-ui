@@ -1102,13 +1102,8 @@ export default Vue.extend({
       innerCanAddTree,
       innerCanAddChild,
       handleFormChange,
-      // dialogTitle,
-      // dialogWidth,
       formAttrs,
       dialogAttrs
-      // formColumns,
-      // formLabelPosition,
-      // formLabelSuffix
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
