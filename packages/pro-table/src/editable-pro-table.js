@@ -1114,6 +1114,12 @@ export default Vue.extend({
       ...formAttrs,
       model: currentFormData
     };
+    const dialogProps = {
+      ...{
+        title: '编辑'
+      },
+      ...dialogAttrs
+    };
     const getCommonToolbarButton = () => {
       const ret = [];
       if (isShowDefaultBatchControl && !labelMode) {
@@ -1273,7 +1279,7 @@ export default Vue.extend({
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
-            {...{ props: dialogAttrs }}
+            {...{ props: dialogProps }}
             {...{ on: dialogOnListener }}
           >
             {
@@ -1353,7 +1359,7 @@ export default Vue.extend({
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
-            {...{ props: dialogAttrs }}
+            {...{ props: dialogProps }}
             {...{ on: dialogOnListener }}
           >
             <el-json-form
