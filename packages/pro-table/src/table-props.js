@@ -251,35 +251,17 @@ export const EDIT_TABLE_PROPS = {
   editConfig: Object,
   // 点击对话框的表单保存按钮后执行，可返回Promise或Boolean
   save: Function,
-  // 编辑模式时，Dialog的宽度
-  dialogWidth: {
-    type: String,
+  // 编辑模式时，Dioalog组件的相关属性
+  dialogAttrs: {
+    type: Object,
     required: false,
-    default: null
+    default: () => {}
   },
-  // 编辑模式时，Dialog的标题
-  dialogTitle: {
-    type: String,
+  // 编辑模式时，表格组件的相关属性
+  formAttrs: {
+    type: Object,
     required: false,
-    default: '标题'
-  },
-  // 编辑模式时，表单域标签的位置
-  formLabelPosition: {
-    type: String,
-    required: false,
-    default: 'left'
-  },
-  // 编辑模式时，表单的列数
-  formColumns: {
-    type: Number,
-    required: false,
-    default: 2
-  },
-  // 编辑模式时，表单的列数
-  formLabelSuffix: {
-    type: String,
-    required: false,
-    default: null
+    default: () => {}
   },
   maxHeight: {
     type: String,

@@ -32,8 +32,8 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
-    :dialog-width="'90%'"
-    :dialog-title="'自定义标题'"
+    :dialog-attrs="dialogAttrs"
+    :form-attrs="formAttrs"
     :form-label-suffix="':'"
     :can-add="canAdd"
     :can-update="canUpdate"
@@ -67,6 +67,15 @@ export default {
   data() {
     return {
       labelMode: true,
+      formAttrs:{
+        columns: 3,
+        'label-position': 'top',
+        'label-suffix': '：'
+      },
+      dialogAttrs:{
+        title:'自定义标题',
+        width:'90%'
+      },
       schema: {
         properties: {
           index: {
@@ -931,11 +940,8 @@ export default {
 | can-update    | 是否可修改数据 | Boolean | — | true |
 | can-delete    | 是否可删除数据 | Boolean | — | true |
 | row-class-name    | 待补充 | String | — | —  |
-| dialog-width    | 编辑模式下，Dialog的宽度 | String | — | 50%  |
-| dialog-title    | 编辑模式下，Dialog的标题 | String | — | 编辑  |
-| form-columns    | 编辑模式下，表单的列数 | Number | — | 2  |
-| form-label-position    | 编辑模式下，表单域标签的位置 | String | top,left,right | left  |
-| form-label-suffix    | 编辑模式下，表单域表单域标签的后缀 | String | — | —  |
+| dialog-attrs    | 编辑模式下，Dialog组件的属性 | Object | — | —  |
+| form-attrs    | 编辑模式下，表单组件的属性 | Object | — | —  |
 | before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
 | before-modify-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
 

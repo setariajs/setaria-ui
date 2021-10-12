@@ -1102,11 +1102,13 @@ export default Vue.extend({
       innerCanAddTree,
       innerCanAddChild,
       handleFormChange,
-      dialogTitle,
-      dialogWidth,
-      formColumns,
-      formLabelPosition,
-      formLabelSuffix
+      // dialogTitle,
+      // dialogWidth,
+      formAttrs,
+      dialogAttrs
+      // formColumns,
+      // formLabelPosition,
+      // formLabelSuffix
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1114,6 +1116,7 @@ export default Vue.extend({
       }
     };
     const dialogFormProps = {
+      ...formAttrs,
       model: currentFormData
     };
     const getCommonToolbarButton = () => {
@@ -1273,11 +1276,10 @@ export default Vue.extend({
         </div>
         {currentFormData ? (
           <el-dialog
-            class="editable-pro-table__dialog11111"
+            class="editable-pro-table__dialog"
             visible={isShowForm}
+            {...{ props: dialogAttrs }}
             {...{ on: dialogOnListener }}
-            title={dialogTitle}
-            width={dialogWidth}
           >
             {
               $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
@@ -1289,10 +1291,8 @@ export default Vue.extend({
                   schema={schema}
                   rules={innerRules}
                   ui-schema={innerUiSchema}
-                  columns={formColumns}
-                  label-position={formLabelPosition}
+                  label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
                   label-width="auto"
-                  label-suffix={formLabelSuffix}
                   scopedSlots={$scopedSlots}
                   on-change={handleFormChange}
                 />
@@ -1358,20 +1358,16 @@ export default Vue.extend({
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
+            {...{ props: dialogAttrs }}
             {...{ on: dialogOnListener }}
-            title={dialogTitle}
-            width={dialogWidth}
           >
-            {dialogWidth}
             <el-json-form
               ref="dialogForm"
               {...{ props: dialogFormProps }}
               schema={schema}
               rules={innerRules}
               ui-schema={innerUiSchema}
-              columns={formColumns}
-              label-suffix={formLabelSuffix}
-              label-position={formLabelPosition}
+              label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
               label-width="auto"
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">
