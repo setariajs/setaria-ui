@@ -501,9 +501,6 @@ export default Vue.extend({
       });
       return ret;
     },
-    dialogTitle() {
-      return '编辑';
-    },
     xTableRef() {
       return this.$refs.xTable;
     }
@@ -1072,7 +1069,6 @@ export default Vue.extend({
       $scopedSlots,
       innerDataList,
       innerTreeDataList,
-      dialogTitle,
       currentFormData,
       isShowForm,
       innerRules,
@@ -1135,7 +1131,12 @@ export default Vue.extend({
       innerCanDelete,
       innerCanAddTree,
       innerCanAddChild,
-      handleFormChange
+      handleFormChange,
+      dialogTitle,
+      dialogWidth,
+      formColumns,
+      formLabelPosition,
+      formLabelSuffix
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1302,10 +1303,11 @@ export default Vue.extend({
         </div>
         {currentFormData ? (
           <el-dialog
-            class="editable-pro-table__dialog"
+            class="editable-pro-table__dialog11111"
             visible={isShowForm}
             {...{ on: dialogOnListener }}
             title={dialogTitle}
+            width={dialogWidth}
           >
             {
               $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
@@ -1317,8 +1319,10 @@ export default Vue.extend({
                   schema={schema}
                   rules={innerRules}
                   ui-schema={innerUiSchema}
-                  columns={2}
+                  columns={formColumns}
+                  label-position={formLabelPosition}
                   label-width="auto"
+                  label-suffix={formLabelSuffix}
                   scopedSlots={$scopedSlots}
                   on-change={handleFormChange}
                 />
@@ -1386,14 +1390,18 @@ export default Vue.extend({
             visible={isShowForm}
             {...{ on: dialogOnListener }}
             title={dialogTitle}
+            width={dialogWidth}
           >
+            {dialogWidth}
             <el-json-form
               ref="dialogForm"
               {...{ props: dialogFormProps }}
               schema={schema}
               rules={innerRules}
               ui-schema={innerUiSchema}
-              columns={2}
+              columns={formColumns}
+              label-suffix={formLabelSuffix}
+              label-position={formLabelPosition}
               label-width="auto"
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">

@@ -32,6 +32,9 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
+    :dialog-width="'90%'"
+    :dialog-title="'自定义标题'"
+    :form-label-suffix="':'"
     :can-add="canAdd"
     :can-update="canUpdate"
     :can-delete="canDelete"
@@ -630,6 +633,11 @@ export default {
 | can-update    | 是否可修改数据 | Boolean | — | true |
 | can-delete    | 是否可删除数据 | Boolean | — | true |
 | row-class-name    | 待补充 | String | — | —  |
+| dialog-width    | 编辑模式下，Dialog的宽度 | String | — | 50%  |
+| dialog-title    | 编辑模式下，Dialog的标题 | String | — | 编辑  |
+| form-columns    | 编辑模式下，表单的列数 | Number | — | 2  |
+| form-label-position    | 编辑模式下，表单域标签的位置 | String | top,left,right | left  |
+| form-label-suffix    | 编辑模式下，表单域表单域标签的后缀 | String | — | —  |
 
 ### 插槽
 
