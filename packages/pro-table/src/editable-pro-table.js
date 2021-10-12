@@ -20,46 +20,7 @@ export default Vue.extend({
   mixins: [tableMixin],
   props: {
     ...COMMON_TABLE_PROPS,
-    ...EDIT_TABLE_PROPS,
-    maxHeight: {
-      type: String,
-      default: '700'
-    },
-    defaultEntity: {
-      type: Object,
-      required: false,
-      default: null
-    },
-    isShowDefaultBatchControl: {
-      type: Boolean,
-      required: false,
-      default: true
-    },
-    canAdd: {
-      type: Boolean,
-      default: true
-    },
-    canAddChild: {
-      type: Boolean,
-      default: true
-    },
-    canUpdate: {
-      type: Boolean,
-      default: true
-    },
-    canDelete: {
-      type: Boolean,
-      default: true
-    },
-    pageSize: Number,
-    pageSizes: Array,
-    dataAddPosition: {
-      type: String,
-      default: 'end',
-      validator(val) {
-        return ['end', 'begin', null].indexOf(val) > -1;
-      }
-    }
+    ...EDIT_TABLE_PROPS
   },
   data() {
     return {
@@ -513,6 +474,12 @@ export default Vue.extend({
         if (this.isTree) {
           this.innerTreeDataList = val;
         }
+      }
+    },
+    isShowForm(val) {
+      // dialog的open在第一次打开窗口时不触发，所以在此处监听dialog显示状态，触发对话框打开逻辑
+      if (val) {
+        this.handleFormDialogOpen();
       }
     }
   },
@@ -1061,6 +1028,9 @@ export default Vue.extend({
     },
     handleFormChange(key, val) {
       this.emitDataChange(key, val, this.currentFormData, this.originFormData);
+    },
+    handleFormDialogOpen() {
+      this.$emit('dialog-open', this.currentFormData);
     }
   },
   render() {

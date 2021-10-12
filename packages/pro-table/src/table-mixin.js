@@ -724,15 +724,22 @@ export default {
      * @returns
      */
     onCustomButtonClick(key, scope) {
-      const { onTableDeleteClick } = this;
+      const { beforeModifyRow, onTableDeleteClick } = this;
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
         if (key === MODIFY_BUTTON.key) {
-          this.controlStatus = EDIT_TYPE.MODIFY;
-          this.isShowForm = true;
-          this.initialDialogFormData(scope.row);
-          this.$emit('row-button-click', key, scope);
+          const exec = () => {
+            this.controlStatus = EDIT_TYPE.MODIFY;
+            this.isShowForm = true;
+            this.initialDialogFormData(scope.row);
+            this.$emit('row-button-click', key, scope);
+          };
+          if (typeof beforeModifyRow === 'function') {
+            beforeModifyRow(scope) ? exec() : null;
+          } else {
+            exec();
+          }
         } else if (key === DELETE_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.DELETE;
           onTableDeleteClick([scope.row]).then(() => {

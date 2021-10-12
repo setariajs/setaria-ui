@@ -61,7 +61,12 @@ export default {
     // type为card时的props
     cardAttrs: Object,
     // type为modalForm时的props
-    dialogAttrs: Object
+    dialogAttrs: Object,
+    labelPosition: String,
+    labelSuffix: {
+      type: String,
+      default: ' :'
+    }
   },
   data() {
     return {
@@ -275,6 +280,8 @@ export default {
       type,
       title,
       submitter,
+      labelPosition,
+      labelSuffix,
       handleExpand,
       handleSubmit,
       handleChange,
@@ -312,7 +319,7 @@ export default {
      * 渲染查询筛选的操作区域
      */
     const getQueryFillterControlContainer = () => {
-      const { handleSubmit, handleReset, $attrs } = this;
+      const { handleSubmit, handleReset } = this;
       return (
         <el-col
           span={queryFilterColumnConfig.span}
@@ -320,7 +327,7 @@ export default {
           slot="formItems"
           class="el-pro-form__control">
           <el-form-item >
-            { $attrs.labelPosition === 'top' ? (
+            { labelPosition === 'top' ? (
               <span slot="label">&nbsp;</span>
             ) : null }
             <el-button
@@ -373,7 +380,9 @@ export default {
         scopedSlots={$scopedSlots}
         on-submit={handleSubmit}
         on-change={handleChange}
-        {...attributes}>
+        {...attributes}
+        label-position={labelPosition}
+        label-suffix={labelSuffix}>
         { getControlButton() }
       </ElJsonForm>
     );

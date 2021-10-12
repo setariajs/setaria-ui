@@ -200,6 +200,10 @@ export const EDIT_TABLE_PROPS = {
    */
   beforeAddRow: Function,
   /**
+   * 修改按钮点击时的回调函数，用于对修改数据进行处理
+   */
+  beforeModifyRow: Function,
+  /**
    * "新增同级"按钮点击前回调函数
    */
   beforeAddCurrent: {
@@ -276,6 +280,45 @@ export const EDIT_TABLE_PROPS = {
     type: String,
     required: false,
     default: null
+  },
+  maxHeight: {
+    type: String,
+    default: '700'
+  },
+  defaultEntity: {
+    type: Object,
+    required: false,
+    default: null
+  },
+  isShowDefaultBatchControl: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
+  canAdd: {
+    type: Boolean,
+    default: true
+  },
+  canAddChild: {
+    type: Boolean,
+    default: true
+  },
+  canUpdate: {
+    type: Boolean,
+    default: true
+  },
+  canDelete: {
+    type: Boolean,
+    default: true
+  },
+  pageSize: Number,
+  pageSizes: Array,
+  dataAddPosition: {
+    type: String,
+    default: 'end',
+    validator(val) {
+      return ['end', 'begin', null].indexOf(val) > -1;
+    }
   }
 };
 

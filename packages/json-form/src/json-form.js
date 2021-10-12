@@ -39,7 +39,8 @@ export default {
       default: 'el'
     },
     columnMaxLabelLength: Number,
-    rules: Object
+    rules: Object,
+    labelSuffix: String
   },
   data() {
     return {
@@ -152,6 +153,13 @@ export default {
       }
       if (tooltip) {
         slotChildren.push(tooltip);
+        if (this.labelSuffix) {
+          slotChildren.push(h('span', {
+            domProps: {
+              innerHTML: this.labelSuffix
+            }
+          }));
+        }
       }
       if (slotChildren.length > 0) {
         ret = (props) => h(
@@ -274,7 +282,8 @@ export default {
       ...$attrs,
       model: model,
       rules: self.innerRules,
-      isPrevent: self.isPrevent
+      isPrevent: self.isPrevent,
+      labelSuffix: self.labelSuffix
     };
     let formComponents = formItemArray;
     // inline模式的场合不使用自适应
