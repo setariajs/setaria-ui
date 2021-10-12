@@ -36,6 +36,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :can-update="canUpdate"
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
+    :before-modify-row="beforeModifyRow"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -277,6 +278,10 @@ export default {
         CustomSlot: null,
         Readonly: '只读信息只读信息'
       };
+    },
+    beforeModifyRow(scope) {
+      console.log(scope);
+      return true;
     },
     save(data, mode) {
       return new window.Promise((resolve, reject) => {
@@ -924,6 +929,8 @@ export default {
 | can-update    | 是否可修改数据 | Boolean | — | true |
 | can-delete    | 是否可删除数据 | Boolean | — | true |
 | row-class-name    | 待补充 | String | — | —  |
+| before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
+| before-modify-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
 
 ### 插槽
 
