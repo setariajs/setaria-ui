@@ -151,7 +151,11 @@ export default {
             title: '只读项目',
             type: 'string',
             editable: false,
-          }
+          },
+          searchHelp: {
+            title: '搜索帮助',
+            type: 'string'
+          }, 
         },
         required: [ 'Name' ],
       },
@@ -218,7 +222,18 @@ export default {
           'ui:options': {
             minWidth: '150px'
           },
-        }
+        },
+        searchHelp: {
+          'ui:options': {
+            'suffix-icon': 'el-icon-search',
+            readonly: true,
+          },
+          'ui:nativeOn': {
+            click: () => {
+              this.$message.info('searchHelp click')
+            },
+          },
+        }, 
       },
       data: [],
       canAdd: true,
@@ -465,7 +480,11 @@ export default {
             title: '联动项目',
             description: '枚举值为1时，显示为输入框，为2时，显示为下拉框',
             type: 'string'
-          }
+          },
+          searchHelp: {
+            title: '搜索帮助',
+            type: 'string'
+          },
         },
         required: [ 'Name' ],
       },
@@ -490,7 +509,18 @@ export default {
         },
         Comment: {
           'ui:colspan': 2
-        }
+        },
+        searchHelp: {
+          'ui:options': {
+            'suffix-icon': 'el-icon-search',
+            readonly: true,
+          },
+          'ui:nativeOn': {
+            click: () => {
+              this.$message.info('searchHelp click')
+            },
+          },
+        },
       },
       lineageEnumArray: [
         {
