@@ -229,7 +229,8 @@ export function convertSchemaToColumns(
  */
 export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
   let props = {
-    events: {}
+    events: {},
+    nativeEvents: {}
   };
   if (typeof uiProperty[JSON_FORM_UI.UI_DISABLED] === 'function') {
     props.disabledFunction = uiProperty[JSON_FORM_UI.UI_DISABLED];
