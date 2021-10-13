@@ -79,9 +79,9 @@
               type: 'integer',
               title: 'gender',
               oneOf: [
-                { const: 1, title: 'Male' },
-                { const: 2, title: 'FeMale' },
-                { const: 3, title: 'Other', disabled: true },
+                { const: '1', title: 'Male' },
+                { const: '2', title: 'FeMale' },
+                { const: '3', title: 'Other', disabled: true },
               ],
             },
             birth: {
@@ -145,7 +145,7 @@
         lastName: 'last',
         password: '',
         age: null,
-        gender: 1,
+        gender: 2,
         birth: '',
         interest: [],
         comment: '',

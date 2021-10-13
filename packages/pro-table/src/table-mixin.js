@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { EDIT_TYPE } from 'setaria-ui/src/constants/index';
+import { initialSetariaSchema } from 'setaria-ui/src/utils/schema';
 import { callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
 import { convertSchemaToColumns } from './util';
@@ -52,10 +53,18 @@ export default {
       columnSettingCheckedKeys: [],
       columnSettingDefaultCheckedKeys: [],
       isParticalColumnShow: false,
-      isAllColumnShow: true
+      isAllColumnShow: true,
+      innerSchema: null
     };
   },
   watch: {
+    schema: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.innerSchema = initialSetariaSchema(val);
+      }
+    },
     pageNum: {
       immediate: true,
       handler(val) {
@@ -272,13 +281,14 @@ export default {
         expandConfig,
         innerDefaultAllColumnSort,
         isTree,
-        schema,
+        innerSchema,
         treeNode,
         uiSchema = {},
         $scopedSlots
       } = this;
+      console.log(innerSchema);
       const ret = convertSchemaToColumns(
-        schema,
+        innerSchema,
         uiSchema,
         $scopedSlots,
         columnWidth,
@@ -442,10 +452,10 @@ export default {
       if (_.isEmpty(data)) {
         return data;
       }
-      const { sortMethod, isTree, schema } = this;
+      const { sortMethod, isTree, innerSchema } = this;
       // 自定义排序函数的场合
       if (typeof sortMethod === 'function') {
-        return sortMethod(data, fieldConfs, schema);
+        return sortMethod(data, fieldConfs, innerSchema);
       }
       const confs = [];
       // 转换函数
@@ -454,7 +464,7 @@ export default {
         const { property, order } = item;
         const key = property;
         let orderKey = key;
-        const schemaProperty = schema.properties[key];
+        const schemaProperty = innerSchema.properties[key];
         if (schemaProperty) {
           if (schemaProperty.format === 'price') {
             orderKey = (rowItem) => {

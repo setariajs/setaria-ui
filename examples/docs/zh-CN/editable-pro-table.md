@@ -28,6 +28,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <el-editable-pro-table
     :label-mode="labelMode"
     multiple-selection
+    column-width="auto"
     :get-row-button="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
@@ -88,7 +89,7 @@ export default {
           },
           Enum: {
             title: '枚举值',
-            type: 'string',
+            type: 'number',
             oneOf: [
               {
                 const: '1',
@@ -169,58 +170,11 @@ export default {
         Name: {
           'ui:options': {
             fixed: 'left',
-            minWidth: '150px'
           },
         },
         Enum: {
           'ui:options': {
             fixed: 'left',
-            width: '150px'
-          },
-        },
-        AnyOf: {
-          'ui:options': {
-            minWidth: '300px'
-          },
-        },
-        Number: {
-          'ui:options': {
-            minWidth: '100px'
-          },
-        },
-        Price: {
-          'ui:options': {
-            minWidth: '100px'
-          },
-        },
-        Date: {
-          'ui:options': {
-            minWidth: '100px'
-          },
-        },
-        Time: {
-          'ui:options': {
-            minWidth: '100px'
-          },
-        },
-        Comment: {
-          'ui:options': {
-            minWidth: '300px'
-          },
-        },
-        Boolean: {
-          'ui:options': {
-            minWidth: '90px'
-          },
-        },
-        CustomSlot: {
-          'ui:options': {
-            minWidth: '230px'
-          },
-        },
-        Readonly: {
-          'ui:options': {
-            minWidth: '150px'
           },
         },
         searchHelp: {
@@ -245,7 +199,7 @@ export default {
     this.headInfoData = {
       Name: 'XXX',
       Price: 12345.678,
-      Enum: '2',
+      Enum: 2,
       AnyOf: ['1', '2'],
       MaxLengthString: null,
       Number: 98765,

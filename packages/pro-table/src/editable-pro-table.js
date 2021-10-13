@@ -66,7 +66,7 @@ export default Vue.extend({
       if (this.defaultEntity) {
         return this.defaultEntity;
       }
-      return getSchemaDefaultObjectByFormSchema(this.schema);
+      return getSchemaDefaultObjectByFormSchema(this.innerSchema);
     },
     innerRowKey() {
       return this.rowKey ? this.rowKey : PRIMARY_ROW_KEY;
@@ -140,11 +140,11 @@ export default Vue.extend({
       return refField || innerRowKey;
     },
     editableColumnCount() {
-      const { schema, vxeColumns } = this;
+      const { innerSchema, vxeColumns } = this;
       let editableColumnCount = 0;
       vxeColumns.forEach((column) => {
         const { field } = column;
-        const { editable } = schema.properties[field];
+        const { editable } = innerSchema.properties[field];
         if (editable !== false) {
           editableColumnCount += 1;
         }
@@ -162,7 +162,7 @@ export default Vue.extend({
         innerUiSchema,
         isEditOnRow,
         labelMode,
-        schema,
+        innerSchema,
         vxeColumns
       } = this;
       const resultColumns = [];
@@ -191,12 +191,12 @@ export default Vue.extend({
       columns.forEach((column) => {
         const { field } = column;
         const targetColumn = column;
-        const { editable, type } = schema.properties[field];
+        const { editable, type } = innerSchema.properties[field];
         let customRender = null;
         if (editable !== false) {
           customRender = getEditRenderByProperty(
             field,
-            schema.properties[field],
+            innerSchema.properties[field],
             innerUiSchema[field]
           );
         }
@@ -403,8 +403,8 @@ export default Vue.extend({
     },
     innerRules() {
       const ret = {};
-      const { rules = {}, schema = {}, uiSchema = {} } = this;
-      const { required = [], properties = {} } = schema;
+      const { rules = {}, innerSchema = {}, uiSchema = {} } = this;
+      const { required = [], properties = {} } = innerSchema;
 
       Object.keys(rules).forEach((key) => {
         ret[key] = [...rules[key]];
@@ -839,7 +839,7 @@ export default Vue.extend({
     },
     /** "新增一行"按钮点击事件 */
     onTableAddRowClick() {
-      const { onAddRowClick, isEditOnRow, schema } = this;
+      const { onAddRowClick, isEditOnRow, innerSchema } = this;
       this.controlStatus = EDIT_TYPE.ADD;
       if (onAddRowClick != null && _.isFunction(onAddRowClick)) {
         onAddRowClick();
@@ -853,7 +853,7 @@ export default Vue.extend({
         if (typeof this.beforeAddRow === 'function') {
           data = this.beforeAddRow();
         } else if (!_.isEmpty(this.innerDataList)) {
-          data = createDefaultObjectBySchema(schema);
+          data = createDefaultObjectBySchema(innerSchema);
         }
         this.initialDialogFormData(data);
         this.isShowForm = true;
@@ -1055,7 +1055,7 @@ export default Vue.extend({
       innerRowKey,
       height,
       maxHeight,
-      schema,
+      innerSchema,
       innerUiSchema,
       onTableCheckboxChange,
       onTableRadioChange,
@@ -1289,7 +1289,7 @@ export default Vue.extend({
                 <el-json-form
                   ref="dialogForm"
                   {...{ props: dialogFormProps }}
-                  schema={schema}
+                  schema={innerSchema}
                   rules={innerRules}
                   ui-schema={innerUiSchema}
                   label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
@@ -1365,7 +1365,7 @@ export default Vue.extend({
             <el-json-form
               ref="dialogForm"
               {...{ props: dialogFormProps }}
-              schema={schema}
+              schema={innerSchema}
               rules={innerRules}
               ui-schema={innerUiSchema}
               label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下

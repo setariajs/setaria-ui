@@ -4,6 +4,46 @@ import moment from 'moment';
 import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
 import { isEmpty } from 'setaria-ui/src/utils/util';
 
+export function initialSetariaSchema(schema) {
+  let ret = _.cloneDeep(schema);
+  if (isEmpty(schema)) {
+    return schema;
+  }
+  const { properties } = ret;
+  if (isEmpty(properties)) {
+    return schema;
+  }
+  Object.keys(properties).forEach((key) => {
+    const property = properties[key];
+    // 转换字典项目的值类型为property定义的类型
+    const { type, oneOf, anyOf } = property;
+    let enumArray = oneOf;
+    if (isEmpty(oneOf)) {
+      enumArray = anyOf;
+    }
+    if (!isEmpty(enumArray)) {
+      enumArray.forEach((item) => {
+        if (typeof item.const !== type) {
+          if (type === 'number' || type === 'integer') {
+            try {
+              const func = type === 'number' ? _.toNumber : _.toInteger;
+              const val = func(item.const);
+              if (!_.isNaN(val)) {
+                item.const = val;
+              }
+            } catch (err) {
+              throw err;
+            }
+          } else if (type === 'string') {
+            item.const = `${item.const}`;
+          }
+        }
+      });
+    }
+  });
+  return ret;
+}
+
 /**
  * 根据Schema取得Property
  * @param {*} schema
@@ -458,9 +498,6 @@ export function createFormatter(property) {
       return dict ? dict.title : val;
     };
     return function formatter(value) {
-      if (typeof value === 'string') {
-        return getDisplayDictLabel(value);
-      }
       if (Array.isArray(value)) {
         const res = value
           .map((cv) => {
@@ -469,6 +506,8 @@ export function createFormatter(property) {
           })
           .join(', ');
         return res;
+      } else if (typeof value === 'number' || typeof value === 'string') {
+        return getDisplayDictLabel(value);
       }
       return value;
     };
