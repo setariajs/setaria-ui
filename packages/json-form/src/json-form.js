@@ -4,7 +4,7 @@ import ElFormItem from 'setaria-ui/packages/form/src/form-item';
 import ElSelect from 'setaria-ui/packages/select';
 import ElInput from 'setaria-ui/packages/input';
 import merge from 'setaria-ui/src/utils/merge';
-import { createElementByProperty, createFormRulesBySchema } from 'setaria-ui/src/utils/schema';
+import { createElementByProperty, createFormRulesBySchema, initialSetariaSchema } from 'setaria-ui/src/utils/schema';
 import { isEmpty } from 'setaria-ui/src/utils/util';
 
 const CLASSNAME = 'className';
@@ -44,12 +44,22 @@ export default {
   },
   data() {
     return {
+      innerSchema: null
     };
+  },
+  watch: {
+    schema: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.innerSchema = initialSetariaSchema(val);
+      }
+    }
   },
   computed: {
     innerRules() {
       const { rules = {} } = this;
-      const ret = createFormRulesBySchema(this.schema, this.uiSchema);
+      const ret = createFormRulesBySchema(this.innerSchema, this.uiSchema);
       return merge({}, ret, rules);
     },
     fields() {
@@ -189,11 +199,12 @@ export default {
       this.handleSubmit();
     };
     const model = this.model;
-    if (this.schema && this.schema.properties) {
-      Object.keys(this.schema.properties).forEach(key => {
+    const { innerSchema } = this;
+    if (innerSchema && innerSchema.properties) {
+      Object.keys(innerSchema.properties).forEach(key => {
         const ui = this.uiSchema[key] || {};
         let formItem = null;
-        const property = self.schema.properties[key];
+        const property = self.innerSchema.properties[key];
         // title不为空的场合，基于schema进行渲染
         if (!isEmpty(property.title)) {
           const formItemChildren = [];

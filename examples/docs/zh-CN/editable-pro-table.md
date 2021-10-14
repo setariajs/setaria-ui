@@ -28,6 +28,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <el-editable-pro-table
     :label-mode="labelMode"
     multiple-selection
+    column-width="auto"
     :get-row-button="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
@@ -88,7 +89,7 @@ export default {
           },
           Enum: {
             title: '枚举值',
-            type: 'string',
+            type: 'number',
             oneOf: [
               {
                 const: '1',
@@ -169,7 +170,6 @@ export default {
         Name: {
           'ui:options': {
             fixed: 'left',
-            minWidth: '150px'
           },
         },
         Enum: {
@@ -247,7 +247,7 @@ export default {
     this.headInfoData = {
       Name: 'XXX',
       Price: 12345.678,
-      Enum: '2',
+      Enum: 2,
       AnyOf: ['1', '2'],
       MaxLengthString: null,
       Number: 98765,
