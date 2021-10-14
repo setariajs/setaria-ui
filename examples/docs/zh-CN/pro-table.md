@@ -343,47 +343,47 @@ export default {
 | data    | 数据 | Array | — | — |
 | schema    | 基于[JSON-Schema]的属性 | Object | — | — |
 | ui-schema | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表) | Object | — | - |
-| rowKey    | 行主键 | String | — | — |
+| row-key    | 行主键 | String | — | — |
 | height    | 表格高度 | String | — | — |
-| maxHeight    | 表格最大高度 | String | — | — |
-| selectionType    | 列表选择类型 | String | 'radio', 'checkbox', '' | — |
-| multipleSelection    | 是否多选 | Boolean | — | false |
+| max-height    | 表格最大高度 | String | — | — |
+| selection-type    | 列表选择类型 | String | 'radio', 'checkbox', '' | — |
+| multiple-selection    | 是否多选 | Boolean | — | false |
 | selectable    | 通过返回值来决定这一行的 CheckBox 是否可以勾选 | Function | — | — |
-| getRowButton    | 获取行数据操作按钮 | Function | — | — |
-| tableListTransform    | 列表数据转换函数 | Function | — | — |
-| parentField    | 标识上级节点的字段名 | String | — | — |
-| columnWidth    | 列宽度 | String | — | — |
-| autoPagination    | 前端分页 | Boolean | — | true |
-| defaultAllColumnSort    | 是否所有列默认允许排序 | Boolean | — | false |
-| isReserve    | 是否保留CheckBox选中状态 | Boolean | — | false |
-| mergeCells    | 合并单元格回调方法 | Function | — | —  |
+| get-row-button    | 获取行数据操作按钮 | Function | — | — |
+| tableList-transform    | 列表数据转换函数 | Function | — | — |
+| parent-field    | 标识上级节点的字段名 | String | — | — |
+| column-width    | 列宽度 | String | — | — |
+| auto-pagination    | 前端分页 | Boolean | — | true |
+| default-all-columnSort    | 是否所有列默认允许排序 | Boolean | — | false |
+| is-reserve    | 是否保留CheckBox选中状态 | Boolean | — | false |
+| merge-cells    | 合并单元格回调方法 | Function | — | —  |
 | loading    | 加载状态 | Boolean | — | —  |
-| menuConfig    |  获取行数据快捷菜单按钮  menu-button-click | Object | — | —  |
-| checkStrictly    | 待补充 | Boolean | — | —  |
-| mergeFooterItems    | 待补充 | Array | — | —  |
-| footerMethod    | 待补充 | Function | — | —  |
-| showFooter    | 待补充 | Function | — | —  |
-| seqConfig    | 序号配置项 | Object | — | —  |
-| checkboxConfig    | 复选框配置项 | Object | — | —  |
-| radioConfig    | 单选框配置项 | Object | — | —  |
-| expandConfig    | 展开行配置项（不能用于虚拟滚动） | Object | — | —  |
-| treeConfig    | 树形结构配置项 | Object | — | { children: 'children' }  |
-| sortConfig    | 排序配置项 | Object | — | — |
-| exportConfig    | 导出配置项 | Object | — | — |
-| proxyConfig    | 数据代理配置项 | Object | — | — |
-| treeNode    | 指定为树节点 | String | — | — |
-| virtualTree    | 是否使用虚拟树 | Boolean | — | — |
-| sortMethod    | 全表排序自定义函数 | Function | — | — |
-| showPagination    | 是否显示分页 | Boolean | — | true |
-| pageNum    | 当前页号 | Number | — | — |
-| pageSize    | 每页显示数据数量 | Number | — | — |
+| menu-config    |  获取行数据快捷菜单按钮  menu-button-click | Object | — | —  |
+| check-strictly    | 待补充 | Boolean | — | —  |
+| merge-footer-items    | 待补充 | Array | — | —  |
+| footer-method    | 待补充 | Function | — | —  |
+| show-footer    | 待补充 | Function | — | —  |
+| seq-config    | 序号配置项 | Object | — | —  |
+| checkbox-config    | 复选框配置项 | Object | — | —  |
+| radio-config    | 单选框配置项 | Object | — | —  |
+| expand-config    | 展开行配置项（不能用于虚拟滚动） | Object | — | —  |
+| tree-config    | 树形结构配置项 | Object | — | { children: 'children' }  |
+| sort-config    | 排序配置项 | Object | — | — |
+| export-config    | 导出配置项 | Object | — | — |
+| proxy-config    | 数据代理配置项 | Object | — | — |
+| tree-node    | 指定为树节点 | String | — | — |
+| virtual-tree    | 是否使用虚拟树 | Boolean | — | — |
+| sort-method    | 全表排序自定义函数 | Function | — | — |
+| show-pagination    | 是否显示分页 | Boolean | — | true |
+| page-num    | 当前页号 | Number | — | — |
+| page-size    | 每页显示数据数量 | Number | — | — |
 | total    | 数据总数量 | Number | — | — |
-| controlColumnWidth    | 控制列宽度 | String | — | '120' |
-| tableId    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
-| showExpandAllBtn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
-| showCollapseAllBtn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
-| showColumnSetting    | 是否显示右上角的列设置 | Boolean | — | true |
-| rowClassName    | 待补充 | String | — | —  |
+| control-column-width    | 控制列宽度 | String | — | '120' |
+| table-id    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
+| show-expand-all-btn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
+| show-collapseall-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
+| show-column-setting    | 是否显示右上角的列设置 | Boolean | — | true |
+| row-class-name    | 待补充 | String | — | —  |
 
 ### UI-Schema Attributes
 
