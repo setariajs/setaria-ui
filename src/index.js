@@ -106,6 +106,7 @@ import QueryCriteriaForm from '../packages/query-criteria-form/index.js';
 import Skeleton from '../packages/skeleton/index.js';
 import SkeletonItem from '../packages/skeleton-item/index.js';
 import Empty from '../packages/empty/index.js';
+import TreeSelect from '../packages/tree-select/index.js';
 import locale from 'setaria-ui/src/locale';
 import CollapseTransition from 'setaria-ui/src/transitions/collapse-transition';
 import eventManager from 'setaria-ui/src/mixins/event-manager';
@@ -212,6 +213,7 @@ const components = [
   Skeleton,
   SkeletonItem,
   Empty,
+  TreeSelect,
   CollapseTransition
 ];
 
@@ -249,7 +251,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.7.31',
+  version: '1.7.32',
   locale: locale.use,
   i18n: locale.i18n,
   install,
@@ -359,5 +361,6 @@ export default {
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,
-  Empty
+  Empty,
+  TreeSelect
 };
