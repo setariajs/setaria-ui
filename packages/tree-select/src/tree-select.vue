@@ -183,8 +183,6 @@ export default {
     },
     // 多选触发
     handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
-
       if (!Array.isArray(this.valueTitle)) {
         this.valueTitle = [];
         this.innerValue = [data[this.treeProps.value]];
