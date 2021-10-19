@@ -109,6 +109,7 @@ import Empty from '../packages/empty/index.js';
 import locale from 'setaria-ui/src/locale';
 import CollapseTransition from 'setaria-ui/src/transitions/collapse-transition';
 import eventManager from 'setaria-ui/src/mixins/event-manager';
+import TreeSelect from '../packages/tree-select/index.js';
 
 const components = [
   Pagination,
@@ -212,7 +213,8 @@ const components = [
   Skeleton,
   SkeletonItem,
   Empty,
-  CollapseTransition
+  CollapseTransition,
+  TreeSelect
 ];
 
 const install = function(Vue, opts = {}) {
@@ -359,5 +361,6 @@ export default {
   QueryCriteriaForm,
   Skeleton,
   SkeletonItem,
-  Empty
+  Empty,
+  TreeSelect
 };

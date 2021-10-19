@@ -146,6 +146,10 @@
               "title": "Select 选择器"
             },
             {
+              "path": "/tree-select",
+              "title": "TreeSelect 树形选择控件"
+            },
+            {
               "path": "/cascader",
               "title": "Cascader 级联选择器"
             },
