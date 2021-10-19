@@ -82,6 +82,10 @@
             {
               "path": "/list",
               "title": "[特色]List 列表"
+            },
+            {
+              "path": "/tree-select",
+              "title": "[特色]TreeSelect 树形选择控件"
             }
           ]
         },
@@ -144,10 +148,6 @@
             {
               "path": "/select",
               "title": "Select 选择器"
-            },
-            {
-              "path": "/tree-select",
-              "title": "TreeSelect 树形选择控件"
             },
             {
               "path": "/cascader",
