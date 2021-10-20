@@ -1,6 +1,7 @@
 <template>
   <el-select :value="valueTitle"
     :clearable="clearable"
+    popper-class="el-tree-select-popper"
     @clear="clearHandle"
     @remove-tag="removeTagHandler"
     :multiple="multiple">
