@@ -269,6 +269,16 @@ export default {
         ...data
       }); 
     }
+    this.dialogAttrs.beforeClose = (val) => {
+      if (val.Name === 'XXX-1') {
+        this.$message({
+          message: '不允许关闭名称为 XXX-1 的数据',
+          type: 'error'
+        });
+        return false;
+      }
+      return true;
+    }
   },
   methods: {
     getRowButton({ rowIndex }) {
