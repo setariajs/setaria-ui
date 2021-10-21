@@ -1,5 +1,7 @@
 <template>
   <el-select :value="valueTitle"
+    ref="select"
+    :collapse-tags="collapseTags"
     :clearable="clearable"
     popper-class="el-tree-select-popper"
     @clear="clearHandle"
@@ -45,6 +47,10 @@ export default {
       })
     },
     multiple: {
+      type: Boolean,
+      default: false
+    },
+    collapseTags: {
       type: Boolean,
       default: false
     },
@@ -126,25 +132,17 @@ export default {
     initScroll() {
       this.$nextTick(() => {
         const scrollWrap = document.querySelectorAll(
-          '.el-select-dropdown .el-scrollbar .el-select-dropdown__wrap'
+          '.el-tree-select-popper .el-scrollbar .el-select-dropdown__wrap'
         )[0];
         const scrollBar = document.querySelectorAll(
-          '.el-select-dropdown .el-scrollbar .el-scrollbar__bar'
+          '.el-tree-select-popper .el-scrollbar .el-scrollbar__bar'
         );
-        scrollWrap.style.cssText =
-          'margin: 0px; max-height: none; overflow: hidden;';
+        scrollWrap.forEach((ele) => (ele.style.cssText = 'margin: 0px; max-height: none; overflow: hidden;'));
+        // scrollWrap.style.cssText =
+        //  ;
         // eslint-disable-next-line no-return-assign
         scrollBar.forEach((ele) => (ele.style.width = 0));
       });
-    },
-    // 切换选项
-    handleNodeClick(node) {
-      if (!this.multiple) {
-        this.valueTitle = node[this.treeProps.label];
-        this.innerValue = node[this.treeProps.value];
-        this.defaultExpandedKey = [];
-        this.accordion = false;
-      }
     },
     // 清除选中
     clearHandle() {
@@ -182,16 +180,28 @@ export default {
         `${item[this.treeProps.value]}`.toLowerCase().indexOf(formatVal) !== -1
       );
     },
+    // 单选触发
+    handleNodeClick(node) {
+      if (!this.multiple) {
+        this.valueTitle = node[this.treeProps.label];
+        this.innerValue = node[this.treeProps.value];
+        this.defaultExpandedKey = [];
+        this.accordion = false;
+        this.$refs.select.blur();
+      }
+    },
     // 多选触发
     handleCheckChange(data, checked, indeterminate) {
       if (!Array.isArray(this.valueTitle)) {
-        this.valueTitle = [];
+        this.valueTitle = [data[this.treeProps.label]];
         this.innerValue = [data[this.treeProps.value]];
       }
       if (checked) {
-        this.valueTitle.push(data[this.treeProps.label]);
-        this.innerValue.push(data[this.treeProps.value]);
-        this.defaultExpandedKey = [];
+        if (!this.innerValue.includes(data[this.treeProps.value])) {
+          this.defaultExpandedKey = [];
+          this.valueTitle.push(data[this.treeProps.label]);
+          this.innerValue.push(data[this.treeProps.value]);
+        }
       } else {
         const vtIndex = this.innerValue.findIndex(
           (item) => item === data[this.treeProps.value]

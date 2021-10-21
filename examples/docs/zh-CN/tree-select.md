@@ -110,11 +110,21 @@
 
 ### 多选用法
 
+可使用`collapse-tags`来折叠tag
+
 :::demo 
 ```html
 <template>
    <el-tree-select
       :multiple="true"
+      :tree-props="props"
+      :options="optionData"
+      v-model="value"
+      :clearable="true"
+    />
+     <el-tree-select
+      :multiple="true"
+      :collapse-tags="true"
       :tree-props="props"
       :options="optionData"
       v-model="value"
@@ -127,7 +137,7 @@
     data() {
       return {
         value: [1000],
-       props: {
+        props: {
         value: 'id',
         label: 'archiveCompName',
         children: 'childs',
