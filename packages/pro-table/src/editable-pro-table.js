@@ -3,6 +3,7 @@ import Vue from 'vue';
 import XEUtils from 'xe-utils';
 import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
 import { createDefaultObjectBySchema } from 'setaria-ui/src/utils/schema';
+import { callbackExec } from 'setaria-ui/src/utils/util';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
 import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
@@ -14,6 +15,8 @@ const OPT_UPDATE = 'U';
 // 可编辑列在三列以上的场合，弹窗编辑
 const MAX_ROW_EDIT = 3;
 const PRIMARY_ROW_KEY = '_XID';
+
+const BEFORE_CLOSE_PROP_KEY = 'before-close';
 
 export default Vue.extend({
   name: 'ElEditableProTable',
@@ -460,6 +463,36 @@ export default Vue.extend({
           ret[key] = ret[key].concat(uiRules);
         }
       });
+      return ret;
+    },
+    beforeCloseFunction() {
+      const { currentFormData, dialogAttrs = {} } = this;
+      const defaultBeforeClose = (customFunc) => {
+        return (cbFunc) => {
+          this.$confirm('是否保存对数据的更改?', '提示', {
+            type: 'warning'
+          }).then(() => {
+            callbackExec(customFunc, currentFormData)
+              .then(() => {
+                cbFunc();
+              }).catch(() => {
+              });
+          }).catch(() => {});
+        };
+      };
+      return defaultBeforeClose(dialogAttrs.beforeClose || dialogAttrs[BEFORE_CLOSE_PROP_KEY]);
+    },
+    innerDialogProps() {
+      const { beforeCloseFunction, dialogAttrs = {} } = this;
+      const defaultDialogProps = {
+        title: '编辑',
+        'close-on-click-modal': false
+      };
+      const ret = _.assign({}, defaultDialogProps, dialogAttrs);
+      delete ret[BEFORE_CLOSE_PROP_KEY];
+      ret.beforeClose = (cb) => {
+        beforeCloseFunction(cb);
+      };
       return ret;
     },
     xTableRef() {
@@ -1018,7 +1051,10 @@ export default Vue.extend({
       });
     },
     onDialogCancelButtonClick() {
-      this.isShowForm = false;
+      const { beforeCloseFunction } = this;
+      beforeCloseFunction(() => {
+        this.isShowForm = false;
+      });
     },
     recalculate(refull) {
       this.xTableRef.recalculate(refull);
@@ -1103,7 +1139,7 @@ export default Vue.extend({
       innerCanAddChild,
       handleFormChange,
       formAttrs,
-      dialogAttrs
+      innerDialogProps
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1113,12 +1149,6 @@ export default Vue.extend({
     const dialogFormProps = {
       ...formAttrs,
       model: currentFormData
-    };
-    const dialogProps = {
-      ...{
-        title: '编辑'
-      },
-      ...dialogAttrs
     };
     const getCommonToolbarButton = () => {
       const ret = [];
@@ -1279,7 +1309,7 @@ export default Vue.extend({
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
-            {...{ props: dialogProps }}
+            {...{ props: innerDialogProps }}
             {...{ on: dialogOnListener }}
           >
             {
@@ -1359,7 +1389,7 @@ export default Vue.extend({
           <el-dialog
             class="editable-pro-table__dialog"
             visible={isShowForm}
-            {...{ props: dialogProps }}
+            {...{ props: innerDialogProps }}
             {...{ on: dialogOnListener }}
           >
             <el-json-form
