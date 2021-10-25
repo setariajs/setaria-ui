@@ -15,9 +15,132 @@ import 'setaria-ui/packages/theme-chalk/src/pro-table.scss';
 Vue.use(ProTableCommonInstall);
 Vue.component('el-editable-pro-table', EditableProTable);
 
-
 ```
+
 ### 基本用法
+
+:::demo
+```html
+<template>
+  <div>
+    <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
+  </div>
+  <el-editable-pro-table
+    ref="ept"
+    :label-mode="labelMode"
+    multiple-selection
+    :get-row-button="getRowButton"
+    :schema="schema"
+    :data="data"
+    :before-add-row="beforeAddRow"
+    :save="save"
+  >
+    <template slot="index" slot-scope="scope">
+      <el-button type="text">{{ scope.rowIndex }}</el-button>
+    </template>
+  </el-editable-pro-table>
+  <div>
+    <el-json-viewer :data="data"></el-json-viewer>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      labelMode: true,
+      schema: {
+        properties: {
+          name: {
+            title: '名称',
+            type: 'string',
+          },
+          price: {
+            title: '价格',
+            type: 'number',
+            precision: '16',
+            scale: '2',
+            format: 'price',
+          },
+        },
+        required: [ 'name' ],
+      },
+      data: []
+    };
+  },
+  created() {
+    this.headInfoData = {
+      name: 'XXX',
+      price: 12345.678
+    };
+    for (let i = 0; i < 5; i += 1) {
+      const data = {
+        ...this.headInfoData
+      };
+      data.name = `${data.name}-${i}`;
+      this.data.push({
+        id: i,
+        ...data
+      }); 
+    }
+  },
+  methods: {
+    getRowButton({ rowIndex }) {
+      return [
+        {
+          key: '1',
+          label: `按钮A${rowIndex}`,
+        },
+      ];
+    },
+    beforeAddRow() {
+      return {
+        name: 'YYY',
+        price: null
+      };
+    },
+    save(data, mode) {
+      return new window.Promise((resolve, reject) => {
+        const loading = this.$loading();
+        setTimeout(() => {
+          if (mode === 'delete') {
+            if (data.findIndex(item => item.id === 1) === -1) {
+              resolve();
+            } else {
+              this.$message.warning('不允许删除id为1的数据');
+              reject();
+              loading.close();
+              return;
+            }
+          } else {
+            resolve({});
+          }
+          loading.close();
+          let label = '';
+          switch(mode) {
+            case 'add':
+              label = '新增';
+              break;
+            case 'modify':
+              label = '修改';
+              break;
+            case 'delete':
+              label = '删除';
+              break;
+            default:
+              label = '保存';
+          }
+          const saveData = Array.isArray(data) ? data : [data];
+          this.$message.success(`名称为 ${saveData.map(item => item.name).join(',')} 的数据已成功${label}。`);
+        }, 1000);
+      })
+    }
+  }
+};
+</script>
+```
+:::
+
+### 多项目编辑
 
 :::demo
 ```html

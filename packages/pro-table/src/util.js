@@ -273,7 +273,8 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
     name: component.componentTagName,
     attrs: component.componentProps.attrs,
     props,
-    options: component.componentChildrenOptions
+    options: component.componentChildrenOptions,
+    autofocus: component.componentTagName
   };
 }
 

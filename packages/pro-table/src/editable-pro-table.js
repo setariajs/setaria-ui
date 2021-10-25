@@ -53,6 +53,7 @@ export default Vue.extend({
         trigger: 'manual',
         mode: 'row',
         showIcon: false,
+        autoClear: false,
         showAsterisk: false
       };
       if (this.isEditOnRow === true) {
@@ -60,8 +61,6 @@ export default Vue.extend({
         defaultConfig.showAsterisk = true;
         // 是否显示列头编辑图标
         defaultConfig.showIcon = true;
-        // 触发方式
-        defaultConfig.trigger = 'click';
       }
       return _.assign({}, defaultConfig, editConfig);
     },
@@ -160,10 +159,14 @@ export default Vue.extend({
       }
       return this.editableColumnCount <= MAX_ROW_EDIT;
     },
+    isEditingOnRow() {
+      return !this.labelMode && this.isEditOnRow && this.isRowManualEditing;
+    },
     innerTableColumns() {
       const {
         innerUiSchema,
         isEditOnRow,
+        isEditingOnRow,
         labelMode,
         innerSchema,
         vxeColumns
@@ -366,11 +369,21 @@ export default Vue.extend({
           const vxeColumnSlots = {
             edit: slot
           };
-          // 行上直接编辑的场合
-          if (isEditOnRow) {
-            vxeColumnSlots.default = slot;
+          // 点击修改按钮在行上直接编辑的场合
+          if (isEditingOnRow) {
+            // vxeColumnSlots.default = slot;
+          } else {
+            // if (vxeColumnSlots.default) {
+            //   delete vxeColumnSlots.default;
+            // }
+            // if (targetColumn.slots.default) {
+            //   delete targetColumn.slots.default;
+            // }
           }
           targetColumn.slots = _.assign({}, vxeColumnSlots, targetColumn.slots);
+          // if (!isEditingOnRow) {
+          //   delete targetColumn.slots.default;
+          // }
         }
         if (targetColumn.slots) {
           if (labelMode) {
@@ -513,6 +526,13 @@ export default Vue.extend({
       // dialog的open在第一次打开窗口时不触发，所以在此处监听dialog显示状态，触发对话框打开逻辑
       if (val) {
         this.handleFormDialogOpen();
+      }
+    },
+    labelMode(val) {
+      // 只读场合
+      if (val) {
+        // 重置行内编辑编辑状态
+        this.cancelRowEdit();
       }
     }
   },
@@ -872,7 +892,19 @@ export default Vue.extend({
     },
     /** "新增一行"按钮点击事件 */
     onTableAddRowClick() {
-      const { onAddRowClick, isEditOnRow, innerSchema } = this;
+      const {
+        onAddRowClick,
+        isEditOnRow,
+        innerSchema,
+        editingRow
+      } = this;
+      if (isEditOnRow && editingRow) {
+        this.$message({
+          message: '同时只能编辑一条数据。',
+          type: 'error'
+        });
+        return;
+      }
       this.controlStatus = EDIT_TYPE.ADD;
       if (onAddRowClick != null && _.isFunction(onAddRowClick)) {
         onAddRowClick();
@@ -1026,29 +1058,31 @@ export default Vue.extend({
         }
         this.isShowForm = false;
       };
-      this.$refs.dialogForm.validate((isValid) => {
-        if (isValid) {
-          this.isSaveLoading = true;
-          if (typeof save === 'function') {
-            // 传递编辑中数据以避免失败时需要进行回退
-            const res = save(currentFormData, controlStatus, this.$refs.dialogForm);
-            if (res.then) {
-              res.then(() => {
+      if (this.$refs.dialogForm) {
+        this.$refs.dialogForm.validate((isValid) => {
+          if (isValid) {
+            this.isSaveLoading = true;
+            if (typeof save === 'function') {
+              // 传递编辑中数据以避免失败时需要进行回退
+              const res = save(currentFormData, controlStatus, this.$refs.dialogForm);
+              if (res.then) {
+                res.then(() => {
+                  afterExec();
+                  this.isSaveLoading = false;
+                }).catch(() => {
+                  this.isSaveLoading = false;
+                });
+              } else if (res) {
                 afterExec();
                 this.isSaveLoading = false;
-              }).catch(() => {
-                this.isSaveLoading = false;
-              });
-            } else if (res) {
+              }
+            } else {
               afterExec();
               this.isSaveLoading = false;
             }
-          } else {
-            afterExec();
-            this.isSaveLoading = false;
           }
-        }
-      });
+        });
+      }
     },
     onDialogCancelButtonClick() {
       const { beforeCloseFunction } = this;
@@ -1272,6 +1306,7 @@ export default Vue.extend({
             show-overflow
             highlight-hover-row
             highlight-current-row
+            keep-source
             edit-config={innerEditConfig}
             data={isTree ? innerTreeDataList : innerDataList}
             height={height}

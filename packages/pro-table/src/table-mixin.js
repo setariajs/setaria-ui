@@ -14,6 +14,14 @@ const DELETE_BUTTON = {
   key: 'ept-delete',
   label: '删除'
 };
+const ROW_MANUAL_SAVE_BUTTON = {
+  key: 'ept-row-manual-save',
+  label: '保存'
+};
+const ROW_MANUAL_CANCEL_BUTTON = {
+  key: 'ept-row-manual-cancel',
+  label: '取消'
+};
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
@@ -54,7 +62,8 @@ export default {
       columnSettingDefaultCheckedKeys: [],
       isParticalColumnShow: false,
       isAllColumnShow: true,
-      innerSchema: null
+      innerSchema: null,
+      editingRow: null
     };
   },
   watch: {
@@ -582,6 +591,15 @@ export default {
       }
       return selectionColumn;
     },
+    isActiveByRow(row) {
+      if (this.editingRow === null) {
+        return false;
+      }
+      if (this.editingRow !== row) {
+        return false;
+      }
+      return this.getTableActionRef().isActiveByRow(row);
+    },
     getDefaultControlColumn() {
       const {
         controlColumnWidth,
@@ -589,7 +607,8 @@ export default {
         labelMode,
         onCustomButtonClick,
         canUpdate,
-        canDelete
+        canDelete,
+        isActiveByRow
       } = this;
       // 当自定义按钮为空且是label模式时，直接隐藏操作列
       if (typeof getRowButton !== 'function' && labelMode) {
@@ -613,6 +632,10 @@ export default {
               }
               if (canUpdate) {
                 rowButtonList.unshift(MODIFY_BUTTON);
+                if (isActiveByRow(scope.row)) {
+                  rowButtonList.unshift(ROW_MANUAL_CANCEL_BUTTON);
+                  rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
+                }
               }
             }
             if (!_.isEmpty(rowButtonList)) {
@@ -727,6 +750,17 @@ export default {
         });
       });
     },
+    cancelRowEdit() {
+      const tableRef = this.getTableActionRef();
+      this.editingRow = null;
+      tableRef.clearActived()
+        .then(() => {
+          // !FIXME 此处会将数据还原至初始状态
+          // tableRef.revertData(scope.row);
+          _.assign(this.originFormData, this.currentFormData);
+          this.originFormData = null;
+        });
+    },
     /**
      * 自定义操作按钮点击事件
      * @param {*} key
@@ -734,27 +768,69 @@ export default {
      * @returns
      */
     onCustomButtonClick(key, scope) {
-      const { beforeModifyRow, onTableDeleteClick } = this;
+      const {
+        beforeModifyRow,
+        isEditOnRow,
+        onTableDeleteClick
+        // onDialogSaveButtonClick
+      } = this;
+      const tableRef = this.getTableActionRef();
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
         if (key === MODIFY_BUTTON.key) {
-          const exec = () => {
-            this.controlStatus = EDIT_TYPE.MODIFY;
-            this.isShowForm = true;
-            this.initialDialogFormData(scope.row);
-            this.$emit('row-button-click', key, scope);
-          };
-          if (typeof beforeModifyRow === 'function') {
-            beforeModifyRow(scope) ? exec() : null;
+          this.initialDialogFormData(scope.row);
+          // 对话框编辑数据的场合
+          if (!isEditOnRow) {
+            const exec = () => {
+              this.controlStatus = EDIT_TYPE.MODIFY;
+              this.isShowForm = true;
+              this.$emit('row-button-click', key, scope);
+            };
+            if (typeof beforeModifyRow === 'function') {
+              beforeModifyRow(scope) ? exec() : null;
+            } else {
+              exec();
+            }
+          // 行上编辑数据的场合
           } else {
-            exec();
+            if (this.editingRow) {
+              this.$message({
+                message: '同时只能编辑一条数据。',
+                type: 'error'
+              });
+              return;
+            }
+            // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
+            setTimeout(() => {
+              tableRef.setActiveRow(scope.row);
+            }, 0);
+            this.editingRow = scope.row;
           }
         } else if (key === DELETE_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.DELETE;
           onTableDeleteClick([scope.row]).then(() => {
             this.$emit('row-button-click', key, scope);
           }).catch(() => {});
+        } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
+          tableRef.validate(this.editingRow)
+            .then(() => {
+              tableRef.clearActived()
+                .then(() => {
+                  console.log('success');
+                  this.currentFormData = null;
+                  // this.syncEditData();
+                  this.editingRow = null;
+                  this.$emit('row-button-click', key, scope);
+                });
+            })
+            .catch(() => {
+              console.log('error');
+              this.$emit('row-button-click', key, scope);
+            });
+        } else if (key === ROW_MANUAL_CANCEL_BUTTON.key) {
+          this.cancelRowEdit();
+          this.$emit('row-button-click', key, scope);
         } else {
           this.$emit('row-button-click', key, scope);
         }
