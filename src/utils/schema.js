@@ -15,30 +15,34 @@ export function initialSetariaSchema(schema) {
   }
   Object.keys(properties).forEach((key) => {
     const property = properties[key];
-    // 转换字典项目的值类型为property定义的类型
-    const { type, oneOf, anyOf } = property;
-    let enumArray = oneOf;
-    if (isEmpty(oneOf)) {
-      enumArray = anyOf;
-    }
-    if (!isEmpty(enumArray)) {
-      enumArray.forEach((item) => {
-        if (typeof item.const !== type) {
-          if (type === 'number' || type === 'integer') {
-            try {
-              const func = type === 'number' ? _.toNumber : _.toInteger;
-              const val = func(item.const);
-              if (!_.isNaN(val)) {
-                item.const = val;
+    if(property){
+      // 转换字典项目的值类型为property定义的类型
+      const { type, oneOf, anyOf } = property;
+      let enumArray = oneOf;
+      if (isEmpty(oneOf)) {
+        enumArray = anyOf;
+      }
+      if (!isEmpty(enumArray)) {
+        enumArray.forEach((item) => {
+          if (typeof item.const !== type) {
+            if (type === 'number' || type === 'integer') {
+              try {
+                const func = type === 'number' ? _.toNumber : _.toInteger;
+                const val = func(item.const);
+                if (!_.isNaN(val)) {
+                  item.const = val;
+                }
+              } catch (err) {
+                throw err;
               }
-            } catch (err) {
-              throw err;
+            } else if (type === 'string') {
+              item.const = `${item.const}`;
             }
-          } else if (type === 'string') {
-            item.const = `${item.const}`;
           }
-        }
-      });
+        });
+      }
+    } else {
+      console.warn(`属性[${key}]，未在schema中定义，请先定义属性。`);
     }
   });
   return ret;
