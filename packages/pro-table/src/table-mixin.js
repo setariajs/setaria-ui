@@ -547,7 +547,6 @@ export default {
         ret.clearSelection = () => {
           this.clearSelection();
         };
-        ret.getFullData = (val) => this.getFullData(val);
         ret.setFullCheckboxRow = (val) => {
           this.setFullCheckboxRow(val);
         };
@@ -607,7 +606,8 @@ export default {
         onCustomButtonClick,
         canUpdate,
         canDelete,
-        isActiveByRow
+        isActiveByRow,
+        forceEditOnRow
       } = this;
       // 当自定义按钮为空且是label模式时，直接隐藏操作列
       if (typeof getRowButton !== 'function' && labelMode) {
@@ -629,7 +629,7 @@ export default {
               if (canDelete) {
                 rowButtonList.unshift(DELETE_BUTTON);
               }
-              if (canUpdate) {
+              if (canUpdate && forceEditOnRow !== true) {
                 rowButtonList.unshift(MODIFY_BUTTON);
                 if (isActiveByRow(scope.row)) {
                   rowButtonList.unshift(ROW_MANUAL_CANCEL_BUTTON);
@@ -801,6 +801,25 @@ export default {
         }, 0);
       }
     },
+    setChangeMode(data, controlStatus) {
+      const { changeModeField } = this;
+      // 新增数据的场合
+      if (controlStatus === EDIT_TYPE.ADD) {
+        data[changeModeField] = controlStatus;
+      // 修改数据的场合
+      } else if (controlStatus === EDIT_TYPE.MODIFY) {
+        // 新增数据的场合，无需修改状态
+        if (data[changeModeField] !== EDIT_TYPE.ADD) {
+          data[changeModeField] = controlStatus;
+        }
+      // 删除数据的场合
+      } else {
+        // 新增数据的场合无视，数据应直接删除
+        if (data[changeModeField] !== EDIT_TYPE.ADD) {
+          data[changeModeField] = controlStatus;
+        }
+      }
+    },
     /**
      * 自定义操作按钮点击事件
      * @param {*} key
@@ -856,15 +875,16 @@ export default {
             .then(() => {
               tableRef.clearActived()
                 .then(() => {
-                  console.log('success');
                   this.currentFormData = null;
-                  // this.syncEditData();
+                  if (typeof this.save === 'function') {
+                    this.save(scope.row, this.controlStatus, scope);
+                  }
                   this.editingRow = null;
+                  this.setChangeMode(scope.row, this.controlStatus);
                   this.$emit('row-button-click', key, scope);
                 });
             })
             .catch(() => {
-              console.log('error');
               this.$emit('row-button-click', key, scope);
             });
         // 取消按钮点击事件处理
@@ -1206,16 +1226,15 @@ export default {
       const {
         data,
         getTableActionRef,
-        isMultipleSelect,
-        tableListTransform
+        isMultipleSelect
       } = this;
       if (!isMultipleSelect) {
         return;
       }
       let tableData = data;
-      if (typeof tableListTransform === 'function') {
-        tableData = tableListTransform(data);
-      }
+      // if (typeof tableListTransform === 'function') {
+      //   tableData = tableListTransform(data);
+      // }
       if (getTableActionRef()) {
         getTableActionRef().setCheckboxRow(tableData, val);
         this.emitSelectionChange(tableData);

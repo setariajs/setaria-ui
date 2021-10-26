@@ -28,13 +28,12 @@ export default Vue.extend({
         innerSortList,
         isSortAllData,
         sortData,
-        tableListTransform,
         total
       } = this;
       let ret = data;
-      if (typeof tableListTransform === 'function') {
-        ret = tableListTransform(data);
-      }
+      // if (typeof tableListTransform === 'function') {
+      //   ret = tableListTransform(data);
+      // }
       // 前端排序逻辑
       if (isSortAllData && !_.isEmpty(innerSortList)) {
         ret = sortData(ret, innerSortList);

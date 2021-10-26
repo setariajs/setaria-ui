@@ -7,10 +7,6 @@ import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
 import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
 
-const OPT_ADD = 'C';
-const OPT_DELETE = 'D';
-const OPT_UPDATE = 'U';
-
 // 可编辑列在三列以上的场合，弹窗编辑
 const MAX_ROW_EDIT = 3;
 const PRIMARY_ROW_KEY = '_XID';
@@ -75,7 +71,6 @@ export default Vue.extend({
     innerDataList() {
       const {
         data,
-        tableListTransform,
         changeModeField,
         autoPagination,
         innerCurrentPage,
@@ -92,7 +87,7 @@ export default Vue.extend({
         return [];
       }
       let tempList = data.filter(
-        (item) => item[changeModeField] !== OPT_DELETE
+        (item) => item[changeModeField] !== EDIT_TYPE.DELETE
       );
       tempList.map((item) => {
         const temp = item;
@@ -104,9 +99,9 @@ export default Vue.extend({
         }
         return temp;
       });
-      if (tableListTransform) {
-        tempList = tableListTransform(tempList);
-      }
+      // if (tableListTransform) {
+      //   tempList = tableListTransform(tempList);
+      // }
       // 前端排序逻辑
       if (isSortAllData && !_.isEmpty(innerSortList)) {
         tempList = sortData(tempList, innerSortList);
@@ -153,8 +148,8 @@ export default Vue.extend({
       return editableColumnCount;
     },
     isEditOnRow() {
-      if (this.isForceEditInRow) {
-        return this.isForceEditInRow;
+      if (this.forceEditOnRow) {
+        return this.forceEditOnRow;
       }
       return this.editableColumnCount <= MAX_ROW_EDIT;
     },
@@ -165,7 +160,7 @@ export default Vue.extend({
       const {
         innerUiSchema,
         isEditOnRow,
-        isEditingOnRow,
+        forceEditOnRow,
         labelMode,
         innerSchema,
         vxeColumns
@@ -368,9 +363,8 @@ export default Vue.extend({
           const vxeColumnSlots = {
             edit: slot
           };
-          // 点击修改按钮在行上直接编辑的场合
-          if (isEditingOnRow) {
-            // vxeColumnSlots.default = slot;
+          if (forceEditOnRow) {
+            vxeColumnSlots.default = slot;
           } else {
             // if (vxeColumnSlots.default) {
             //   delete vxeColumnSlots.default;
@@ -608,34 +602,30 @@ export default Vue.extend({
     refreshData() {
       this.xTableRef.updateData();
     },
+    removeComponentInnerProps(item) {
+      const { changeModeField } = this;
+      const ret = {
+        ...item
+      };
+      delete ret[changeModeField];
+      return ret;
+    },
     /** 获取修改的记录 */
     getUpdateRecords() {
-      /*
-      if (this.isTree) {
-        return this.data.filter(
-          (item) => item[this.changeModeField] === OPT_UPDATE,
-        );
-      }
-      return this.xTableRef.getUpdateRecords();
-       */
-      return this.data.filter(
-        (item) => item[this.changeModeField] === OPT_UPDATE
-      );
+      const { changeModeField } = this;
+      return this.data
+        .filter((item) => item[changeModeField] === EDIT_TYPE.MODIFY)
+        .map((item) => this.removeComponentInnerProps(item));
     },
     /** 获取新增的记录 */
     getInsertRecords() {
-      /*
-      if (this.isTree) {
-        return this.data.filter(
-          (item) => item[this.changeModeField] === OPT_ADD,
-        );
-      }
-      return this.xTableRef.getInsertRecords();
-       */
-      return this.data.filter((item) => item[this.changeModeField] === OPT_ADD);
+      const { changeModeField } = this;
+      return this.data
+        .filter((item) => item[changeModeField] === EDIT_TYPE.ADD)
+        .map((item) => this.removeComponentInnerProps(item));
     },
     /** 获取删除的记录 */
-    getRemoveRecords() {
+    getDeleteRecords() {
       const { changeModeField, parentField, treeConfig, virtualTree } = this;
       if (virtualTree) {
         const removeList = this.getTableActionRef().getRemoveRecords();
@@ -643,14 +633,14 @@ export default Vue.extend({
         if (!_.isEmpty(parentField)) {
           const filterTreeArray = XEUtils.filterTree(
             removeList,
-            (item) => item[changeModeField] !== OPT_ADD,
+            (item) => item[changeModeField] !== EDIT_TYPE.ADD,
             {
               children: _.get(treeConfig, 'children', 'children')
             }
           );
           filterTreeArray.forEach((item) => {
             const arrayItem = item;
-            arrayItem[changeModeField] = OPT_DELETE;
+            arrayItem[changeModeField] = EDIT_TYPE.DELETE;
           });
           const ret = XEUtils.toArrayTree(filterTreeArray, {
             parentKey: parentField
@@ -658,24 +648,21 @@ export default Vue.extend({
           return ret;
         }
       }
-      return this.data.filter((item) => item[changeModeField] === OPT_DELETE);
+      return this.data
+        .filter((item) => item[changeModeField] === EDIT_TYPE.DELETE)
+        .map((item) => this.removeComponentInnerProps(item));
     },
-    /** 获取有变更的所有记录（含新增、删除、修改） */
+    /**
+     * 获取有变更的所有记录（含新增、删除、修改）
+     * @public
+     * @returns { insert: [], update: [], delete: [] }
+     */
     getChangedRecords() {
-      const { changeModeField } = this;
-
-      const fillChangeModeField = (list, changeMode) => {
-        list.forEach((item) => {
-          const temp = item;
-          temp[changeModeField] = changeMode;
-        });
-        return list;
+      return {
+        insert: this.getInsertRecords(),
+        update: this.getUpdateRecords(),
+        delete: this.getDeleteRecords()
       };
-      return [
-        ...fillChangeModeField(this.getUpdateRecords(), OPT_UPDATE),
-        ...fillChangeModeField(this.getInsertRecords(), OPT_ADD),
-        ...fillChangeModeField(this.getRemoveRecords(), OPT_DELETE)
-      ];
     },
     getCheckboxRecords() {
       const { isReserve, selectionType } = this;
@@ -799,7 +786,7 @@ export default Vue.extend({
         const defaultItem = {
           ...targetItem,
           [parentField]: '',
-          [changeModeField]: OPT_ADD
+          [changeModeField]: EDIT_TYPE.ADD
         };
         data.push(defaultItem);
         return;
@@ -814,13 +801,13 @@ export default Vue.extend({
       const index = data.findIndex(
         (item) =>
           item[innerRowKey] === innerSelection[0][innerRefField] &&
-          item[changeModeField] !== OPT_DELETE
+          item[changeModeField] !== EDIT_TYPE.DELETE
       );
 
       // 构造新的节点
       const defaultItem = {
         ...targetItem,
-        [changeModeField]: OPT_ADD
+        [changeModeField]: EDIT_TYPE.ADD
       };
       if (!_.isEmpty(parentField)) {
         defaultItem[parentField] = innerSelection[0][parentField];
@@ -866,7 +853,7 @@ export default Vue.extend({
 
       const defaultItem = {
         ...targetItem,
-        [changeModeField]: OPT_ADD
+        [changeModeField]: EDIT_TYPE.ADD
       };
       if (!_.isEmpty(parentField)) {
         defaultItem[parentField] = innerSelection[0][innerRefField];
@@ -929,7 +916,7 @@ export default Vue.extend({
 
       const defaultItem = {
         ...item,
-        [changeModeField]: OPT_ADD
+        [changeModeField]: EDIT_TYPE.ADD
       };
       this.data.splice(position || 0, 0, defaultItem);
       return defaultItem;
@@ -967,16 +954,16 @@ export default Vue.extend({
         const index = data.findIndex(
           (obj) =>
             obj[innerRowKey] === temp[innerRowKey] &&
-            obj[changeModeField] !== OPT_DELETE
+            obj[changeModeField] !== EDIT_TYPE.DELETE
         );
         // 如果是新添加的记录，直接从data中删除
-        if (temp[changeModeField] === OPT_ADD) {
+        if (temp[changeModeField] === EDIT_TYPE.ADD) {
           if (index > -1) {
             data.splice(index, 1);
           }
         } else {
           // changeMode标识为 DELETE
-          temp[changeModeField] = OPT_DELETE;
+          temp[changeModeField] = EDIT_TYPE.DELETE;
           data.splice(index, 1, temp);
         }
 

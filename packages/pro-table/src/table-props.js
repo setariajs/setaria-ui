@@ -49,14 +49,6 @@ export const COMMON_TABLE_PROPS = {
     default: () => ({})
   },
   /**
-   * 列表数据转换函数
-   */
-  tableListTransform: {
-    type: Function,
-    required: false,
-    default: null
-  },
-  /**
    * 标识上级节点的字段名
    */
   parentField: {
@@ -222,7 +214,7 @@ export const EDIT_TABLE_PROPS = {
   /**
    * 是否强制在行内编辑
    */
-  isForceEditInRow: {
+  forceEditOnRow: {
     type: Boolean,
     required: false,
     default: null
@@ -233,7 +225,7 @@ export const EDIT_TABLE_PROPS = {
   changeModeField: {
     type: String,
     required: false,
-    default: 'ChangeMode'
+    default: '_MODE'
   },
   /**
    * 与子节点关联的字段名，默认使用 rowKey的值

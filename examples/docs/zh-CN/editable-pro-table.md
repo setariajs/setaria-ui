@@ -24,6 +24,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
+    <el-button @click="onGetChangeData">取得当前数据状态</el-button>
   </div>
   <el-editable-pro-table
     ref="ept"
@@ -84,6 +85,9 @@ export default {
     }
   },
   methods: {
+    onGetChangeData() {
+      console.log(this.$refs.ept.getChangedRecords());
+    },
     getRowButton({ rowIndex }) {
       return [
         {
@@ -97,7 +101,16 @@ export default {
         const loading = this.$loading();
         setTimeout(() => {
           if (mode === 'delete') {
-            if (data.findIndex(item => item.id === 1) === -1) {
+            const targetIndex = data.findIndex(item => item.id === 1);
+            if (targetIndex === -1) {
+              // const deleteRowDataArr = [];
+              // data.forEach((tableRowData) => {
+              //   console.log(tableRowData.id);
+              //   const deleteRowIndex = this.data.findIndex(item => item.id === tableRowData.id);
+              //   if (deleteRowIndex !== -1) {
+              //     this.data.splice(deleteRowIndex, 1);
+              //   }
+              // });
               resolve();
             } else {
               this.$message.warning('不允许删除id为1的数据');
@@ -106,6 +119,7 @@ export default {
               return;
             }
           } else {
+            console.log(mode, this.data[0], data, this.data[0] === data);
             resolve({});
           }
           loading.close();
@@ -125,7 +139,7 @@ export default {
           }
           const saveData = Array.isArray(data) ? data : [data];
           this.$message.success(`名称为 ${saveData.map(item => item.name).join(',')} 的数据已成功${label}。`);
-        }, 1000);
+        }, 500);
       })
     }
   }
@@ -1062,11 +1076,10 @@ export default {
 | multiple-selection    | 是否多选 | Boolean | — | false |
 | selectable    | 通过返回值来决定这一行的 CheckBox 是否可以勾选 | Function | — | — |
 | getrow-button    | 获取行数据操作按钮 | Function | — | — |
-| table-list-transform    | 列表数据转换函数 | Function | — | — |
 | parent-field    | 标识上级节点的字段名 | String | — | — |
 | column-width    | 列宽度 | String | — | — |
 | auto-pagination    | 前端分页 | Boolean | — | true |
-| default-all-columnSort    | 是否所有列默认允许排序 | Boolean | — | false |
+| default-all-column-sort    | 是否所有列默认允许排序 | Boolean | — | false |
 | is-reserve    | 是否保留CheckBox选中状态 | Boolean | — | false |
 | merge-cells    | 合并单元格回调方法 | Function | — | —  |
 | loading    | 加载状态 | Boolean | — | —  |
