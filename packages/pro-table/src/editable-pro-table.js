@@ -2,7 +2,6 @@ import _ from 'lodash';
 import Vue from 'vue';
 import XEUtils from 'xe-utils';
 import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
-import { createDefaultObjectBySchema } from 'setaria-ui/src/utils/schema';
 import { callbackExec } from 'setaria-ui/src/utils/util';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
@@ -890,12 +889,14 @@ export default Vue.extend({
         tableActionRef.setTreeExpand(innerSelection[0], true);
       });
     },
-    /** "新增一行"按钮点击事件 */
+    /**
+     * 新增一条数据
+     * ROW-ADD
+     */
     onTableAddRowClick() {
       const {
         onAddRowClick,
         isEditOnRow,
-        innerSchema,
         editingRow
       } = this;
       if (isEditOnRow && editingRow) {
@@ -910,34 +911,28 @@ export default Vue.extend({
         onAddRowClick();
         return;
       }
-      if (isEditOnRow) {
-        this.tableAddRow();
-      } else {
-        let data = null;
-        // 填充表单默认数据
-        if (typeof this.beforeAddRow === 'function') {
-          data = this.beforeAddRow();
-        } else if (!_.isEmpty(this.innerDataList)) {
-          data = createDefaultObjectBySchema(innerSchema);
-        }
-        this.initialDialogFormData(data);
+      // 弹窗编辑数据的场合
+      if (!isEditOnRow) {
+        this.initialDialogFormData(this.createDefaultRowData());
         this.isShowForm = true;
+      // 行上直接编辑的场合
+      } else {
+        const addRow = this.tableAddRow();
+        this.editingRow = addRow;
+        this.setActiveRow();
       }
     },
     tableAddRow(position) {
-      const { innerDefaultEntity, beforeAddRow, changeModeField } = this;
+      const { changeModeField } = this;
 
-      let item = _.cloneDeep(innerDefaultEntity);
-      if (typeof beforeAddRow === 'function') {
-        item = beforeAddRow(item);
-      }
+      const item = this.createDefaultRowData();
 
       const defaultItem = {
         ...item,
         [changeModeField]: OPT_ADD
       };
       this.data.splice(position || 0, 0, defaultItem);
-      // this.xTableRef.insert(item);
+      return defaultItem;
     },
     tableDelete(rows) {
       if (rows && _.isArray(rows) && rows.length > 0) {

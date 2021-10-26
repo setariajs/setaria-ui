@@ -29,10 +29,10 @@ Vue.component('el-editable-pro-table', EditableProTable);
     ref="ept"
     :label-mode="labelMode"
     multiple-selection
+    row-key="id"
     :get-row-button="getRowButton"
     :schema="schema"
     :data="data"
-    :before-add-row="beforeAddRow"
     :save="save"
   >
     <template slot="index" slot-scope="scope">
@@ -91,12 +91,6 @@ export default {
           label: `按钮A${rowIndex}`,
         },
       ];
-    },
-    beforeAddRow() {
-      return {
-        name: 'YYY',
-        price: null
-      };
     },
     save(data, mode) {
       return new window.Promise((resolve, reject) => {

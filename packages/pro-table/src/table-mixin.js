@@ -295,7 +295,6 @@ export default {
         uiSchema = {},
         $scopedSlots
       } = this;
-      console.log(innerSchema);
       const ret = convertSchemaToColumns(
         innerSchema,
         uiSchema,
@@ -750,16 +749,57 @@ export default {
         });
       });
     },
+    /**
+     * 创建默认新增对象
+     * 默认根据schema创建默认对象
+     * 传入defaultEntity的场合，使用defaultEntity
+     * 同时支持使用beforeAddRow前置钩子函数对新增的数据进行自定义，此函数接收参数为defaultEntity
+     *
+     * @returns Object
+     */
+    createDefaultRowData() {
+      const { innerDefaultEntity, beforeAddRow } = this;
+
+      let item = _.cloneDeep(innerDefaultEntity);
+      if (typeof beforeAddRow === 'function') {
+        item = beforeAddRow(item);
+      }
+      return item;
+    },
     cancelRowEdit() {
       const tableRef = this.getTableActionRef();
+      // 新增数据的场合
+      if (this.controlStatus === EDIT_TYPE.ADD) {
+        // 直接移除数据
+        this.tableDelete([this.editingRow]);
+      } else {
+        tableRef.clearActived()
+          .then(() => {
+            // !FIXME 此处会将数据还原至初始状态
+            // tableRef.revertData(scope.row);
+            _.assign(this.originFormData, this.currentFormData);
+            this.originFormData = null;
+          });
+      }
       this.editingRow = null;
-      tableRef.clearActived()
-        .then(() => {
-          // !FIXME 此处会将数据还原至初始状态
-          // tableRef.revertData(scope.row);
-          _.assign(this.originFormData, this.currentFormData);
-          this.originFormData = null;
-        });
+    },
+    /**
+     * 激活当前行
+     */
+    setActiveRow() {
+      const tableRef = this.getTableActionRef();
+      if (this.editingRow) {
+        // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
+        setTimeout(() => {
+          tableRef.setActiveRow(this.editingRow).then(() => {
+            // !FIXME vxe-table的focus功能基于未知原因不可用，所以手动进行focus
+            const dom = document.querySelector('.el-editable-pro-table .vxe-table--body-wrapper .vxe-table--body .vxe-body--row .el-input__inner');
+            if (dom) {
+              dom.focus();
+            }
+          });
+        }, 0);
+      }
     },
     /**
      * 自定义操作按钮点击事件
@@ -772,18 +812,18 @@ export default {
         beforeModifyRow,
         isEditOnRow,
         onTableDeleteClick
-        // onDialogSaveButtonClick
       } = this;
       const tableRef = this.getTableActionRef();
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
+        // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
+          this.controlStatus = EDIT_TYPE.MODIFY;
           this.initialDialogFormData(scope.row);
           // 对话框编辑数据的场合
           if (!isEditOnRow) {
             const exec = () => {
-              this.controlStatus = EDIT_TYPE.MODIFY;
               this.isShowForm = true;
               this.$emit('row-button-click', key, scope);
             };
@@ -801,17 +841,16 @@ export default {
               });
               return;
             }
-            // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
-            setTimeout(() => {
-              tableRef.setActiveRow(scope.row);
-            }, 0);
             this.editingRow = scope.row;
+            this.setActiveRow();
           }
+        // 删除按钮点击事件处理
         } else if (key === DELETE_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.DELETE;
           onTableDeleteClick([scope.row]).then(() => {
             this.$emit('row-button-click', key, scope);
           }).catch(() => {});
+        // 保存按钮点击事件
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
             .then(() => {
@@ -828,6 +867,7 @@ export default {
               console.log('error');
               this.$emit('row-button-click', key, scope);
             });
+        // 取消按钮点击事件处理
         } else if (key === ROW_MANUAL_CANCEL_BUTTON.key) {
           this.cancelRowEdit();
           this.$emit('row-button-click', key, scope);
