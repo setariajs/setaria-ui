@@ -15,7 +15,7 @@ export function initialSetariaSchema(schema) {
   }
   Object.keys(properties).forEach((key) => {
     const property = properties[key];
-    if(property){
+    if (property) {
       // 转换字典项目的值类型为property定义的类型
       const { type, oneOf, anyOf } = property;
       let enumArray = oneOf;
