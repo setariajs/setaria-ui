@@ -31,7 +31,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :label-mode="labelMode"
     multiple-selection
     row-key="id"
-    :get-row-button="getRowButton"
+    :row-buttons="getRowButton"
     :schema="schema"
     :data="data"
     :save="save"
@@ -90,10 +90,6 @@ export default {
     },
     getRowButton({ rowIndex }) {
       return [
-        {
-          key: '1',
-          label: `按钮A${rowIndex}`,
-        },
       ];
     },
     save(data, mode) {
@@ -160,7 +156,7 @@ export default {
     :label-mode="labelMode"
     multiple-selection
     column-width="auto"
-    :get-row-button="getRowButton"
+    :row-buttons="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"
@@ -507,7 +503,7 @@ export default {
     :label-mode="labelMode"
     column-width="auto"
     multiple-selection
-    :get-row-button="getRowButton"
+    :row-buttons="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
     :data="data"

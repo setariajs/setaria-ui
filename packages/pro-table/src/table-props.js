@@ -38,8 +38,10 @@ export const COMMON_TABLE_PROPS = {
    * Function 的返回值用来决定这一行的 CheckBox 是否可以勾选
    */
   selectable: Function,
-  // 获取行数据操作按钮
-  getRowButton: Function,
+  /**
+   * 获取行数据操作按钮
+   */
+  rowButtons: Function,
   /**
    * 校验规则
    */

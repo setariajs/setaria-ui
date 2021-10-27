@@ -601,7 +601,7 @@ export default {
     getDefaultControlColumn() {
       const {
         controlColumnWidth,
-        getRowButton,
+        rowButtons,
         labelMode,
         onCustomButtonClick,
         canUpdate,
@@ -609,8 +609,8 @@ export default {
         isActiveByRow,
         forceEditOnRow
       } = this;
-      // 当自定义按钮为空且是label模式时，直接隐藏操作列
-      if (typeof getRowButton !== 'function' && labelMode) {
+      // label模式时，直接隐藏操作列
+      if (labelMode) {
         return;
       }
       return {
@@ -622,18 +622,19 @@ export default {
           default(scope) {
             const controlColumnDefaultSlot = [];
             let rowButtonList = [];
-            if (typeof getRowButton === 'function') {
-              rowButtonList = getRowButton(scope) || [];
+            if (typeof rowButtons === 'function') {
+              rowButtonList = rowButtons(scope) || [];
             }
             if (labelMode !== true) {
               if (canDelete) {
                 rowButtonList.unshift(DELETE_BUTTON);
               }
               if (canUpdate && forceEditOnRow !== true) {
-                rowButtonList.unshift(MODIFY_BUTTON);
                 if (isActiveByRow(scope.row)) {
                   rowButtonList.unshift(ROW_MANUAL_CANCEL_BUTTON);
                   rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
+                } else {
+                  rowButtonList.unshift(MODIFY_BUTTON);
                 }
               }
             }
