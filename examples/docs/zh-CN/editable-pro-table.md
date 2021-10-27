@@ -1116,6 +1116,7 @@ export default {
 | form-attrs    | 编辑模式下，表单组件的属性 | Object | — | —  |
 | before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
 | before-modify-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
+| save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
 
 ### 插槽
 
@@ -1141,5 +1142,13 @@ export default {
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
 | data-change | 行项目修改后(原始组件change事件)触发 | key 表单字段的 Key, val 表单字段的值, data 当前修改的数据（行编辑模式时为行数据，弹窗编辑模式时为展开的表单数据）, originData 行编辑前数据，仅为行编辑模式时存在 |
 | dialog-open | 表单对话框显示时触发 | val 当前行数据 |
+
+
+### 方法
+
+| 方法名        | 说明                                                       | 参数                                                             |
+| ------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| getChangedRecords      | 获取有变更的所有记录（含新增、删除、修改）   | Function(callback: {insert,update,delete}) |
+
 
 
