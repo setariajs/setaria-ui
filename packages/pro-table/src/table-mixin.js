@@ -808,7 +808,7 @@ export default {
       if (controlStatus === EDIT_TYPE.ADD) {
         data[changeModeField] = controlStatus;
       // 修改数据的场合
-      } else if (controlStatus === EDIT_TYPE.MODIFY) {
+      } else if (controlStatus === EDIT_TYPE.UPDATE) {
         // 新增数据的场合，无需修改状态
         if (data[changeModeField] !== EDIT_TYPE.ADD) {
           data[changeModeField] = controlStatus;
@@ -839,7 +839,7 @@ export default {
         event.stopPropagation();
         // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
-          this.controlStatus = EDIT_TYPE.MODIFY;
+          this.controlStatus = EDIT_TYPE.UPDATE;
           // 对话框编辑数据的场合
           if (!isEditOnRow) {
             const exec = () => {

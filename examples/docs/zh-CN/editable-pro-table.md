@@ -124,7 +124,7 @@ export default {
             case 'add':
               label = '新增';
               break;
-            case 'modify':
+            case 'update':
               label = '修改';
               break;
             case 'delete':
@@ -471,7 +471,7 @@ export default {
             case 'add':
               label = '新增';
               break;
-            case 'modify':
+            case 'update':
               label = '修改';
               break;
             case 'delete':
@@ -779,7 +779,7 @@ export default {
             case 'add':
               label = '新增';
               break;
-            case 'modify':
+            case 'update':
               label = '修改';
               break;
             case 'delete':

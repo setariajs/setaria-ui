@@ -21,7 +21,7 @@ export const COLUMN_TYPE = {
 export const EDIT_TYPE = {
   ADD: 'add',
   DELETE: 'delete',
-  MODIFY: 'modify'
+  UPDATE: 'update'
 };
 
 export default {

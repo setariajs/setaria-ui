@@ -614,7 +614,7 @@ export default Vue.extend({
     getUpdateRecords() {
       const { changeModeField } = this;
       return this.data
-        .filter((item) => item[changeModeField] === EDIT_TYPE.MODIFY)
+        .filter((item) => item[changeModeField] === EDIT_TYPE.UPDATE)
         .map((item) => this.removeComponentInnerProps(item));
     },
     /** 获取新增的记录 */
