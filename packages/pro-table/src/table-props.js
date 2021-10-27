@@ -194,7 +194,7 @@ export const EDIT_TABLE_PROPS = {
   /**
    * 修改按钮点击时的回调函数，用于对修改数据进行处理
    */
-  beforeModifyRow: Function,
+  beforeUpdateRow: Function,
   /**
    * "新增同级"按钮点击前回调函数
    */

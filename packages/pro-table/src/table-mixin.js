@@ -828,7 +828,7 @@ export default {
      */
     onCustomButtonClick(key, scope) {
       const {
-        beforeModifyRow,
+        beforeUpdateRow,
         isEditOnRow,
         onTableDeleteClick
       } = this;
@@ -845,8 +845,8 @@ export default {
               this.isShowForm = true;
               this.$emit('row-button-click', key, scope);
             };
-            if (typeof beforeModifyRow === 'function') {
-              beforeModifyRow(scope) ? exec() : null;
+            if (typeof beforeUpdateRow === 'function') {
+              beforeUpdateRow(scope) ? exec() : null;
             } else {
               exec();
             }

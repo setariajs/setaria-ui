@@ -171,7 +171,7 @@ export default {
     :can-update="canUpdate"
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
-    :before-modify-row="beforeModifyRow"
+    :before-update-row="beforeUpdateRow"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -449,7 +449,7 @@ export default {
         Readonly: '只读信息只读信息'
       };
     },
-    beforeModifyRow(scope) {
+    beforeUpdateRow(scope) {
       console.log(scope);
       return true;
     },
@@ -1115,7 +1115,7 @@ export default {
 | dialog-attrs    | 编辑模式下，Dialog组件的属性 | Object | — | —  |
 | form-attrs    | 编辑模式下，表单组件的属性 | Object | — | —  |
 | before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
-| before-modify-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
+| before-update-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
 | save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
 
 ### 插槽
