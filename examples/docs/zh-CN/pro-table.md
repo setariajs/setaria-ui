@@ -440,7 +440,7 @@ export default {
 | selection-type    | 列表选择类型 | String | 'radio', 'checkbox', '' | — |
 | multiple-selection    | 是否多选 | Boolean | — | false |
 | selectable    | 通过返回值来决定这一行的 CheckBox 是否可以勾选 | Function | — | — |
-| get-row-button    | 获取行数据操作按钮 | Function | — | — |
+| row-buttons    | 获取行数据操作按钮 | Function | — | — |
 | tableList-transform    | 列表数据转换函数 | Function | — | — |
 | parent-field    | 标识上级节点的字段名 | String | — | — |
 | column-width    | 列宽度 | String | — | — |
