@@ -839,7 +839,6 @@ export default {
         // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.MODIFY;
-          this.initialDialogFormData(scope.row);
           // 对话框编辑数据的场合
           if (!isEditOnRow) {
             const exec = () => {
@@ -851,6 +850,7 @@ export default {
             } else {
               exec();
             }
+            this.initialDialogFormData(scope.row);
           // 行上编辑数据的场合
           } else {
             if (this.editingRow) {
@@ -860,6 +860,7 @@ export default {
               });
               return;
             }
+            this.initialDialogFormData(scope.row);
             this.editingRow = scope.row;
             this.setActiveRow();
           }
