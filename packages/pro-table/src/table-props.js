@@ -153,7 +153,11 @@ export const COMMON_TABLE_PROPS = {
     type: Boolean,
     default: true
   },
-  rowClassName: null
+  rowClassName: null,
+  showControlColumn: {
+    type: Boolean,
+    default: true
+  }
 };
 
 export const EDIT_TABLE_PROPS = {

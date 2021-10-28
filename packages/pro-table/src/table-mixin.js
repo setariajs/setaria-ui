@@ -610,7 +610,7 @@ export default {
         forceEditOnRow
       } = this;
       // label模式时，直接隐藏操作列
-      if (labelMode) {
+      if (this.showControlColumn !== true && labelMode) {
         return;
       }
       return {
