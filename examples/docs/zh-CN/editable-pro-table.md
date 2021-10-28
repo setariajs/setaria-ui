@@ -1113,6 +1113,7 @@ export default {
 | before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
 | before-update-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
 | save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
+| show-control-column  | 是否显示操作列 | Boolean | — | true  |
 
 ### 插槽
 
