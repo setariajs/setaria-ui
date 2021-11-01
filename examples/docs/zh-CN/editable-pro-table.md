@@ -800,6 +800,271 @@ export default {
 ```
 :::
 
+### 强制行内编辑
+
+通过属性`force-edit-on-row`来控制是否行内编辑
+
+可配合`schema.properties[属性名].editable`为`false` 设置某个字段不可编辑模式
+
+
+:::demo
+```html
+<template>
+  <el-editable-pro-table
+    :label-mode="false"
+    column-width="auto"
+    :force-edit-on-row="true"
+    multiple-selection
+    :schema="schema"
+    :ui-schema="uiSchema"
+    :data="data"
+    :save="save"
+  >
+    <template slot="index" slot-scope="scope">
+      <el-button type="text">{{ scope.rowIndex }}</el-button>
+    </template>
+    <template slot="CustomSlot" slot-scope="scope">
+      <el-rate :disabled="scope.status !== 'edit'"
+               v-model="scope.data.CustomSlotCode"></el-rate>
+    </template>
+  </el-editable-pro-table>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      labelMode: false,
+      schema: {
+        properties: {
+          index: {
+            title: '序号',
+            type: 'index'
+          },
+          Name: {
+            title: '名称',
+            type: 'string',
+            editable:false,
+          },
+          Enum: {
+            title: '枚举值',
+            type: 'string',
+            oneOf: [
+              {
+                const: '1',
+                title: '枚举值一'
+              },
+              {
+                const: '2',
+                title: '枚举值二'
+              }
+            ],
+          },
+          AnyOf: {
+            title: '多选枚举值',
+            type: 'array',
+            anyOf: [
+              {
+                const: '1',
+                title: '枚举值一'
+              },
+              {
+                const: '2',
+                title: '枚举值二'
+              }
+            ]
+          },
+          Number: {
+            title: '数字',
+            type: 'number',
+            editable:false,
+          },
+          Price: {
+            title: '价格',
+            type: 'number',
+            precision: '16',
+            scale: '2',
+            format: 'price',
+          },
+          Comment: {
+            title: '备注',
+            type: 'string',
+            editable:false,
+          },
+          Date: {
+            title: '日期',
+            type: 'string',
+            format: 'date',
+            editable:false,
+          },
+          Time: {
+            title: '时间',
+            type: 'string',
+            format: 'time',
+            editable:false,
+          },
+          Boolean: {
+            title: '布尔值',
+            type: 'boolean',
+          },
+          CustomSlot: {
+            title: '自定义插槽',
+            type: 'string',
+          },
+          Readonly: {
+            title: '只读项目',
+            type: 'string',
+            editable: false,
+          },
+          linkage: {
+            title: '联动项目',
+            description: '枚举值为1时，显示为输入框，为2时，显示为下拉框',
+            type: 'string'
+          },
+          searchHelp: {
+            title: '搜索帮助',
+            type: 'string'
+          },
+        },
+        required: [ 'Name' ],
+      },
+      uiSchema: {
+        index: {
+          'ui:options': {
+            fixed: 'left',
+            width: '100px'
+          }
+        },
+        Name: {
+          'ui:options': {
+            fixed: 'left',
+            minWidth: '150px'
+          },
+        },
+        Enum: {
+          'ui:options': {
+            fixed: 'left',
+            width: '150px'
+          },
+        },
+        Comment: {
+          'ui:colspan': 2,
+        },
+        searchHelp: {
+          'ui:options': {
+            'suffix-icon': 'el-icon-search',
+            readonly: true,
+          },
+          'ui:nativeOn': {
+            click: () => {
+              this.$message.info('searchHelp click')
+            },
+          },
+        },
+      },
+      lineageEnumArray: [
+        {
+          const: 'a',
+          title: 'AAA',
+        },
+        {
+          const: 'b',
+          title: 'BBB',
+        }
+      ],
+      data: [],
+      canAdd: true,
+      canUpdate: true,
+      canDelete: true
+    };
+  },
+  created() {
+    this.headInfoData = {
+      Name: 'XXX',
+      Price: 12345.678,
+      Enum: '2',
+      AnyOf: ['1', '2'],
+      MaxLengthString: null,
+      Number: 98765,
+      Date: '2021-08-31',
+      Time: '17:18:00',
+      Comment: 'setaria-ui',
+      'Boolean': true,
+      CustomSlotCode: 4.3,
+      CustomSlot: '装饰线条',
+      Readonly: '信息不可修改',
+      linkage: 'b'
+    };
+    for (let i = 0; i < 5; i += 1) {
+      const data = {
+        ...this.headInfoData
+      };
+      data.Enum = i % 2 === 0 ? '1' : '2';
+      data.Name = `${data.Name}-${i}`;
+      this.data.push({
+        id: i,
+        ...data
+      }); 
+    }
+  },
+  methods: {
+    beforeAddRow() {
+      return {
+        Name: 'YYY',
+        Price: null,
+        Enum: null,
+        AnyOf: null,
+        Number: null,
+        Date: null,
+        Time: null,
+        Comment: null,
+        'Boolean': true,
+        CustomSlotCode: null,
+        CustomSlot: null,
+        Readonly: '只读信息只读信息'
+      };
+    },
+    save(data, mode) {
+      return new window.Promise((resolve, reject) => {
+        const loading = this.$loading();
+        setTimeout(() => {
+          if (mode === 'delete') {
+            if (data.findIndex(item => item.id === 1) === -1) {
+              resolve();
+            } else {
+              this.$message.warning('不允许删除id为1的数据');
+              reject();
+              loading.close();
+              return;
+            }
+          } else {
+            resolve({});
+          }
+          loading.close();
+          let label = '';
+          switch(mode) {
+            case 'add':
+              label = '新增';
+              break;
+            case 'update':
+              label = '修改';
+              break;
+            case 'delete':
+              label = '删除';
+              break;
+            default:
+              label = '保存';
+          }
+          const saveData = Array.isArray(data) ? data : [data];
+          this.$message.success(`id为 ${saveData.map(item => item.id).join(',')} 的数据已成功${label}。`);
+        }, 1000);
+      })
+    }
+  }
+};
+</script>
+```
+:::
+
 ### 编辑弹窗完全自定义
 
 :::demo
@@ -1115,6 +1380,7 @@ export default {
 | before-update-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
 | save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
 | show-control-column  | 是否显示操作列 | Boolean | — | true  |
+| force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |
 
 ### 插槽
 
