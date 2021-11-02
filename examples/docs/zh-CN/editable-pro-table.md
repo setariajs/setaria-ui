@@ -374,7 +374,7 @@ export default {
   created() {
     this.headInfoData = {
       Name: 'XXX',
-      Price: 12345.678,
+      Price: 12345.67,
       Enum: 2,
       AnyOf: ['1', '2'],
       MaxLengthString: null,
@@ -1381,6 +1381,7 @@ export default {
 | save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
 | show-control-column  | 是否显示操作列 | Boolean | — | true  |
 | force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |
+| dialog-form-discard-change-message-setting  | 数据修改对话框的显示消息配置 | Object | — | { message: '是否放弃对数据的更改?', confirmButtonText: '是', cancelButtonText: '否' } |
 
 ### 插槽
 

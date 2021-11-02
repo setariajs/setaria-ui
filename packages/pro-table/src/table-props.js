@@ -299,6 +299,15 @@ export const EDIT_TABLE_PROPS = {
     validator(val) {
       return ['end', 'begin', null].indexOf(val) > -1;
     }
+  },
+  dialogFormDiscardChangeMessageSetting: {
+    default() {
+      return {
+        message: '是否放弃对数据的更改?',
+        confirmButtonText: '是',
+        cancelButtonText: '否'
+      };
+    }
   }
 };
 

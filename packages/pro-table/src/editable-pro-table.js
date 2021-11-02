@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Vue from 'vue';
 import XEUtils from 'xe-utils';
 import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
-import { callbackExec } from 'setaria-ui/src/utils/util';
+import { callbackExec, looseEqual } from 'setaria-ui/src/utils/util';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
 import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
@@ -475,15 +475,29 @@ export default Vue.extend({
       const { currentFormData, dialogAttrs = {} } = this;
       const defaultBeforeClose = (customFunc) => {
         return (cbFunc) => {
-          this.$confirm('是否保存对数据的更改?', '提示', {
-            type: 'warning'
-          }).then(() => {
-            callbackExec(customFunc, currentFormData)
-              .then(() => {
-                cbFunc();
-              }).catch(() => {
-              });
-          }).catch(() => {});
+          const {
+            dialogFormDiscardChangeMessageSetting = {}
+          } = this;
+          const message = _.get(dialogFormDiscardChangeMessageSetting, 'message', '是否放弃对数据的更改?');
+          const confirmButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'confirmButtonText', '是');
+          const cancelButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'cancelButtonText', '否');
+          this.$nextTick(() => {
+            if (looseEqual(this.currentFormData, this.originFormData)) {
+              cbFunc();
+            } else {
+              this.$confirm(message, '提示', {
+                type: 'warning',
+                confirmButtonText,
+                cancelButtonText
+              }).then(() => {
+                callbackExec(customFunc, currentFormData)
+                  .then(() => {
+                    cbFunc();
+                  }).catch(() => {
+                  });
+              }).catch(() => {});
+            }
+          });
         };
       };
       return defaultBeforeClose(dialogAttrs.beforeClose || dialogAttrs[BEFORE_CLOSE_PROP_KEY]);
