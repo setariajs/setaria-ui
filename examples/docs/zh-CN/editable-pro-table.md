@@ -152,6 +152,7 @@ export default {
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
+    <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
   </div>
   <el-editable-pro-table
     :label-mode="labelMode"
@@ -173,6 +174,7 @@ export default {
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
     :save="save"
+    ref="editTable"
   >
     <template slot="batchControl" v-if="!labelMode">
       <el-button type="text" @click="canAdd=!canAdd">{{ canAdd ? '禁止' : '允许' }}新增</el-button>
@@ -409,6 +411,9 @@ export default {
     }
   },
   methods: {
+    setActiveRowByIndex(){
+      this.$refs.editTable.setActiveRowByIndex(0)
+    },
     getRowButton({ rowIndex }) {
       return [
         {
@@ -1414,6 +1419,9 @@ export default {
 | 方法名        | 说明                                                       | 参数                                                             |
 | ------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
 | getChangedRecords      | 获取有变更的所有记录（含新增、删除、修改）   | Function(callback: {insert,update,delete}) |
+| setActiveRowByIndex      | 按照下标激活行   | Function(index) |
+
+
 
 
 
