@@ -91,6 +91,10 @@ export default {
     },
     getRowButton({ rowIndex }) {
       return [
+        {
+          key: 'watch',
+          label: '自定义查看',
+        },
       ];
     },
     save(data, mode) {
