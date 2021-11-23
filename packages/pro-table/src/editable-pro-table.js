@@ -923,6 +923,7 @@ export default Vue.extend({
         this.setActiveRow();
       }
     },
+    // 表格添加行信息
     tableAddRow(position) {
       const { changeModeField } = this;
 
@@ -935,6 +936,7 @@ export default Vue.extend({
       this.data.splice(position || 0, 0, defaultItem);
       return defaultItem;
     },
+    // 表格删除行信息
     tableDelete(rows) {
       if (rows && _.isArray(rows) && rows.length > 0) {
         rows.forEach((item) => {

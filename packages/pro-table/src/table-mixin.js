@@ -626,6 +626,7 @@ export default {
               rowButtonList = rowButtons(scope) || [];
             }
             if (labelMode !== true) {
+              // 添加删除按钮
               if (canDelete) {
                 rowButtonList.unshift(DELETE_BUTTON);
               }
