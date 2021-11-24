@@ -89,6 +89,7 @@ export const COMMON_TABLE_PROPS = {
   },
   mergeFooterItems: Array,
   footerMethod: Function,
+  // 是否显示页脚
   showFooter: Boolean,
   // 序号配置项
   seqConfig: Object,
