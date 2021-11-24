@@ -25,6 +25,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
     <el-button @click="onGetChangeData">取得当前数据状态</el-button>
+     <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
   </div>
   <el-editable-pro-table
     ref="ept"
@@ -86,6 +87,9 @@ export default {
     }
   },
   methods: {
+    setActiveRowByIndex(){
+      this.$refs.ept.setActiveRowByIndex(0)
+    },
     onGetChangeData() {
       console.log(this.$refs.ept.getChangedRecords());
     },
@@ -101,6 +105,13 @@ export default {
       return new window.Promise((resolve, reject) => {
         const loading = this.$loading();
         setTimeout(() => {
+          console.log('test',data)
+          if(data.name === 'save'){
+            this.$message.warning('测试自定义校验拒绝');
+            reject();
+            loading.close();
+            return;
+          }
           if (mode === 'delete') {
             const targetIndex = data.findIndex(item => item.id === 1);
             if (targetIndex === -1) {
@@ -156,7 +167,7 @@ export default {
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
-    <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
+  
   </div>
   <el-editable-pro-table
     :label-mode="labelMode"

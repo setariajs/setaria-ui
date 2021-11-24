@@ -628,7 +628,7 @@ export default {
             if (labelMode !== true) {
               // 添加删除按钮
               if (canDelete) {
-                rowButtonList.unshift(DELETE_BUTTON);
+                rowButtonList.push(DELETE_BUTTON);
               }
               if (canUpdate && forceEditOnRow !== true) {
                 if (isActiveByRow(scope.row)) {
@@ -810,9 +810,12 @@ export default {
       const tableRef = this.getTableActionRef();
       if (index >= 0) {
         const list = this.isTree ? this.innerTreeDataList : this.innerDataList;
+        const item = list[index];
+        this.initialDialogFormData(item);
+        this.editingRow = item;
         // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
         setTimeout(() => {
-          tableRef.setActiveRow(list[index]).then(() => {
+          tableRef.setActiveRow(item).then(() => {
             // !FIXME vxe-table的focus功能基于未知原因不可用，所以手动进行focus
             const dom = document.querySelector('.el-editable-pro-table .vxe-table--body-wrapper .vxe-table--body .vxe-body--row .el-input__inner');
             if (dom) {
@@ -895,16 +898,32 @@ export default {
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
             .then(() => {
-              tableRef.clearActived()
-                .then(() => {
+              // tableRef.clearActived()
+              //   .then(() => {
+              //     this.currentFormData = null;
+              //     if (typeof this.save === 'function') {
+              //       this.save(scope.row, this.controlStatus, scope);
+              //     }
+              //     this.editingRow = null;
+              //     this.setChangeMode(scope.row, this.controlStatus);
+              //     this.$emit('row-button-click', key, scope);
+              //   });
+              const afterExec = () => {
+                tableRef.clearActived().then(() => {
                   this.currentFormData = null;
-                  if (typeof this.save === 'function') {
-                    this.save(scope.row, this.controlStatus, scope);
-                  }
                   this.editingRow = null;
                   this.setChangeMode(scope.row, this.controlStatus);
                   this.$emit('row-button-click', key, scope);
                 });
+              };
+              const fun = this.save(scope.row, this.controlStatus, scope);
+              if (typeof this.save === 'function' && fun.then) {
+                fun.then(() => {
+                  afterExec();
+                });
+              } else {
+                afterExec();
+              }
             })
             .catch(() => {
               this.$emit('row-button-click', key, scope);

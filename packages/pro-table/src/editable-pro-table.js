@@ -1262,8 +1262,8 @@ export default Vue.extend({
       const ret = (
         <div class="el-pro-table__toolbar">
           <div>
-            {getCommonToolbarButton()}
             {$slots.batchControl}
+            {getCommonToolbarButton()}
           </div>
           <div class="toolbar__table-common">{getColumnSettingRender()}</div>
         </div>
