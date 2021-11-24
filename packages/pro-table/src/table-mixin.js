@@ -825,6 +825,9 @@ export default {
         }, 0);
       }
     },
+    /**
+     * 设置改变数据模式
+     */
     setChangeMode(data, controlStatus) {
       const { changeModeField } = this;
       // 新增数据的场合
@@ -898,16 +901,6 @@ export default {
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
             .then(() => {
-              // tableRef.clearActived()
-              //   .then(() => {
-              //     this.currentFormData = null;
-              //     if (typeof this.save === 'function') {
-              //       this.save(scope.row, this.controlStatus, scope);
-              //     }
-              //     this.editingRow = null;
-              //     this.setChangeMode(scope.row, this.controlStatus);
-              //     this.$emit('row-button-click', key, scope);
-              //   });
               const afterExec = () => {
                 tableRef.clearActived().then(() => {
                   this.currentFormData = null;
@@ -959,6 +952,7 @@ export default {
         this.emitSelectionChange(val.records);
       }
     },
+    // 所有的都被check
     onTableCheckboxAll({ records }) {
       this.emitSelectionChange(records);
       this.$emit('select-all', records);

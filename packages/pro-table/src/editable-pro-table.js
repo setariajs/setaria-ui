@@ -471,6 +471,7 @@ export default Vue.extend({
       });
       return ret;
     },
+    // 关闭之前回调
     beforeCloseFunction() {
       const { currentFormData, dialogAttrs = {} } = this;
       const defaultBeforeClose = (customFunc) => {
