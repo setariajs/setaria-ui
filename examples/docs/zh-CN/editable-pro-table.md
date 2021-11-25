@@ -1434,7 +1434,7 @@ export default {
 | 方法名        | 说明                                                       | 参数                                                             |
 | ------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
 | getChangedRecords      | 获取有变更的所有记录（含新增、删除、修改）   | Function(callback: {insert,update,delete}) |
-| setActiveRowByIndex      | 按照下标激活行   | Function(index) |
+| setActiveRowByIndex      | 按照下标激活行   | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
 
 
 

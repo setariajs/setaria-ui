@@ -806,13 +806,15 @@ export default {
     /**
      * 按照下标激活行
      */
-    setActiveRowByIndex(index = -1) {
+    setActiveRowByIndex(index = -1, controlStatus = EDIT_TYPE.ADD) {
       const tableRef = this.getTableActionRef();
       if (index >= 0) {
         const list = this.isTree ? this.innerTreeDataList : this.innerDataList;
         const item = list[index];
         this.initialDialogFormData(item);
         this.editingRow = item;
+        this.controlStatus = controlStatus;
+        this.setChangeMode(item, this.controlStatus);
         // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
         setTimeout(() => {
           tableRef.setActiveRow(item).then(() => {
