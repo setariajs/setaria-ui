@@ -865,9 +865,11 @@ export default {
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
+        console.log('bnigogog');
         // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.UPDATE;
+          let currentRow = scope.row;
           // 对话框编辑数据的场合
           if (!isEditOnRow) {
             const exec = () => {
@@ -875,11 +877,16 @@ export default {
               this.$emit('row-button-click', key, scope);
             };
             if (typeof beforeUpdateRow === 'function') {
-              beforeUpdateRow(scope) ? exec() : null;
+              let updatedRow = beforeUpdateRow(scope);
+              if (updatedRow) {
+                currentRow = updatedRow;
+                exec();
+              }
+              // beforeUpdateRow(scope) ? exec() : null;
             } else {
               exec();
             }
-            this.initialDialogFormData(scope.row);
+            this.initialDialogFormData(currentRow);
           // 行上编辑数据的场合
           } else {
             if (this.editingRow) {
@@ -889,7 +896,10 @@ export default {
               });
               return;
             }
-            this.initialDialogFormData(scope.row);
+            if (typeof beforeUpdateRow === 'function') {
+              currentRow = beforeUpdateRow(scope);
+            }
+            this.initialDialogFormData(currentRow);
             this.editingRow = scope.row;
             this.setActiveRow();
           }

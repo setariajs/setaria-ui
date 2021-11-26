@@ -1226,15 +1226,19 @@ export default Vue.extend({
           );
           ret.push(addRowButton);
         }
+        const style = {
+          display: innerCanDelete ? 'inline-block' : 'none'
+        };
         const deleteRowButton = (
-          innerCanDelete ? (
-            <el-button
-              type="text"
-              on-click={onBatchDeleteData}
-            >
-              批量删除
-            </el-button>
-          ) : null
+          // innerCanDelete ? (
+          <el-button
+            style={style}
+            type="text"
+            on-click={onBatchDeleteData}
+          >
+            批量删除
+          </el-button>
+          // ) : null
         );
         ret.push(deleteRowButton);
       }
@@ -1263,8 +1267,8 @@ export default Vue.extend({
       const ret = (
         <div class="el-pro-table__toolbar">
           <div>
-            {$slots.batchControl}
             {getCommonToolbarButton()}
+            {$slots.batchControl}
           </div>
           <div class="toolbar__table-common">{getColumnSettingRender()}</div>
         </div>
