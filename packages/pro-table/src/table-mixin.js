@@ -912,22 +912,24 @@ export default {
         // 保存按钮点击事件
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
-            .then(() => {
-              const afterExec = () => {
-                tableRef.clearActived().then(() => {
-                  this.currentFormData = null;
-                  this.editingRow = null;
-                  this.setChangeMode(scope.row, this.controlStatus);
-                  this.$emit('row-button-click', key, scope);
-                });
-              };
-              const fun = this.save(scope.row, this.controlStatus, scope);
-              if (typeof this.save === 'function' && fun.then) {
-                fun.then(() => {
+            .then((isNoValid) => {
+              if (!isNoValid) {
+                const afterExec = () => {
+                  tableRef.clearActived().then(() => {
+                    this.currentFormData = null;
+                    this.editingRow = null;
+                    this.setChangeMode(scope.row, this.controlStatus);
+                    this.$emit('row-button-click', key, scope);
+                  });
+                };
+                const fun = this.save(scope.row, this.controlStatus, scope);
+                if (typeof this.save === 'function' && fun.then) {
+                  fun.then(() => {
+                    afterExec();
+                  });
+                } else {
                   afterExec();
-                });
-              } else {
-                afterExec();
+                }
               }
             })
             .catch(() => {
