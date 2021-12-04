@@ -4,7 +4,7 @@
 
 ### 使用前准备
 
-请先`main.js`中引入 EditableProTable 组件
+请先`main.js`中引入 EditableProTable 组件 
 
 ```java
 import EditableProTable from 'setaria-ui/lib/editable-pro-table';
