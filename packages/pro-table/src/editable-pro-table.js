@@ -1045,6 +1045,7 @@ export default Vue.extend({
         selectRow
       } = this;
       const afterExec = () => {
+        this.isSaveLoading = false;
         this.syncEditData();
         if (controlStatus === EDIT_TYPE.ADD) {
           if (dataAddPosition === 'begin') {
@@ -1067,17 +1068,15 @@ export default Vue.extend({
               if (res.then) {
                 res.then(() => {
                   afterExec();
-                  this.isSaveLoading = false;
-                }).catch(() => {
+                }).finally(() => {
                   this.isSaveLoading = false;
                 });
               } else if (res) {
                 afterExec();
-                this.isSaveLoading = false;
               }
             } else {
               afterExec();
-              this.isSaveLoading = false;
+             
             }
           }
         });
