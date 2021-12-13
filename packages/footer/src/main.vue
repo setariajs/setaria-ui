@@ -1,6 +1,9 @@
 <template>
-  <footer class="el-footer" :style="{ height }">
-    <slot></slot>
+  <footer class="el-footer">
+    <div class="el-footer__left"></div>
+    <div class="el-footer__right">
+      <slot></slot>
+    </div>
   </footer>
 </template>
 
@@ -11,10 +14,6 @@
     componentName: 'ElFooter',
 
     props: {
-      height: {
-        type: String,
-        default: '60px'
-      }
     }
   };
 </script>
