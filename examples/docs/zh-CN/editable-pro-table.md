@@ -532,6 +532,7 @@ export default {
     :can-update="canUpdate"
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
+    :before-update-row="beforeAddRow"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -762,8 +763,9 @@ export default {
     onSelectionChange(val) {
       console.log(val);
     },
-    beforeAddRow() {
+    beforeAddRow({ row }) {
       return {
+        ...{
         Name: 'YYY',
         Price: null,
         Enum: null,
@@ -776,6 +778,8 @@ export default {
         CustomSlotCode: null,
         CustomSlot: null,
         Readonly: '只读信息只读信息'
+        },
+        ...row,
       };
     },
     save(data, mode) {

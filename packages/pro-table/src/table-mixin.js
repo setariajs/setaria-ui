@@ -865,7 +865,6 @@ export default {
       return (event) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log('bnigogog');
         // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.UPDATE;
@@ -879,7 +878,8 @@ export default {
             if (typeof beforeUpdateRow === 'function') {
               let updatedRow = beforeUpdateRow(scope);
               if (updatedRow) {
-                currentRow = updatedRow;
+                scope.row = _.assign(scope.row, updatedRow);
+                currentRow = _.assign(currentRow, updatedRow);
                 exec();
               }
               // beforeUpdateRow(scope) ? exec() : null;
@@ -897,7 +897,11 @@ export default {
               return;
             }
             if (typeof beforeUpdateRow === 'function') {
-              currentRow = beforeUpdateRow(scope);
+              const updatedRow = beforeUpdateRow(scope);
+              if (updatedRow) {
+                scope.row = _.assign(scope.row, updatedRow);
+                currentRow = _.assign(currentRow, updatedRow);
+              }
             }
             this.initialDialogFormData(currentRow);
             this.editingRow = scope.row;

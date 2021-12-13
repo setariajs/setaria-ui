@@ -2,7 +2,13 @@
 @import "common/var";
 
 @include b(json-form) {
-  
+  .el-row{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .el-form-item--small.el-form-item{
+    margin-bottom: 20px;
+  }
   @include b(json-form-item) {
     &.is-hidden {
       display: none;

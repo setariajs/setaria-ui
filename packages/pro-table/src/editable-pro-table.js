@@ -23,7 +23,7 @@ export default Vue.extend({
   data() {
     return {
       isShowForm: false,
-      selectRow: null,
+      // selectRow: null,
       isShowTable: true,
       /* 树形列表绑定到vxe-table的数据 */
       innerTreeDataList: [],
@@ -1041,11 +1041,12 @@ export default Vue.extend({
         dataAddPosition,
         currentFormData,
         originFormData,
-        save,
-        selectRow
+        save
+        // selectRow
       } = this;
       const afterExec = () => {
         this.isSaveLoading = false;
+        // 将 currentFormData 合并到 originFormData
         this.syncEditData();
         if (controlStatus === EDIT_TYPE.ADD) {
           if (dataAddPosition === 'begin') {
@@ -1053,9 +1054,11 @@ export default Vue.extend({
           } else {
             data.push(originFormData);
           }
-        } else {
-          _.assign(selectRow, originFormData);
         }
+        // else {
+        //   console.log(selectRow);
+        //   // _.assign(selectRow, originFormData);
+        // }
         this.isShowForm = false;
       };
       if (this.$refs.dialogForm) {

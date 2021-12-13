@@ -21,7 +21,7 @@
     :schema="schema"
     :ui-schema="uiSchema"
     :validate-on-rule-change="false"
-    :columns="2"
+    :columns="4"
     :rules="rules"
     @submit="onSubmit"
     @change="onChange"
@@ -84,6 +84,10 @@
                 { const: '3', title: 'Other', disabled: true },
               ],
             },
+            comment: {
+              type: 'string',
+              title: 'comment',
+            },
             birth: {
               type: 'string',
               title: 'birth',
@@ -108,10 +112,6 @@
                 { const: '3', title: 'Sport' },
               ],
             },
-            comment: {
-              type: 'string',
-              title: 'comment',
-            },
             profession: {
               type: 'string',
               title: 'profession',
@@ -133,6 +133,14 @@
           },
         },
         uiSchema: {
+           comment: {
+            'ui:widget': 'textarea',
+            'ui:options': {
+              rows: 5,
+            },
+            'ui:placeholder': '111',
+            'ui:colspan': 2,
+          },
           gender: {
             'ui:widget': 'select'
           }
