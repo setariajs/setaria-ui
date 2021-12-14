@@ -410,7 +410,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   // placeholder处理
   if (isEmpty(attrs.placeholder)) {
     let placeholder = uiProperty[JSON_FORM_UI.UI_PLACEHOLDER];
-    if (isEmpty(placeholder)) {
+    if (isEmpty(placeholder) && !props.disabled) {
       placeholder = `请输入${property.title}`;
     }
     attrs.placeholder = placeholder;
