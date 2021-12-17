@@ -1216,7 +1216,6 @@ export default {
               data={columnSettingKeys}
               node-key="key"
               ref="columnSettingTree"
-              icon-class="el-icon-rank"
               props={{ label: 'title' }}
               default-expand-all={true}
               expand-on-click-node={false}
