@@ -66,6 +66,12 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
               scale: '2',
               format: 'price',
             },
+            Price2: {
+              title: '价格2',
+              type: 'number',
+              // scale: '2',
+              format: 'price',
+            },
             Comment: {
               title: '备注',
               type: 'string',
@@ -110,6 +116,7 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
         this.data = {
           Name: 'XXX',
           Price: 12345.678,
+          Price2: '12345',
           Enum: '2',
           AnyOf: ['1', '2'],
           Number: 98765,

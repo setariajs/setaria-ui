@@ -26,7 +26,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.elCard.actionItemList.length);
+    // console.log(this.elCard.actionItemList.length);
   }
 };
 </script>

@@ -520,7 +520,7 @@ export function createFormatter(property) {
     return function formatter(value) {
       const config = {};
       let scaleNum = _.toNumber(scale);
-      if (typeof scaleNum === 'number') {
+      if (typeof scaleNum === 'number' && !isNaN(scaleNum)) {
         config.maximumFractionDigits = scaleNum;
       } else {
         scaleNum = 0;
