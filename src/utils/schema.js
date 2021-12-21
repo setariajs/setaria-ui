@@ -526,7 +526,7 @@ export function createFormatter(property) {
         scaleNum = 0;
       }
       const val = _.toNumber(value);
-      if (!_.isNumber) {
+      if (!_.isNumber || isNaN(val)) {
         return value;
       }
       const displayVal = priceFormatter(val, config);
