@@ -391,7 +391,7 @@ export default {
   created() {
     this.headInfoData = {
       Name: 'XXX',
-      Price: 12345.67,
+      Price: '22345',
       Enum: 2,
       AnyOf: ['1', '2'],
       MaxLengthString: null,
