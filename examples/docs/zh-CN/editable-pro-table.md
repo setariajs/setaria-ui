@@ -25,6 +25,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
     <el-button @click="onGetChangeData">取得当前数据状态</el-button>
+    <el-button @click="getTableIsEditStatus">获取当前表格是否在行上编辑模式</el-button>
      <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
   </div>
   <el-editable-pro-table
@@ -87,8 +88,11 @@ export default {
     }
   },
   methods: {
+    getTableIsEditStatus(){
+      console.log(this.$refs.ept.getIsEditOnRow());
+    },
     setActiveRowByIndex(){
-      this.$refs.ept.setActiveRowByIndex(0)
+      this.$refs.ept.setActiveRowByIndex(0);
     },
     onGetChangeData() {
       console.log(this.$refs.ept.getChangedRecords());
@@ -1439,6 +1443,7 @@ export default {
 | ------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
 | getChangedRecords      | 获取有变更的所有记录（含新增、删除、修改）   | Function(callback: {insert,update,delete}) |
 | setActiveRowByIndex      | 按照下标激活行   | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
+| getIsEditOnRow      | 获取当前表格是否在行上编辑模式   | Function():Boolean) |
 
 
 

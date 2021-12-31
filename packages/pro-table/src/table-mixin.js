@@ -430,6 +430,17 @@ export default {
     }
   },
   methods: {
+    // 获取当前表格是否在行上编辑模式
+    getIsEditOnRow() {
+      const {
+        isEditOnRow,
+        editingRow
+      } = this;
+      if (isEditOnRow && editingRow) {
+        return true;
+      }
+      return false;
+    },
     /**
      * 用于 type=checkbox，切换某一行的选中状态
      * @public
@@ -607,7 +618,8 @@ export default {
         canUpdate,
         canDelete,
         isActiveByRow,
-        forceEditOnRow
+        forceEditOnRow,
+        getIsEditOnRow
       } = this;
       // label模式时，直接隐藏操作列
       if (this.showControlColumn !== true && labelMode) {
@@ -622,12 +634,14 @@ export default {
           default(scope) {
             const controlColumnDefaultSlot = [];
             let rowButtonList = [];
-            if (typeof rowButtons === 'function') {
+            // 添加自定义按钮的前提是必须为非行内编辑激活状态
+            if (typeof rowButtons === 'function' && !getIsEditOnRow()) {
               rowButtonList = rowButtons(scope) || [];
             }
             if (labelMode !== true) {
               // 添加删除按钮
-              if (canDelete) {
+              // 当前编辑状态为激活状态时，需要隐藏删除按钮
+              if (canDelete && !getIsEditOnRow()) {
                 rowButtonList.push(DELETE_BUTTON);
               }
               if (canUpdate && forceEditOnRow !== true) {
