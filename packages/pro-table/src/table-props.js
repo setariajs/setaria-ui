@@ -1,3 +1,4 @@
+import { t as localeT } from 'setaria-ui/src/locale';
 /**
  * 列表组件通用的props
  */
@@ -304,9 +305,9 @@ export const EDIT_TABLE_PROPS = {
   dialogFormDiscardChangeMessageSetting: {
     default() {
       return {
-        message: '是否放弃对数据的更改?',
-        confirmButtonText: '是',
-        cancelButtonText: '否'
+        message: localeT('el.protable.giveUpUpdate'),
+        confirmButtonText: localeT('el.schema.yes'),
+        cancelButtonText: localeT('el.schema.no')
       };
     }
   }

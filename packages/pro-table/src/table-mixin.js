@@ -3,30 +3,32 @@ import { EDIT_TYPE } from 'setaria-ui/src/constants/index';
 import { initialSetariaSchema } from 'setaria-ui/src/utils/schema';
 import { callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
+import Locale from 'setaria-ui/src/mixins/locale';
 import { convertSchemaToColumns } from './util';
-
-const COLUMN_CONTROL_TITLE = '操作';
+import { t as localeT } from 'setaria-ui/src/locale';
+const COLUMN_CONTROL_TITLE = localeT('el.protable.operation');
 const MODIFY_BUTTON = {
   key: 'ept-modify',
-  label: '修改'
+  label: localeT('el.protable.update')
 };
 const DELETE_BUTTON = {
   key: 'ept-delete',
-  label: '删除'
+  label: localeT('el.protable.delete')
 };
 const ROW_MANUAL_SAVE_BUTTON = {
   key: 'ept-row-manual-save',
-  label: '保存'
+  label: localeT('el.protable.save')
 };
 const ROW_MANUAL_CANCEL_BUTTON = {
   key: 'ept-row-manual-cancel',
-  label: '取消'
+  label: localeT('el.protable.cancel')
 };
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
 
 export default {
+  mixins: [Locale],
   props: {
     labelMode: {
       type: Boolean,
@@ -619,7 +621,8 @@ export default {
         canDelete,
         isActiveByRow,
         forceEditOnRow,
-        getIsEditOnRow
+        getIsEditOnRow,
+        t
       } = this;
       // label模式时，直接隐藏操作列
       if (this.showControlColumn !== true && labelMode) {
@@ -681,7 +684,7 @@ export default {
                 const moreElt = (
                   <el-dropdown style="margin-left: 15px">
                     <el-button type="text">
-                      更多<i class="el-icon-arrow-down el-icon--right" />
+                      { t('el.protable.more')}<i class="el-icon-arrow-down el-icon--right" />
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                       {rowButtonList.map(({ key, label }, index) => {
@@ -748,8 +751,8 @@ export default {
     /** "批量删除"按钮点击事件 */
     onTableDeleteClick(val) {
       return new window.Promise((resolve, reject) => {
-        const { save } = this;
-        this.$confirm('确认删除数据吗？', '提示', {
+        const { save, t } = this;
+        this.$confirm(t('el.protable.confirmDelete'), t('el.messagebox.title'), {
           type: 'warning'
         }).then(() => {
           callbackExec(save, val, EDIT_TYPE.DELETE)
@@ -873,7 +876,8 @@ export default {
       const {
         beforeUpdateRow,
         isEditOnRow,
-        onTableDeleteClick
+        onTableDeleteClick,
+        t
       } = this;
       const tableRef = this.getTableActionRef();
       return (event) => {
@@ -905,7 +909,7 @@ export default {
           } else {
             if (this.editingRow) {
               this.$message({
-                message: '同时只能编辑一条数据。',
+                message: t('el.protable.onylEditOne'),
                 type: 'error'
               });
               return;
@@ -1174,7 +1178,8 @@ export default {
         columnSettingDefaultCheckedKeys,
         isAllColumnShow,
         isParticalColumnShow,
-        showColumnSetting
+        showColumnSetting,
+        t
       } = this;
       if (showColumnSetting === false) {
         return null;
@@ -1216,14 +1221,14 @@ export default {
                 value={isAllColumnShow}
                 on-change={onColumnSettingTreeCheckboxChange}
               >
-                所有列
+                {t('el.protable.allColumns')}
               </el-checkbox>
               <el-button
                 type="text"
                 class="column-setting__reset-button"
                 on-click={onReset}
               >
-                重置
+                {t('el.proform.reset')}
               </el-button>
             </div>
             <el-tree
@@ -1231,6 +1236,7 @@ export default {
               node-key="key"
               ref="columnSettingTree"
               props={{ label: 'title' }}
+              icon-class="''"
               default-expand-all={true}
               expand-on-click-node={false}
               default-checked-keys={columnSettingDefaultCheckedKeys}
@@ -1239,9 +1245,9 @@ export default {
               on-check-change={onColumnSettingTreeNodeCheck}
               render-content={renderContent}
             />
-            <el-tooltip content="列设置" placement="top" slot="reference">
+            <el-tooltip content={t('el.protable.settingColumns')} placement="top" slot="reference">
               <el-button icon="el-icon-setting" type="text">
-                列设置
+                {t('el.protable.settingColumns')}
               </el-button>
             </el-tooltip>
           </el-popover>
@@ -1250,7 +1256,7 @@ export default {
       return null;
     },
     exportData(option) {
-      const { getTableActionRef } = this;
+      const { getTableActionRef, t } = this;
       let columns = _.filter(
         getTableActionRef().getColumns(),
         (item) =>
@@ -1265,7 +1271,7 @@ export default {
         return ret;
       });
       const defaultConfig = {
-        sheetName: '数据',
+        sheetName: t('el.protable.sheetName'),
         type: 'xlsx',
         mode: 'all',
         columns,

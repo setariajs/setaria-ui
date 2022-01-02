@@ -58,6 +58,51 @@ export default {
         dec: '12月'
       }
     },
+    protable: {
+      confirmDelete: 'データを削除してもよろしいですか？',
+      giveUpUpdate: 'データへの変更を破棄しますか？',
+      onylEditOne: '同時に編集できるデータは1つだけです。',
+      addSibling: '兄弟を追加する',
+      addChild: '子供を追加する',
+      addData: 'データを追加する',
+      batchDelete: 'バッチ削除',
+      allExpand: 'すべて展開',
+      allStow: 'すべて縮小',
+      save: '保存する',
+      cancel: 'キャンセル',
+      operation: '操作する',
+      update: '改訂',
+      delete: '消去',
+      more: 'もっと',
+      allColumns: 'すべての列',
+      settingColumns: '列設定',
+      sheetName: 'データ'
+    },
+    schema: {
+      placeholder: '{0}と入力してください',
+      int: '整数',
+      number: '番号',
+      yes: 'はい',
+      no: 'いいえ',
+      edit: '編集',
+      validate1: '入力形式は{0}に準拠している必要があります',
+      validate2: '長さは{0}文字より大きくする必要があります',
+      validate3: '長さは{0}〜{1}文字の間のみにすることができます',
+      validate4: '長さは{0}文字未満である必要があります',
+      validate5: '{0}は数字でなければなりません',
+      validate6: '{0は整数でなければなりません',
+      validate7: '{0}より大きい{1}を入力してください',
+      validate8: '{0}-{1}の間に{2}と入力してください',
+      validate9: '{0}未満の{1}を入力してください'
+    },
+    proform: {
+      stow: 'ストウ',
+      expand: '拡大する',
+      submit: '提出する',
+      reset: 'リセット',
+      search: 'サーチ',
+      cancel: '取り消し'
+    },
     select: {
       loading: 'ロード中',
       noMatch: 'データなし',

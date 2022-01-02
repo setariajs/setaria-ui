@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Vue from 'vue';
 import XEUtils from 'xe-utils';
+import Locale from 'setaria-ui/src/mixins/locale';
 import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
 import { callbackExec, looseEqual } from 'setaria-ui/src/utils/util';
 import tableMixin from './table-mixin';
@@ -15,7 +16,7 @@ const BEFORE_CLOSE_PROP_KEY = 'before-close';
 
 export default Vue.extend({
   name: 'ElEditableProTable',
-  mixins: [tableMixin],
+  mixins: [tableMixin, Locale],
   props: {
     ...COMMON_TABLE_PROPS,
     ...EDIT_TABLE_PROPS
@@ -412,7 +413,7 @@ export default Vue.extend({
     },
     innerRules() {
       const ret = {};
-      const { rules = {}, innerSchema = {}, uiSchema = {} } = this;
+      const { rules = {}, innerSchema = {}, uiSchema = {}, t } = this;
       const { required = [], properties = {} } = innerSchema;
 
       Object.keys(rules).forEach((key) => {
@@ -423,7 +424,7 @@ export default Vue.extend({
           const property = properties[key] || {};
           const requireRule = {
             required: true,
-            message: `请输入${property.title}`,
+            message: t('el.schema.placeholder', [property.title]),
             trigger: 'blur'
           };
           if (Array.isArray(rules[key])) {
@@ -473,20 +474,20 @@ export default Vue.extend({
     },
     // 关闭之前回调
     beforeCloseFunction() {
-      const { currentFormData, dialogAttrs = {} } = this;
+      const { currentFormData, dialogAttrs = {}, t } = this;
       const defaultBeforeClose = (customFunc) => {
         return (cbFunc) => {
           const {
             dialogFormDiscardChangeMessageSetting = {}
           } = this;
-          const message = _.get(dialogFormDiscardChangeMessageSetting, 'message', '是否放弃对数据的更改?');
-          const confirmButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'confirmButtonText', '是');
-          const cancelButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'cancelButtonText', '否');
+          const message = _.get(dialogFormDiscardChangeMessageSetting, 'message', t('el.protable.giveUpUpdate'));
+          const confirmButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'confirmButtonText', t('el.schema.yes'));
+          const cancelButtonText = _.get(dialogFormDiscardChangeMessageSetting, 'cancelButtonText', t('el.schema.no'));
           this.$nextTick(() => {
             if (looseEqual(this.currentFormData, this.originFormData)) {
               cbFunc();
             } else {
-              this.$confirm(message, '提示', {
+              this.$confirm(message, t('el.messagebox.title'), {
                 type: 'warning',
                 confirmButtonText,
                 cancelButtonText
@@ -504,9 +505,9 @@ export default Vue.extend({
       return defaultBeforeClose(dialogAttrs.beforeClose || dialogAttrs[BEFORE_CLOSE_PROP_KEY]);
     },
     innerDialogProps() {
-      const { beforeCloseFunction, dialogAttrs = {} } = this;
+      const { beforeCloseFunction, dialogAttrs = {}, t } = this;
       const defaultDialogProps = {
-        title: '编辑',
+        title: t('el.schema.edit'),
         'close-on-click-modal': false
       };
       const ret = _.assign({}, defaultDialogProps, dialogAttrs);
@@ -899,11 +900,12 @@ export default Vue.extend({
       const {
         onAddRowClick,
         isEditOnRow,
-        editingRow
+        editingRow,
+        t
       } = this;
       if (isEditOnRow && editingRow) {
         this.$message({
-          message: '同时只能编辑一条数据。',
+          message: t('el.protable.onylEditOne'),
           type: 'error'
         });
         return;
@@ -1174,7 +1176,8 @@ export default Vue.extend({
       innerCanAddChild,
       handleFormChange,
       formAttrs,
-      innerDialogProps
+      innerDialogProps,
+      t
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1197,7 +1200,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddCurrentClick}
               >
-                新增同级
+                { t('el.protable.addSibling') }
               </el-button>
             ) : null
           );
@@ -1209,7 +1212,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddChildClick}
               >
-                新增子级
+                { t('el.protable.addChild') }
               </el-button>
             ) : null
           );
@@ -1222,7 +1225,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddRowClick}
               >
-                新增数据
+                { t('el.protable.addData') }
               </el-button>
             ) : null
           );
@@ -1238,7 +1241,7 @@ export default Vue.extend({
             type="text"
             on-click={onBatchDeleteData}
           >
-            批量删除
+            { t('el.protable.batchDelete') }
           </el-button>
           // ) : null
         );
@@ -1248,7 +1251,7 @@ export default Vue.extend({
         if (showExpandAllBtn) {
           const expandAllButton = (
             <el-button type="text" on-click={onTableExpandRowsClick}>
-              全部展开
+              { t('el.protable.allExpand') }
             </el-button>
           );
           ret.push(expandAllButton);
@@ -1256,7 +1259,7 @@ export default Vue.extend({
         if (showCollapseAllBtn) {
           const collapseAllButton = (
             <el-button type="text" on-click={onTableCollapseRowsClick}>
-              全部收缩
+              { t('el.protable.allStow') }
             </el-button>
           );
           ret.push(collapseAllButton);
@@ -1371,9 +1374,9 @@ export default Vue.extend({
             }
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
-                保存
+                { t('el.protable.save') }
               </el-button>
-              <el-button on-click={onDialogCancelButtonClick}>取消</el-button>
+              <el-button on-click={onDialogCancelButtonClick}>{ t('el.protable.cancel') }</el-button>
             </span>
           </el-dialog>
         ) : null}
@@ -1443,9 +1446,9 @@ export default Vue.extend({
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
-                保存
+                { t('el.protable.save') }
               </el-button>
-              <el-button on-click={onDialogCancelButtonClick}>取消</el-button>
+              <el-button on-click={onDialogCancelButtonClick}>{ t('el.protable.cancel') }</el-button>
             </span>
           </el-dialog>
         ) : null}

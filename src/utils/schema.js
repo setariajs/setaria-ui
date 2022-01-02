@@ -3,6 +3,7 @@ import numeral from 'numeral';
 import moment from 'moment';
 import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
 import { isEmpty } from 'setaria-ui/src/utils/util';
+import { t } from 'setaria-ui/src/locale';
 
 export function initialSetariaSchema(schema) {
   let ret = _.cloneDeep(schema);
@@ -68,7 +69,7 @@ export function createFormRulesBySchema(schema, uiSchema) {
     if (required.includes(key)) {
       ret[key].push({
         required: true,
-        message: `请输入${itemName}`,
+        message: t('el.schema.placeholder', [itemName]),
         trigger: 'blur'
       });
     }
@@ -91,7 +92,7 @@ export function createFormRulesBySchema(schema, uiSchema) {
       if (!isEmpty(item.pattern)) {
         const rule = {
           pattern: item.pattern,
-          message: `输入格式必须符合${item.pattern}`
+          message: t('el.schema.validate1', [item.pattern])
         };
         if (!ret[key]) {
           ret[key] = [];
@@ -105,14 +106,14 @@ export function createFormRulesBySchema(schema, uiSchema) {
         const maxLength = item.maxLength;
         if (typeof minLength === 'number') {
           rule.min = minLength;
-          rule.message = `长度必须大于${minLength}个字符`;
+          rule.message = t('el.schema.validate2', [minLength]);
         }
         if (typeof maxLength === 'number') {
           rule.max = maxLength;
           if (typeof minLength === 'number') {
-            rule.message = `长度只能在${minLength}-${maxLength}个字符之间`;
+            rule.message = t('el.schema.validate3', [minLength, maxLength]);
           } else {
-            rule.message = `长度必须小于${maxLength}个字符`;
+            rule.message = t('el.schema.validate4', [minLength]);
           }
         }
         if (rule.message !== '' && rule.message !== undefined) {
@@ -122,9 +123,9 @@ export function createFormRulesBySchema(schema, uiSchema) {
           ret[key].push(rule);
         }
       } else if (item.type === 'integer' || item.type === 'number') {
-        let message = `${itemName}必须为数字`;
+        let message = t('el.schema.validate5', [itemName]);
         if (item.type === 'integer') {
-          message = `${itemName}必须为整数`;
+          message = t('el.schema.validate6', [itemName]);
         }
         const numberRule = {
           type: item.type,
@@ -135,14 +136,14 @@ export function createFormRulesBySchema(schema, uiSchema) {
         const maximum = item.maximum;
         if (typeof minimum === 'number') {
           numberRule.min = minimum;
-          numberRule.message = `请输入大于${minimum}的${item.type === 'integer' ? '整数' : '数字'}`;
+          numberRule.message = t('el.schema.validate7', [minimum, item.type === 'integer' ? t('el.schema.int') : t('el.schema.number')]);
         }
         if (typeof maximum === 'number') {
           numberRule.max = maximum;
           if (typeof minimum === 'number') {
-            numberRule.message = `请输入${minimum} - ${maximum}之间的${item.type === 'integer' ? '整数' : '数字'}`;
+            numberRule.message = t('el.schema.validate8', [minimum, maximum, item.type === 'integer' ? t('el.schema.int') : t('el.schema.number')]);
           } else {
-            numberRule.message = `请输入小于${maximum}的${item.type === 'integer' ? '整数' : '数字'}`;
+            numberRule.message = t('el.schema.validate9', [maximum, item.type === 'integer' ? t('el.schema.int') : t('el.schema.number')]);
           }
         }
         let isRequiredRuleExist = false;
@@ -411,7 +412,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   if (isEmpty(attrs.placeholder)) {
     let placeholder = uiProperty[JSON_FORM_UI.UI_PLACEHOLDER];
     if (isEmpty(placeholder) && !props.disabled) {
-      placeholder = `请输入${property.title}`;
+      placeholder = t('el.schema.placeholder', [property.title]);
     }
     attrs.placeholder = placeholder;
   }
@@ -483,7 +484,7 @@ export function createFormatter(property) {
   // }
   if (type === 'boolean') {
     return function formatter(value) {
-      return value ? '是' : '否';
+      return value ? t('el.schema.yes') : t('el.schema.no');
     };
   }
   if (format === 'time') {

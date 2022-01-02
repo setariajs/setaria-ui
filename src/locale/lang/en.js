@@ -58,6 +58,51 @@ export default {
         dec: 'Dec'
       }
     },
+    protable: {
+      confirmDelete: 'Are you sure to delete data?',
+      giveUpUpdate: 'Do you want to abandon changes to the data?',
+      onylEditOne: 'Only one piece of data can be edited at the same time.',
+      addSibling: 'Add sibling',
+      addChild: 'Add child',
+      addData: 'Add data',
+      batchDelete: 'batch deletion',
+      allExpand: 'Expand all',
+      allStow: 'Shrink all',
+      save: 'Save',
+      cancel: 'Cancel',
+      operation: 'operate',
+      update: 'Modify',
+      delete: 'Delete',
+      more: 'More',
+      allColumns: 'All columns',
+      settingColumns: 'Column settings',
+      sheetName: 'data'
+    },
+    schema: {
+      placeholder: 'please enter {0}',
+      int: 'Integer',
+      number: 'Number',
+      yes: 'Yes',
+      no: 'No',
+      edit: 'Edit',
+      validate1: 'The input format must conform to{0}',
+      validate2: 'The length must be greater than {0} characters',
+      validate3: 'The length can only be between {0}-{1} characters',
+      validate4: 'The length must be less than {0} characters',
+      validate5: '{0} must be a number',
+      validate6: '{0} must be an integer',
+      validate7: 'Please enter {1} greater than {0}',
+      validate8: 'Please enter {2} between {0}-{1}',
+      validate9: 'Please enter {1} less than {0}'
+    },
+    proform: {
+      stow: 'Stow',
+      expand: 'Expand',
+      submit: 'Submit',
+      reset: 'Reset',
+      search: 'Search',
+      cancel: 'Cancel'
+    },
     select: {
       loading: 'Loading',
       noMatch: 'No matching data',

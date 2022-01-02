@@ -1,6 +1,7 @@
 import ElCard from 'setaria-ui/packages/card/src/main';
 import ElDialog from 'setaria-ui/packages/dialog/src/component';
 import ElJsonForm from 'setaria-ui/packages/json-form/src/json-form';
+import Locale from 'setaria-ui/src/mixins/locale';
 import { getStyle } from 'setaria-ui/src/utils/dom';
 import { arrayFind, isEmpty } from 'setaria-ui/src/utils/util';
 
@@ -30,6 +31,7 @@ const BREAKPOINTS = {
 export default {
   name: 'ElProForm',
   componentName: 'ElProForm',
+  mixins: [Locale],
   props: {
     model: {
       type: Object
@@ -300,8 +302,8 @@ export default {
     // console.log('元素所占列数总和', currentDisplayTotalColSpan, totalColSpan);
     const getExpandTextLabel = () => {
       return innerExpand
-        ? (<div><i class="el-icon-arrow-up"></i><span>收起</span></div>)
-        : (<div><i class="el-icon-arrow-down"></i><span>展开</span></div>);
+        ? (<div><i class="el-icon-arrow-up"></i><span>{ this.t('el.proform.stow') }</span></div>)
+        : (<div><i class="el-icon-arrow-down"></i><span>{ this.t('el.proform.expand') }</span></div>);
     };
     /**
      * 正常表单的操作区域
@@ -310,8 +312,8 @@ export default {
       const { handleSubmit, handleReset } = this;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>提交</el-button>
-          <el-button onClick={handleReset}>重置</el-button>
+          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
+          <el-button onClick={handleReset}>{ this.t('el.proform.reset') }</el-button>
         </div>
       );
     };
@@ -334,8 +336,8 @@ export default {
               type="primary"
               icon="el-icon-search"
               onClick={handleSubmit}
-              loading={isSubmiting}>搜索</el-button>
-            <el-button onClick={handleReset} icon="el-icon-refresh-left">重置</el-button>
+              loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>
+            <el-button onClick={handleReset} icon="el-icon-refresh-left">{ this.t('el.proform.reset') }</el-button>
             <el-button
               type="text"
               onClick={handleExpand}
@@ -353,8 +355,8 @@ export default {
       const { handleSubmit, handleCancel } = this;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button onClick={handleCancel}>取消</el-button>
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>提交</el-button>
+          <el-button onClick={handleCancel}>{ this.t('el.proform.cancel') }</el-button>
+          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
         </div>
       );
     };

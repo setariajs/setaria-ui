@@ -401,6 +401,63 @@
       "name": "Components",
       "groups": [
         {
+          "groupName": "Special Feature",
+          "list": [
+            {
+              "path": "/json-form",
+              "title": "[特色]JsonForm Json表单"
+            },
+            {
+              "path": "/pro-form",
+              "title": "[特色]ProForm 高级表单"
+            },
+            {
+              "path": "/pro-table",
+              "title": "[特色]ProTable 高级表格"
+            },
+            {
+              "path": "/editable-pro-table",
+              "title": "[特色]EditableProTable 可编辑表格"
+            },
+            {
+              "path": "/pro-description",
+              "title": "[特色]ProDescription 高级定义列表"
+            },
+            {
+              "path": "/query-criteria-form",
+              "title": "[特色]QueryCriteriaForm 标准查询表单"
+            },
+            {
+              "path": "/query-filter",
+              "title": "[特色]QueryFilter 高级筛选器"
+            },
+            {
+              "path": "/json-viewer",
+              "title": "[特色]JsonViewer JSON视图查看"
+            },
+            {
+              "path": "/ellipsis",
+              "title": "[特色]Ellipsis 文本自动省略号"
+            },
+            {
+              "path": "/description",
+              "title": "[特色]Description 描述列表"
+            },
+            {
+              "path": "/statistics",
+              "title": "[特色]Statistics 统计数值"
+            },
+            {
+              "path": "/list",
+              "title": "[特色]List 列表"
+            },
+            {
+              "path": "/tree-select",
+              "title": "[特色]TreeSelect 树形选择控件"
+            }
+          ]
+        },
+        {
           "groupName": "Basic",
           "list": [
             {
