@@ -61,7 +61,7 @@ export default {
     protable: {
       confirmDelete: 'データを削除してもよろしいですか？',
       giveUpUpdate: 'データへの変更を破棄しますか？',
-      onylEditOne: '同時に編集できるデータは1つだけです。',
+      onlyEditOne: '同時に編集できるデータは1つだけです。',
       addSibling: '兄弟を追加する',
       addChild: '子供を追加する',
       addData: 'データを追加する',

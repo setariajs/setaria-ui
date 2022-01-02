@@ -905,7 +905,7 @@ export default Vue.extend({
       } = this;
       if (isEditOnRow && editingRow) {
         this.$message({
-          message: t('el.protable.onylEditOne'),
+          message: t('el.protable.onlyEditOne'),
           type: 'error'
         });
         return;

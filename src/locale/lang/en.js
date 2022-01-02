@@ -61,7 +61,7 @@ export default {
     protable: {
       confirmDelete: 'Are you sure to delete data?',
       giveUpUpdate: 'Do you want to abandon changes to the data?',
-      onylEditOne: 'Only one piece of data can be edited at the same time.',
+      onlyEditOne: 'Only one piece of data can be edited at the same time.',
       addSibling: 'Add sibling',
       addChild: 'Add child',
       addData: 'Add data',

@@ -61,7 +61,7 @@ export default {
     protable: {
       confirmDelete: '确认删除数据吗？',
       giveUpUpdate: '是否放弃对数据的更改?',
-      onylEditOne: '同时只能编辑一条数据。',
+      onlyEditOne: '同时只能编辑一条数据。',
       addSibling: '新增同级',
       addChild: '新增子级',
       addData: '新增数据',
