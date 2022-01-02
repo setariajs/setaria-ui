@@ -6,7 +6,13 @@ import 'vxe-table-plugin-virtual-tree/dist/style.css';
 // import VXETablePluginMenus from 'vxe-table-plugin-menus';
 // import VXETablePluginExportXLSX from 'vxe-table-plugin-export-xlsx';
 
-export function install(Vue) {
+export function install(Vue, opts = {}) {
+  if (opts.i18n) {
+    VXETable.setup({
+      // 对组件内置的提示语进行国际化翻译
+      i18n: (key, args) => opts.i18n.t(key, args)
+    });
+  }
   // 初始化VxeTable
   Vue.use(VXETable);
   VXETable.use(VXETablePluginElement);
