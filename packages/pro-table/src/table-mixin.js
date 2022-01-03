@@ -5,24 +5,8 @@ import { callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
 import Locale from 'setaria-ui/src/mixins/locale';
 import { convertSchemaToColumns } from './util';
-import { t as localeT } from 'setaria-ui/src/locale';
-const COLUMN_CONTROL_TITLE = localeT('el.protable.operation');
-const MODIFY_BUTTON = {
-  key: 'ept-modify',
-  label: localeT('el.protable.update')
-};
-const DELETE_BUTTON = {
-  key: 'ept-delete',
-  label: localeT('el.protable.delete')
-};
-const ROW_MANUAL_SAVE_BUTTON = {
-  key: 'ept-row-manual-save',
-  label: localeT('el.protable.save')
-};
-const ROW_MANUAL_CANCEL_BUTTON = {
-  key: 'ept-row-manual-cancel',
-  label: localeT('el.protable.cancel')
-};
+// import { t as localeT } from 'setaria-ui/src/locale';
+
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
@@ -110,6 +94,33 @@ export default {
     }
   },
   computed: {
+    COLUMN_CONTROL_TITLE() {
+      return this.t('el.protable.operation');
+    },
+    MODIFY_BUTTON() {
+      return {
+        key: 'ept-modify',
+        label: this.t('el.protable.operation')
+      };
+    },
+    DELETE_BUTTON() {
+      return {
+        key: 'ept-delete',
+        label: this.t('el.protable.delete')
+      };
+    },
+    ROW_MANUAL_SAVE_BUTTON() {
+      return {
+        key: 'ept-row-manual-save',
+        label: this.t('el.protable.save')
+      };
+    },
+    ROW_MANUAL_CANCEL_BUTTON() {
+      return {
+        key: 'ept-row-manual-cancel',
+        label: this.t('el.protable.cancel')
+      };
+    },
     innerUiSchema() {
       return this.uiSchema || {};
     },
@@ -622,7 +633,12 @@ export default {
         isActiveByRow,
         forceEditOnRow,
         getIsEditOnRow,
-        t
+        t,
+        COLUMN_CONTROL_TITLE,
+        MODIFY_BUTTON,
+        DELETE_BUTTON,
+        ROW_MANUAL_CANCEL_BUTTON,
+        ROW_MANUAL_SAVE_BUTTON
       } = this;
       // label模式时，直接隐藏操作列
       if (this.showControlColumn !== true && labelMode) {
@@ -635,6 +651,7 @@ export default {
         width: controlColumnWidth,
         slots: {
           default(scope) {
+            console.log(123123);
             const controlColumnDefaultSlot = [];
             let rowButtonList = [];
             // 添加自定义按钮的前提是必须为非行内编辑激活状态
@@ -877,7 +894,11 @@ export default {
         beforeUpdateRow,
         isEditOnRow,
         onTableDeleteClick,
-        t
+        t,
+        MODIFY_BUTTON,
+        DELETE_BUTTON,
+        ROW_MANUAL_SAVE_BUTTON,
+        ROW_MANUAL_CANCEL_BUTTON
       } = this;
       const tableRef = this.getTableActionRef();
       return (event) => {
@@ -1160,7 +1181,7 @@ export default {
       });
       settings = _.filter(
         settings,
-        (item) => !_.isEmpty(item.key) && item.title !== COLUMN_CONTROL_TITLE
+        (item) => !_.isEmpty(item.key) && item.title !== this.COLUMN_CONTROL_TITLE
       );
       this.columnSettingKeys = settings;
       const visibleKeys = this.columnSettingKeys.filter(
@@ -1256,7 +1277,7 @@ export default {
       return null;
     },
     exportData(option) {
-      const { getTableActionRef, t } = this;
+      const { getTableActionRef, t, COLUMN_CONTROL_TITLE } = this;
       let columns = _.filter(
         getTableActionRef().getColumns(),
         (item) =>
