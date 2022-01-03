@@ -100,7 +100,7 @@ export default {
     MODIFY_BUTTON() {
       return {
         key: 'ept-modify',
-        label: this.t('el.protable.operation')
+        label: this.t('el.protable.update')
       };
     },
     DELETE_BUTTON() {
