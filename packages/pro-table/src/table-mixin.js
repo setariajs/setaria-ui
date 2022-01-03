@@ -651,7 +651,6 @@ export default {
         width: controlColumnWidth,
         slots: {
           default(scope) {
-            console.log(123123);
             const controlColumnDefaultSlot = [];
             let rowButtonList = [];
             // 添加自定义按钮的前提是必须为非行内编辑激活状态
