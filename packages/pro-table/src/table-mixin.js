@@ -776,9 +776,7 @@ export default {
               // 从表格中删除指定行
               this.tableDelete(val);
               resolve();
-            }).catch(() => {
-              reject();
-            });
+            })
         }).catch(() => {
           reject();
         });
