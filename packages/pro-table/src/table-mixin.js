@@ -950,7 +950,7 @@ export default {
           this.controlStatus = EDIT_TYPE.DELETE;
           onTableDeleteClick([scope.row]).then(() => {
             this.$emit('row-button-click', key, scope);
-          }).catch(() => {});
+          });
         // 保存按钮点击事件
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
