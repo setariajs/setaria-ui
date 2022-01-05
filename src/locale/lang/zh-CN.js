@@ -100,7 +100,7 @@ export default {
       expand: '展开',
       submit: '提交',
       reset: '重置',
-      search: '搜素',
+      search: '搜索',
       cancel: '取消'
     },
     select: {
