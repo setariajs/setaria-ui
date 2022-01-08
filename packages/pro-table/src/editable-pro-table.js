@@ -546,6 +546,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    // 获取dialogform的对象
+    getDialogFormRef() {
+      return this.$refs.dialogForm;
+    },
     /**
      * 切换所有行的选中状态
      * @public
