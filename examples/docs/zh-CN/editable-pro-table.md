@@ -38,6 +38,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :schema="schema"
     :data="data"
     :save="save"
+    @selection-change="onSelectionChange"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -88,6 +89,9 @@ export default {
     }
   },
   methods: {
+    onSelectionChange(val,currentItem) {
+      console.log(val, currentItem);
+    },
     getTableIsEditStatus(){
       console.log(this.$refs.ept.getIsEditOnRow());
     },

@@ -749,7 +749,7 @@ export default {
           selection = [data];
         }
       }
-      this.emitSelectionChange(selection);
+      this.emitSelectionChange(selection, data);
     },
     reloadColumn() {
       const xTable = this.getTableRef();
@@ -993,17 +993,17 @@ export default {
       const { innerRadioConfig } = this;
       if (innerRadioConfig && _.isFunction(innerRadioConfig.checkMethod)) {
         if (val && innerRadioConfig.checkMethod(val)) {
-          this.emitSelectionChange([val.row]);
+          this.emitSelectionChange([val.row], val.row);
         }
       } else {
-        this.emitSelectionChange([val.row]);
+        this.emitSelectionChange([val.row], val.row);
       }
     },
     /** CheckBox 选中事件 */
     onTableCheckboxChange(val) {
       // !FIXME vxe-table bug - 不存在checkbox多选列的情况下，仍然触发了checkbox-change事件
       if (this.isMultipleSelect) {
-        this.emitSelectionChange(val.records);
+        this.emitSelectionChange(val.records, val.row);
       }
     },
     // 所有的都被check
@@ -1011,14 +1011,14 @@ export default {
       this.emitSelectionChange(records);
       this.$emit('select-all', records);
     },
-    emitSelectionChange(val) {
+    emitSelectionChange(val, currentRow = {}) {
       let selectionArray = val;
       if (this.isReserve && this.isMultipleSelect) {
         const reserveArray = this.getTableActionRef().getCheckboxReserveRecords();
         selectionArray = selectionArray.concat(reserveArray);
       }
       this.innerSelection = selectionArray;
-      this.$emit('selection-change', selectionArray);
+      this.$emit('selection-change', selectionArray, currentRow);
     },
     onCellClick(val) {
       this.$emit('cell-click', val);
@@ -1051,7 +1051,8 @@ export default {
               typeof this.getTableActionRef().getCheckboxRecords === 'function'
             ) {
               this.emitSelectionChange(
-                this.getTableActionRef().getCheckboxRecords(true)
+                this.getTableActionRef().getCheckboxRecords(true),
+                val.row
               );
             }
           });
