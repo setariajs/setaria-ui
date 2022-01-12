@@ -68,17 +68,36 @@ export default {
             scale: '2',
             format: 'price',
           },
+          noReadName: {
+            title: '不可编辑字段占位',
+            type: 'string',
+            editable: false,
+          },
         },
         required: [ 'name' ],
       },
+      uiSchema:{
+      },
       rules:{
         price: [
-            { 
+            {
               validator:(rule, value, callback) => {
                 if (value === '') {
                   callback(new Error('请输入内容'));
                 } else if (value < 0 ){
                   callback(new Error('请输入大于0的数'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
+        noReadName: [ 
+            {
+              validator:(rule, value, callback) => {
+                console.log(value)
+                if (value === '') {
+                  callback(new Error('请输入内容'));
                 } else {
                    callback();
                 }
@@ -99,6 +118,7 @@ export default {
         ...this.headInfoData
       };
       data.name = `${data.name}-${i}`;
+      data.noReadName = `${data.name}-${i}`;
       this.data.push({
         id: i,
         ...data

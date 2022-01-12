@@ -448,6 +448,7 @@ export default Vue.extend({
             ret[key] = uiRules;
           }
         } else {
+          // dialog编辑时的处理逻辑
           ret[key] = [...rules[key]];
         }
       });
