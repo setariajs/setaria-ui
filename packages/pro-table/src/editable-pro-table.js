@@ -413,11 +413,43 @@ export default Vue.extend({
     },
     innerRules() {
       const ret = {};
-      const { rules = {}, innerSchema = {}, uiSchema = {}, t } = this;
+      const { isEditOnRow, rules = {}, innerSchema = {}, uiSchema = {}, t } = this;
       const { required = [], properties = {} } = innerSchema;
 
       Object.keys(rules).forEach((key) => {
-        ret[key] = [...rules[key]];
+        // 行内编辑时的处理逻辑
+        if (isEditOnRow) {
+          let uiRules = [...rules[key]];
+          if (!_.isEmpty(uiRules)) {
+            uiRules = _.cloneDeep(uiRules);
+            uiRules.forEach((rule) => {
+              const { validator } = rule;
+              if (validator) {
+                const transformRule = rule;
+                transformRule.validator = (val = {}) => {
+                  const promise = new window.Promise((resolve, reject) => {
+                    validator(
+                      val.rule,
+                      val.cellValue,
+                      (callbackFuncVal) => {
+                        if (callbackFuncVal instanceof Error) {
+                          reject(callbackFuncVal);
+                          return;
+                        }
+                        resolve(callbackFuncVal);
+                      },
+                      val.row
+                    );
+                  });
+                  return promise;
+                };
+              }
+            });
+            ret[key] = uiRules;
+          }
+        } else {
+          ret[key] = [...rules[key]];
+        }
       });
       if (!_.isEmpty(required)) {
         required.forEach((key) => {
@@ -497,7 +529,7 @@ export default Vue.extend({
                     cbFunc();
                   }).catch(() => {
                   });
-              }).catch(() => {});
+              }).catch(() => { });
             }
           });
         };
@@ -923,7 +955,7 @@ export default Vue.extend({
       if (!isEditOnRow) {
         this.initialDialogFormData(this.createDefaultRowData());
         this.isShowForm = true;
-      // 行上直接编辑的场合
+        // 行上直接编辑的场合
       } else {
         const addRow = this.tableAddRow();
         this.editingRow = addRow;
@@ -1204,7 +1236,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddCurrentClick}
               >
-                { t('el.protable.addSibling') }
+                {t('el.protable.addSibling')}
               </el-button>
             ) : null
           );
@@ -1216,7 +1248,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddChildClick}
               >
-                { t('el.protable.addChild') }
+                {t('el.protable.addChild')}
               </el-button>
             ) : null
           );
@@ -1229,7 +1261,7 @@ export default Vue.extend({
                 type="text"
                 on-click={onTableAddRowClick}
               >
-                { t('el.protable.addData') }
+                {t('el.protable.addData')}
               </el-button>
             ) : null
           );
@@ -1245,7 +1277,7 @@ export default Vue.extend({
             type="text"
             on-click={onBatchDeleteData}
           >
-            { t('el.protable.batchDelete') }
+            {t('el.protable.batchDelete')}
           </el-button>
           // ) : null
         );
@@ -1255,7 +1287,7 @@ export default Vue.extend({
         if (showExpandAllBtn) {
           const expandAllButton = (
             <el-button type="text" on-click={onTableExpandRowsClick}>
-              { t('el.protable.allExpand') }
+              {t('el.protable.allExpand')}
             </el-button>
           );
           ret.push(expandAllButton);
@@ -1263,7 +1295,7 @@ export default Vue.extend({
         if (showCollapseAllBtn) {
           const collapseAllButton = (
             <el-button type="text" on-click={onTableCollapseRowsClick}>
-              { t('el.protable.allStow') }
+              {t('el.protable.allStow')}
             </el-button>
           );
           ret.push(collapseAllButton);
@@ -1378,9 +1410,9 @@ export default Vue.extend({
             }
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
-                { t('el.protable.save') }
+                {t('el.protable.save')}
               </el-button>
-              <el-button on-click={onDialogCancelButtonClick}>{ t('el.protable.cancel') }</el-button>
+              <el-button on-click={onDialogCancelButtonClick}>{t('el.protable.cancel')}</el-button>
             </span>
           </el-dialog>
         ) : null}
@@ -1450,9 +1482,9 @@ export default Vue.extend({
             />
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
-                { t('el.protable.save') }
+                {t('el.protable.save')}
               </el-button>
-              <el-button on-click={onDialogCancelButtonClick}>{ t('el.protable.cancel') }</el-button>
+              <el-button on-click={onDialogCancelButtonClick}>{t('el.protable.cancel')}</el-button>
             </span>
           </el-dialog>
         ) : null}

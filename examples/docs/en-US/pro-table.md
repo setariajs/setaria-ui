@@ -206,7 +206,8 @@ Vue.component('el-pro-table', ProTable);
       handleSizeChange(val) {
         this.$message.info(`每页数据显示数量改为 ${val}`);
       },
-      handleSelectionChange(val) {
+      handleSelectionChange(val, currentItem) {
+        console.log(val, currentItem)
         this.multipleSelection = val;
       }
     }

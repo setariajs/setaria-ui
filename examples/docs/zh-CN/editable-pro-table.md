@@ -36,6 +36,8 @@ Vue.component('el-editable-pro-table', EditableProTable);
     row-key="id"
     :row-buttons="getRowButton"
     :schema="schema"
+    :ui-schema="uiSchema"
+    :rules="rules"
     :data="data"
     :save="save"
     @selection-change="onSelectionChange"
@@ -68,6 +70,21 @@ export default {
           },
         },
         required: [ 'name' ],
+      },
+      rules:{
+        price: [
+            { 
+              validator:(rule, value, callback) => {
+                if (value === '') {
+                  callback(new Error('请输入内容'));
+                } else if (value < 0 ){
+                  callback(new Error('请输入大于0的数'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
       },
       data: []
     };
@@ -193,6 +210,7 @@ export default {
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
     :before-update-row="beforeUpdateRow"
+    :rules="rules"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -389,6 +407,21 @@ export default {
             },
           },
         }, 
+      },
+      rules:{
+        Price: [
+            { 
+              validator:(rule, value, callback) => {
+                if (value === '') {
+                  callback(new Error('请输入内容'));
+                } else if (value < 0 ){
+                  callback(new Error('请输入大于0的数'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
       },
       data: [],
       canAdd: true,
