@@ -32,7 +32,6 @@ Vue.component('el-editable-pro-table', EditableProTable);
     ref="ept"
     :label-mode="labelMode"
     multiple-selection
-    :show-control-column="false"
     row-key="id"
     :row-buttons="getRowButton"
     :schema="schema"
