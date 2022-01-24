@@ -1074,6 +1074,9 @@ export default {
       const { currentPage, pageSize } = val;
       this.innerCurrentPage = currentPage;
       this.innerPageSize = pageSize;
+      if (!this.isReserve) {
+        this.emitSelectionChange([]);
+      }
       this.$emit('page-change', val);
     },
     refreshTempState() {
