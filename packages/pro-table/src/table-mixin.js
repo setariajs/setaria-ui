@@ -641,7 +641,7 @@ export default {
         ROW_MANUAL_SAVE_BUTTON
       } = this;
       // label模式时，直接隐藏操作列
-      if (!this.showControlColumn || labelMode) {
+      if (!this.showControlColumn) {
         return;
       }
       return {
