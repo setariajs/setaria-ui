@@ -62,6 +62,7 @@ export default {
       confirmDelete: '确认删除数据吗？',
       giveUpUpdate: '是否放弃对数据的更改?',
       onlyEditOne: '同时只能编辑一条数据。',
+      beforeCloseEdit: '请先关闭编辑状态的数据。',
       addSibling: '新增同级',
       addChild: '新增子级',
       addData: '新增数据',

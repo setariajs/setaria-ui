@@ -1134,6 +1134,18 @@ export default Vue.extend({
       this.xTableRef.recalculate(refull);
     },
     onBatchDeleteData() {
+      const {
+        isEditOnRow,
+        editingRow,
+        t
+      } = this;
+      if (isEditOnRow && editingRow) {
+        this.$message({
+          message: t('el.protable.beforeCloseEdit'),
+          type: 'error'
+        });
+        return;
+      }
       this.onTableDeleteClick(this.innerSelection);
     },
     handleFormChange(key, val) {
@@ -1268,21 +1280,21 @@ export default Vue.extend({
           );
           ret.push(addRowButton);
         }
-        const style = {
-          display: innerCanDelete ? 'inline-block' : 'none'
-        };
-        const deleteRowButton = (
-          // innerCanDelete ? (
-          <el-button
-            style={style}
-            type="text"
-            on-click={onBatchDeleteData}
-          >
-            {t('el.protable.batchDelete')}
-          </el-button>
-          // ) : null
-        );
-        ret.push(deleteRowButton);
+        // const style = {
+        //   display: innerCanDelete ? 'inline-block' : 'none'
+        // };
+        // const deleteRowButton = (
+        //   // innerCanDelete ? (
+        //   <el-button
+        //     style={style}
+        //     type="text"
+        //     on-click={onBatchDeleteData}
+        //   >
+        //     {t('el.protable.batchDelete')}
+        //   </el-button>
+        //   // ) : null
+        // );
+        // ret.push(deleteRowButton);
       }
       if (isTree) {
         if (showExpandAllBtn) {
@@ -1304,6 +1316,28 @@ export default Vue.extend({
       }
       return ret;
     };
+
+    const getCommonToolbarButtonByAfter = () => {
+      const ret = [];
+      if (isShowDefaultBatchControl && !labelMode) {
+        const style = {
+          display: innerCanDelete ? 'inline-block' : 'none'
+        };
+        const deleteRowButton = (
+          // innerCanDelete ? (
+          <el-button
+            style={style}
+            type="text"
+            on-click={onBatchDeleteData}
+          >
+            {t('el.protable.batchDelete')}
+          </el-button>
+          // ) : null
+        );
+        ret.push(deleteRowButton);
+      }
+      return ret;
+    };
     // 表格工具栏
     const tableToolbar = () => {
       const ret = (
@@ -1311,6 +1345,7 @@ export default Vue.extend({
           <div>
             {getCommonToolbarButton()}
             {$slots.batchControl}
+            {getCommonToolbarButtonByAfter()}
           </div>
           <div class="toolbar__table-common">{getColumnSettingRender()}</div>
         </div>

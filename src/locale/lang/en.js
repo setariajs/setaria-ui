@@ -62,6 +62,7 @@ export default {
       confirmDelete: 'Are you sure to delete data?',
       giveUpUpdate: 'Do you want to abandon changes to the data?',
       onlyEditOne: 'Only one piece of data can be edited at the same time.',
+      beforeCloseEdit: 'Please close the data in editing status first.',
       addSibling: 'Add sibling',
       addChild: 'Add child',
       addData: 'Add data',

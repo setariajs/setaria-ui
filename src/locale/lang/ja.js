@@ -62,6 +62,7 @@ export default {
       confirmDelete: 'データを削除してもよろしいですか？',
       giveUpUpdate: 'データへの変更を破棄しますか？',
       onlyEditOne: '同時に編集できるデータは1つだけです。',
+      beforeCloseEdit: '请先关闭编辑状态的数据。',
       addSibling: '兄弟を追加する',
       addChild: '子供を追加する',
       addData: 'データを追加する',
