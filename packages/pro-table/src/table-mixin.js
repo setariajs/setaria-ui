@@ -630,6 +630,8 @@ export default {
         onCustomButtonClick,
         canUpdate,
         canDelete,
+        canDeleteRow,
+        canUpdateRow,
         isActiveByRow,
         forceEditOnRow,
         getIsEditOnRow,
@@ -661,14 +663,31 @@ export default {
               // 添加删除按钮
               // 当前编辑状态为激活状态时，需要隐藏删除按钮
               if (canDelete && !getIsEditOnRow()) {
-                rowButtonList.push(DELETE_BUTTON);
+
+                // 以上逻辑是整体控制
+                // 这里的控制是以行维度控制是否可以显示删除按钮
+                if (canDeleteRow) {
+                  if (canDeleteRow(scope)) {
+                    rowButtonList.push(DELETE_BUTTON);
+                  }
+                } else {
+                  rowButtonList.push(DELETE_BUTTON);
+                }
               }
               if (canUpdate && forceEditOnRow !== true) {
                 if (isActiveByRow(scope.row)) {
                   rowButtonList.unshift(ROW_MANUAL_CANCEL_BUTTON);
                   rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
                 } else {
-                  rowButtonList.unshift(MODIFY_BUTTON);
+                  // 以上逻辑是整体控制
+                  // 这里的控制是以行维度控制是否可以显示删除按钮
+                  if (canUpdateRow) {
+                    if (canUpdateRow(scope)) {
+                      rowButtonList.unshift(MODIFY_BUTTON);
+                    }
+                  } else {
+                    rowButtonList.unshift(MODIFY_BUTTON);
+                  }
                 }
               }
             }

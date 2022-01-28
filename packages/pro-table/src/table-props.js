@@ -293,6 +293,12 @@ export const EDIT_TABLE_PROPS = {
     type: Boolean,
     default: true
   },
+  canUpdateRow: {
+    type: Function
+  },
+  canDeleteRow: {
+    type: Function
+  },
   pageSize: Number,
   pageSizes: Array,
   dataAddPosition: {

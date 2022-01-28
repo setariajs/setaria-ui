@@ -227,6 +227,8 @@ export default {
     :can-add="canAdd"
     :can-update="canUpdate"
     :can-delete="canDelete"
+    :can-delete-row="canDeleteRow"
+    :can-update-row="canUpdateRow"
     :before-add-row="beforeAddRow"
     :before-update-row="beforeUpdateRow"
     :rules="rules"
@@ -486,6 +488,12 @@ export default {
     }
   },
   methods: {
+    canDeleteRow({row}){
+      return row.id !== 1
+    },
+    canUpdateRow({row}){
+      return row.id !== 2
+    },
     setActiveRowByIndex(){
       this.$refs.editTable.setActiveRowByIndex(0)
     },
@@ -1457,6 +1465,8 @@ export default {
 | can-add    | 是否可新增数据 | Boolean | — | true |
 | can-update    | 是否可修改数据 | Boolean | — | true |
 | can-delete    | 是否可删除数据 | Boolean | — | true |
+| can-delete-row   | 是否可删除数据(行维度)，需要返回true false | Funciton | — | — |
+| can-update-row   | 是否可修改数据(行维度)，需要返回true false | Funciton | — | — |
 | row-class-name    | 待补充 | String | — | —  |
 | dialog-attrs    | 编辑模式下，Dialog组件的属性 | Object | — | —  |
 | form-attrs    | 编辑模式下，表单组件的属性 | Object | — | —  |
@@ -1500,6 +1510,7 @@ export default {
 | getChangedRecords      | 获取有变更的所有记录（含新增、删除、修改）   | Function(callback: {insert,update,delete}) |
 | setActiveRowByIndex      | 按照下标激活行   | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
 | getIsEditOnRow      | 获取当前表格是否在行上编辑模式   | Function():Boolean) |
+| cancelRowEdit      | 移除表格编辑状态  | Function() |
 
 
 
