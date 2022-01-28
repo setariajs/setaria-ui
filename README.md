@@ -50,7 +50,7 @@ Vue.use(Setaria)
 import {
   Select,
   Button
-  // ...
+  // ...  
 } from 'setaria-ui'
 
 Vue.component(Select.name, Select)
