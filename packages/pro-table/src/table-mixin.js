@@ -823,7 +823,9 @@ export default {
       // 新增数据的场合
       if (this.controlStatus === EDIT_TYPE.ADD) {
         // 直接移除数据
-        this.tableDelete([this.editingRow]);
+        if (this.editingRow) {
+          this.tableDelete([this.editingRow]);
+        }
       } else {
         tableRef.clearActived()
           .then(() => {
