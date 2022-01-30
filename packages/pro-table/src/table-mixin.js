@@ -1080,6 +1080,9 @@ export default {
       this.innerSelection = selectionArray;
       this.$emit('selection-change', selectionArray, currentRow);
     },
+    onCellDblClick(val) {
+      this.$emit('cell-dblclick', val);
+    },
     onCellClick(val) {
       this.$emit('cell-click', val);
       const isTriggerBySelectColumn = (target) => {

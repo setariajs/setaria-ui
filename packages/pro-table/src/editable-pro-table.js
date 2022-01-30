@@ -1217,6 +1217,7 @@ export default Vue.extend({
       showPagination,
       isShowTable,
       onCellClick,
+      onCellDblClick,
       innerMergeCells,
       menuConfig,
       onCellMenu,
@@ -1425,6 +1426,7 @@ export default Vue.extend({
             nativeOnClick={onGridNativeClick}
             row-class-name={rowClassName}
             on-cell-click={onCellClick}
+            on-cell-dblclick={onCellDblClick}
             on-radio-change={onTableRadioChange}
             on-checkbox-change={onTableCheckboxChange}
             on-checkbox-all={onTableCheckboxAll}
@@ -1504,6 +1506,7 @@ export default Vue.extend({
             tree-config={innerTreeConfig}
             scroll-y={{ gt: 20 }}
             on-cell-click={onCellClick}
+            on-cell-dblclick={onCellDblClick}
             merge-cells={innerMergeCells}
             menu-config={menuConfig}
             on-cell-menu={onCellMenu}

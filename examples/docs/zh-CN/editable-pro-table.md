@@ -41,6 +41,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :rules="rules"
     :data="data"
     :save="save"
+    @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
   >
     <template slot="index" slot-scope="scope">
@@ -127,6 +128,9 @@ export default {
     }
   },
   methods: {
+    cellDblclick(val){
+      console.log('cellDblclick',val)
+    },
      beforeAddRow(row) {
       // 自定义返回数据 Promise 方式
        return new Promise((resovle)=>{
@@ -1564,6 +1568,7 @@ export default {
 | select-all | 选中所有 | records 选中所有数据 |
 | selection-change | 选中变更 | selectionArray 选中的数据 |
 | cell-click | 单元格点击 | val 单元格数据 |
+| cell-dblclick | 单元格双击 | val 单元格数据 |
 | menu-click | 只对 menu-config 配置时有效，当点击快捷菜单时会触发该事件 | { menu, type, row, rowIndex, column, columnIndex, $event } |
 | cell-menu | 只对 menu-config 配置时有效，单元格被鼠标右键时触发该事件 | { type, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event } |
 | sort-change | 当排序条件发生变化时会触发该事件 | { column, property, order, sortBy, sortList, $event } |
