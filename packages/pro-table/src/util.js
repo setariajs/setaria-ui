@@ -93,10 +93,10 @@ export function convertSchemaToColumns(
     column.headerAlign = 'left';
     // 列标题
     column.title = property.title;
-    if (property.type === 'number' || property.type === 'integer') {
-      column.headerAlign = 'right';
-      column.align = 'right';
-    }
+    // if (property.type === 'number' || property.type === 'integer') {
+    //   column.headerAlign = 'right';
+    //   column.align = 'right';
+    // }
     // 列宽度
     let { width } = uiProperty;
     if (!_.isEmpty(width) && width.indexOf('px')) {

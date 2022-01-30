@@ -4,6 +4,7 @@
     cellpadding="0"
     class="el-date-table"
     @click="handleClick"
+    @dblclick="handleDbClick"
     @mousemove="handleMouseMove"
     :class="{ 'is-week-mode': selectionMode === 'week' }">
     <tbody>
@@ -385,7 +386,29 @@
           });
         }
       },
+      handleDbClick(event) {
+        let target = event.target;
+        if (target.tagName === 'SPAN') {
+          target = target.parentNode.parentNode;
+        }
+        if (target.tagName === 'DIV') {
+          target = target.parentNode;
+        }
 
+        if (target.tagName !== 'TD') return;
+
+        const row = target.parentNode.rowIndex - 1;
+        const column = this.selectionMode === 'week' ? 1 : target.cellIndex;
+        const cell = this.rows[row][column];
+
+        if (cell.disabled || cell.type === 'week') return;
+
+        const newDate = this.getDateOfCell(row, column);
+
+        if (this.selectionMode === 'day') {
+          this.$emit('pick', newDate, false);
+        }
+      },
       handleClick(event) {
         let target = event.target;
         if (target.tagName === 'SPAN') {

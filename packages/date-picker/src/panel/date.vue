@@ -350,7 +350,7 @@
         }
       },
 
-      handleDatePick(value) {
+      handleDatePick(value, isFocusHide = null) {
         if (this.selectionMode === 'day') {
           let newDate = this.value
             ? modifyDate(this.value, value.getFullYear(), value.getMonth(), value.getDate())
@@ -360,7 +360,11 @@
             newDate = modifyDate(this.selectableRange[0][0], value.getFullYear(), value.getMonth(), value.getDate());
           }
           this.date = newDate;
-          this.emit(this.date, this.showTime);
+          if (isFocusHide === null) {
+            this.emit(this.date, this.showTime);
+          } else {
+            this.emit(this.date, isFocusHide);
+          }
         } else if (this.selectionMode === 'week') {
           this.emit(value.date);
         } else if (this.selectionMode === 'dates') {
