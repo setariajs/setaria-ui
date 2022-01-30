@@ -36,6 +36,8 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :row-buttons="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
+    :before-add-row="beforeAddRow"
+    :before-update-row="beforeUpdateRow"
     :rules="rules"
     :data="data"
     :save="save"
@@ -125,6 +127,48 @@ export default {
     }
   },
   methods: {
+     beforeAddRow(row) {
+      // 自定义返回数据 Promise 方式
+       return new Promise((resovle)=>{
+           setTimeout(()=>{
+             resovle({
+              ...row,
+              ...{
+                name: 333444
+            }});
+
+           },1500);
+      });
+    },
+    // beforeAddRow(row) {
+    //   return {
+    //     ...row,
+    //     name: 33333
+    //   };
+    // },
+    beforeUpdateRow(scope) {
+      console.log(scope);
+      // 自定义返回数据
+      return {
+        ...scope.row,
+        ...{
+          name: 13323
+        }
+      };
+    },
+    //  beforeUpdateRow(scope) {
+    //   // 自定义返回数据 Promise 方式
+    //    return new Promise((resovle)=>{
+    //        setTimeout(()=>{
+    //          resovle({
+    //           ...scope.row,
+    //           ...{
+    //             name: 2222
+    //         }});
+
+    //        },1500);
+    //   });
+    // },
     onSelectionChange(val,currentItem) {
       console.log(val, currentItem);
     },
@@ -244,7 +288,7 @@ export default {
       <el-button type="text" @click="canDelete=!canDelete">{{ canDelete ? '禁止' : '允许' }}删除</el-button>
     </template>
     <template slot="index" slot-scope="scope">
-      <el-button type="text">{{ scope.rowIndex }}</el-button>
+      <el-button type="text">{{ scope.rowIndex }}{{scope.data.test}}</el-button>
     </template>
     <template slot="CustomSlot" slot-scope="scope">
       <el-rate :disabled="scope.status !== 'edit'"
@@ -518,26 +562,51 @@ export default {
     onSelectionChange(val) {
       console.log(val);
     },
-    beforeAddRow() {
-      return {
-        Name: 'YYY',
-        Price: null,
-        Enum: null,
-        AnyOf: null,
-        Number: null,
-        Date: null,
-        Time: null,
-        Comment: null,
-        'Boolean': true,
-        CustomSlotCode: null,
-        CustomSlot: null,
-        Readonly: '只读信息只读信息'
-      };
+    // beforeAddRow(scope) {
+    //   console.log(scope);
+    //   return {
+    //     ...scope,
+    //     ...{
+    //       test: 112233
+    //     }
+    //   };
+    // },
+    beforeAddRow(scope) {
+      // 自定义返回数据 Promise 方式
+       return new Promise((resovle)=>{
+           setTimeout(()=>{
+             resovle({
+              ...scope,
+              ...{
+                test: 222333444
+            }});
+
+           },1500);
+      });
     },
     beforeUpdateRow(scope) {
       console.log(scope);
-      return true;
+      // 自定义返回数据
+      return {
+        ...scope.row,
+        ...{
+          test: 13323
+        }
+      };
     },
+    //  beforeUpdateRow(scope) {
+    //   // 自定义返回数据 Promise 方式
+    //    return new Promise((resovle)=>{
+    //        setTimeout(()=>{
+    //          resovle({
+    //           ...scope.row,
+    //           ...{
+    //             test: 2222
+    //         }});
+
+    //        },1500);
+    //   });
+    // },
     save(data, mode) {
       return new window.Promise((resolve, reject) => {
         const loading = this.$loading();
@@ -1470,8 +1539,8 @@ export default {
 | row-class-name    | 待补充 | String | — | —  |
 | dialog-attrs    | 编辑模式下，Dialog组件的属性 | Object | — | —  |
 | form-attrs    | 编辑模式下，表单组件的属性 | Object | — | —  |
-| before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象，用于对新增数据进行默认值设定 | Function | — | —  |
-| before-update-row    | 修改按钮点击时的回调函数，返回布尔值，用于对修改数据进行处理 | Function | — | —  |
+| before-add-row    | 新增一行按钮点击时的回调函数，返回新增数据对象或者返回一个Promise对象，用于对新增数据进行默认值设定 | Function | — | —  |
+| before-update-row    | 修改按钮点击时的回调函数，返回新增数据对象或者返回一个Promise对象，用于对修改数据进行处理 | Function | — | —  |
 | save    | 当操作数据时（新增、更新、删除）触发，回调参数(data->操作的数据,mode->操作类型),需要返回 Promise对象进行数据的下一步操作 | Function | — | —  |
 | show-control-column  | 是否显示操作列 | Boolean | — | true  |
 | force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |

@@ -719,7 +719,7 @@ export default {
                 const moreElt = (
                   <el-dropdown style="margin-left: 15px">
                     <el-button type="text">
-                      { t('el.protable.more')}<i class="el-icon-arrow-down el-icon--right" />
+                      {t('el.protable.more')}<i class="el-icon-arrow-down el-icon--right" />
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                       {rowButtonList.map(({ key, label }, index) => {
@@ -810,13 +810,27 @@ export default {
      * @returns Object
      */
     createDefaultRowData() {
-      const { innerDefaultEntity, beforeAddRow } = this;
-
-      let item = _.cloneDeep(innerDefaultEntity);
-      if (typeof beforeAddRow === 'function') {
-        item = beforeAddRow(item);
-      }
-      return item;
+      return new window.Promise((resolve) => {
+        const { innerDefaultEntity, beforeAddRow } = this;
+        let item = _.cloneDeep(innerDefaultEntity);
+        const afterExec = (res) => {
+          resolve(res);
+        };
+        if (typeof beforeAddRow === 'function') {
+          const addRes = beforeAddRow(item);
+          if (addRes && addRes.then) {
+            addRes.then((res) => {
+              afterExec(res);
+            });
+          } else {
+            afterExec(addRes);
+          }
+          // item = beforeAddRow(item);
+        } else {
+          afterExec(item);
+        }
+        // return item;
+      });
     },
     cancelRowEdit() {
       const tableRef = this.getTableActionRef();
@@ -887,13 +901,13 @@ export default {
       // 新增数据的场合
       if (controlStatus === EDIT_TYPE.ADD) {
         data[changeModeField] = controlStatus;
-      // 修改数据的场合
+        // 修改数据的场合
       } else if (controlStatus === EDIT_TYPE.UPDATE) {
         // 新增数据的场合，无需修改状态
         if (data[changeModeField] !== EDIT_TYPE.ADD) {
           data[changeModeField] = controlStatus;
         }
-      // 删除数据的场合
+        // 删除数据的场合
       } else {
         // 新增数据的场合无视，数据应直接删除
         if (data[changeModeField] !== EDIT_TYPE.ADD) {
@@ -933,19 +947,30 @@ export default {
               this.$emit('row-button-click', key, scope);
             };
             if (typeof beforeUpdateRow === 'function') {
-              let updatedRow = beforeUpdateRow(scope);
-              if (updatedRow) {
-                scope.row = _.assign(scope.row, updatedRow);
-                currentRow = _.assign(currentRow, updatedRow);
+
+              const afterExec = (updatedRow) => {
+                if (updatedRow) {
+                  scope.row = _.assign(scope.row, updatedRow);
+                  currentRow = _.assign(currentRow, updatedRow);
+                }
                 exec();
+                this.initialDialogFormData(currentRow);
+              };
+
+              const updateRes = beforeUpdateRow(scope);
+              if (updateRes && updateRes.then) {
+                updateRes.then((res) => {
+                  afterExec(res);
+                });
+              } else {
+                afterExec(updateRes);
               }
-              // beforeUpdateRow(scope) ? exec() : null;
             } else {
               exec();
+              this.initialDialogFormData(currentRow);
             }
-            this.initialDialogFormData(currentRow);
-          // 行上编辑数据的场合
           } else {
+            // 行上编辑数据的场合
             if (this.editingRow) {
               this.$message({
                 message: t('el.protable.onlyEditOne'),
@@ -953,24 +978,38 @@ export default {
               });
               return;
             }
-            if (typeof beforeUpdateRow === 'function') {
-              const updatedRow = beforeUpdateRow(scope);
+
+            const afterExec = (updatedRow) => {
               if (updatedRow) {
                 scope.row = _.assign(scope.row, updatedRow);
                 currentRow = _.assign(currentRow, updatedRow);
               }
+
+              this.initialDialogFormData(currentRow);
+              this.editingRow = scope.row;
+              this.setActiveRow();
+            };
+            if (typeof beforeUpdateRow === 'function') {
+              const updateRes = beforeUpdateRow(scope);
+
+              if (updateRes && updateRes.then) {
+                updateRes.then((res) => {
+                  afterExec(res);
+                });
+              } else {
+                afterExec(updateRes);
+              }
+            } else {
+              afterExec();
             }
-            this.initialDialogFormData(currentRow);
-            this.editingRow = scope.row;
-            this.setActiveRow();
           }
-        // 删除按钮点击事件处理
+          // 删除按钮点击事件处理
         } else if (key === DELETE_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.DELETE;
           onTableDeleteClick([scope.row]).then(() => {
             this.$emit('row-button-click', key, scope);
           });
-        // 保存按钮点击事件
+          // 保存按钮点击事件
         } else if (key === ROW_MANUAL_SAVE_BUTTON.key) {
           tableRef.validate(this.editingRow)
             .then((isNoValid) => {
@@ -996,7 +1035,7 @@ export default {
             .catch(() => {
               this.$emit('row-button-click', key, scope);
             });
-        // 取消按钮点击事件处理
+          // 取消按钮点击事件处理
         } else if (key === ROW_MANUAL_CANCEL_BUTTON.key) {
           this.cancelRowEdit();
           this.$emit('row-button-click', key, scope);

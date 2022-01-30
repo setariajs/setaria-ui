@@ -952,29 +952,43 @@ export default Vue.extend({
         onAddRowClick();
         return;
       }
-      // 弹窗编辑数据的场合
       if (!isEditOnRow) {
-        this.initialDialogFormData(this.createDefaultRowData());
-        this.isShowForm = true;
-        // 行上直接编辑的场合
+        // 弹窗编辑数据的场合
+        this.createDefaultRowData().then(res => {
+          this.initialDialogFormData(res);
+          this.isShowForm = true;
+        });
+        // this.initialDialogFormData(this.createDefaultRowData());
+        // this.isShowForm = true;
       } else {
-        const addRow = this.tableAddRow();
-        this.editingRow = addRow;
-        this.setActiveRow();
+        // 行上直接编辑的场合
+        this.tableAddRow().then((addRow) => {
+          this.editingRow = addRow;
+          this.setActiveRow();
+        });
+        // const addRow = this.tableAddRow();
+        // this.editingRow = addRow;
+        // this.setActiveRow();
       }
     },
     // 表格添加行信息
     tableAddRow(position) {
-      const { changeModeField } = this;
-
-      const item = this.createDefaultRowData();
-
-      const defaultItem = {
-        ...item,
-        [changeModeField]: EDIT_TYPE.ADD
-      };
-      this.data.splice(position || 0, 0, defaultItem);
-      return defaultItem;
+      return this.createDefaultRowData().then((item) => {
+        const { changeModeField } = this;
+        const defaultItem = {
+          ...item,
+          [changeModeField]: EDIT_TYPE.ADD
+        };
+        this.data.splice(position || 0, 0, defaultItem);
+        return defaultItem;
+      });
+      // const item = this.createDefaultRowData();
+      // const defaultItem = {
+      //   ...item,
+      //   [changeModeField]: EDIT_TYPE.ADD
+      // };
+      // this.data.splice(position || 0, 0, defaultItem);
+      // return defaultItem;
     },
     // 表格删除行信息
     tableDelete(rows) {
