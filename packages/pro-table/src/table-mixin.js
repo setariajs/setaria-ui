@@ -8,7 +8,7 @@ import { convertSchemaToColumns } from './util';
 // import { t as localeT } from 'setaria-ui/src/locale';
 
 const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_PAGE_SIZES = [1, 10, 20, 50, 100];
+const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
 
 export default {
