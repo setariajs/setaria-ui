@@ -191,7 +191,7 @@
     created() {
       /*eslint no-new: "error"*/
       this.$nextTick(() => {
-        if (this.dragable) {
+        if (this.dragable && this.$refs.dialog) {
           /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "drag" }]*/
           const drag = new Draggabilly(this.$refs.dialog, {
             containment: this.$refs.dialogWrapper,
