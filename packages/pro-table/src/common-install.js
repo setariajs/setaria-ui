@@ -10,7 +10,8 @@ export function install(Vue, opts = {}) {
   if (opts.i18n) {
     VXETable.setup({
       // 对组件内置的提示语进行国际化翻译
-      i18n: (key, args) => opts.i18n.t(key, args)
+      i18n: (key, args) => opts.i18n.t(key, args),
+      zIndex: 5000
     });
   }
   // 初始化VxeTable
