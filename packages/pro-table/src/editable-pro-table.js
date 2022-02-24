@@ -1136,6 +1136,8 @@ export default Vue.extend({
             }
           }
         });
+      } else {
+        afterExec();
       }
     },
     onDialogCancelButtonClick() {
