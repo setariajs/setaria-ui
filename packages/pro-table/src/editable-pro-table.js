@@ -1387,6 +1387,21 @@ export default Vue.extend({
       }
       return null;
     };
+
+    const jsonForm = isShowForm ? (
+      <el-json-form
+        ref="dialogForm"
+        {...{ props: dialogFormProps }}
+        schema={innerSchema}
+        rules={innerRules}
+        ui-schema={innerUiSchema}
+        label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
+        label-width="auto"
+        scopedSlots={$scopedSlots}
+        on-change={handleFormChange}
+      />
+    ) : null;
+
     const grid = (
       <div class="el-table-container">
         {tableToolbar()}
@@ -1448,19 +1463,7 @@ export default Vue.extend({
             {
               $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
                 data: currentFormData
-              }) : (
-                <el-json-form
-                  ref="dialogForm"
-                  {...{ props: dialogFormProps }}
-                  schema={innerSchema}
-                  rules={innerRules}
-                  ui-schema={innerUiSchema}
-                  label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
-                  label-width="auto"
-                  scopedSlots={$scopedSlots}
-                  on-change={handleFormChange}
-                />
-              )
+              }) : jsonForm
             }
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
@@ -1526,15 +1529,7 @@ export default Vue.extend({
             {...{ props: innerDialogProps }}
             {...{ on: dialogOnListener }}
           >
-            <el-json-form
-              ref="dialogForm"
-              {...{ props: dialogFormProps }}
-              schema={innerSchema}
-              rules={innerRules}
-              ui-schema={innerUiSchema}
-              label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
-              label-width="auto"
-            />
+            {jsonForm}
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
                 {t('el.protable.save')}
