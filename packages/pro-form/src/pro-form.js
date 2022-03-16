@@ -238,7 +238,6 @@ export default {
                 this.isShowModalForm = false;
               }
             };
-            // !FIXME 兼容以前代码，避免因polyfill不支持finally的场合出现问题
             if (result.then) {
               result.then(callbackFunc);
             }
