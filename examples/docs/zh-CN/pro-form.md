@@ -141,10 +141,9 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
         });
       },
       onSubmit() {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.$message.success('表单提交成功');
-            resolve();
+            reject(new Error('abc'))
           }, 1000);
         });
       }

@@ -231,13 +231,19 @@ export default {
           this.isSubmiting = true;
           if (typeof afterSubmit === 'function') {
             const result = afterSubmit(model);
+            const callbackFunc = () => {
+              // 关闭loading状态
+              this.isSubmiting = false;
+              if (type === 'modalForm' && this.isShowModalForm) {
+                this.isShowModalForm = false;
+              }
+            };
+            // !FIXME 兼容以前代码，避免因polyfill不支持finally的场合出现问题
             if (result.then) {
-              result.then(() => {
-                this.isSubmiting = false;
-                if (type === 'modalForm' && this.isShowModalForm) {
-                  this.isShowModalForm = false;
-                }
-              });
+              result.then(callbackFunc);
+            }
+            if (result.finally) {
+              result.finally(callbackFunc);
             }
           }
           this.$emit('submit');
