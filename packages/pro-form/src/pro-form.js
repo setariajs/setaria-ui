@@ -242,8 +242,8 @@ export default {
             if (result.then) {
               result.then(callbackFunc);
             }
-            if (result.finally) {
-              result.finally(callbackFunc);
+            if (result.catch) {
+              result.catch(callbackFunc);
             }
           }
           this.$emit('submit');
