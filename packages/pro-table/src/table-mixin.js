@@ -32,14 +32,6 @@ export default {
       innerCurrentPage: 1,
       innerPageSize: DEFAULT_PAGE_SIZE,
       innerTotal: 0,
-      layouts: [
-        'Total',
-        'Sizes',
-        'PrevPage',
-        'JumpNumber',
-        'NextPage',
-        'FullJump'
-      ],
       innerPageSizes: DEFAULT_PAGE_SIZES,
       /* 分页有关属性 END */
       cloneVxeTableColumnArray: [],

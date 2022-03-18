@@ -126,6 +126,19 @@ export const COMMON_TABLE_PROPS = {
     type: Boolean,
     default: true
   },
+  layouts: {
+    type: Array,
+    default() {
+      return [
+        'Total',
+        'Sizes',
+        'PrevPage',
+        'JumpNumber',
+        'NextPage',
+        'FullJump'
+      ];
+    }
+  },
   // 当前页号
   pageNum: Number,
   // 每页显示数据数量
