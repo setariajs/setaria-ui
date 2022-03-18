@@ -71,7 +71,7 @@ export default {
       allStow: 'Shrink all',
       save: 'Save',
       cancel: 'Cancel',
-      operation: 'operate',
+      operation: 'Operate',
       update: 'Modify',
       delete: 'Delete',
       more: 'More',
