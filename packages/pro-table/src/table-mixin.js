@@ -580,6 +580,12 @@ export default {
     },
     createSelectionColumn(selectionType) {
       const { checkboxConfig, radioConfig } = this;
+      const getSelectionColumnTitle = (cbConfig, rConfig, st) => {
+        if (st === 'checkbox') {
+          return _.get(cbConfig, 'label', '');
+        }
+        return _.get(rConfig, 'label', '');
+      };
       const getSelectionColumnWidth = (cbConfig, rConfig, st) => {
         const DEFAULT_WIDTH = 40;
         if (st === 'checkbox') {
@@ -592,7 +598,11 @@ export default {
       if (selectionType) {
         selectionColumn = {
           type: selectionType,
-          title: '',
+          title: getSelectionColumnTitle(
+            checkboxConfig,
+            radioConfig,
+            selectionType
+          ),
           width: getSelectionColumnWidth(
             checkboxConfig,
             radioConfig,
