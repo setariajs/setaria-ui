@@ -150,6 +150,15 @@ export const COMMON_TABLE_PROPS = {
     type: String,
     default: '160'
   },
+  controlColumnConfig: {
+    type: Object,
+    default() {
+      return {
+        width: '',
+        label: ''
+      };
+    }
+  },
   // 表格ID，主要用于对表格的配置进行缓存
   tableId: String,
   // 是否显示"全部展开"按钮，：is-tree="true"时生效，默认为true

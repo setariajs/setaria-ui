@@ -116,6 +116,16 @@ export default {
     innerUiSchema() {
       return this.uiSchema || {};
     },
+    innerControlColumnConfig() {
+      const { controlColumnConfig } = this;
+      if (controlColumnConfig.label === '') {
+        controlColumnConfig.label = this.t('el.protable.operation');
+      }
+      if (controlColumnConfig.width === '') {
+        controlColumnConfig.width = this.controlColumnWidth;
+      }
+      return controlColumnConfig;
+    },
     innerSeqConfig() {
       const {
         innerCurrentPage,
@@ -626,7 +636,7 @@ export default {
     },
     getDefaultControlColumn() {
       const {
-        controlColumnWidth,
+        innerControlColumnConfig,
         rowButtons,
         labelMode,
         onCustomButtonClick,
@@ -638,7 +648,6 @@ export default {
         forceEditOnRow,
         getIsEditOnRow,
         t,
-        COLUMN_CONTROL_TITLE,
         MODIFY_BUTTON,
         DELETE_BUTTON,
         ROW_MANUAL_CANCEL_BUTTON,
@@ -649,10 +658,10 @@ export default {
         return;
       }
       return {
-        title: COLUMN_CONTROL_TITLE,
+        title: innerControlColumnConfig.label,
         fixed: 'right',
         align: 'center',
-        width: controlColumnWidth,
+        width: innerControlColumnConfig.width,
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];

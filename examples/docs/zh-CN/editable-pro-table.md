@@ -1531,6 +1531,7 @@ export default {
 | page-size    | 每页显示数据数量 | Number | — | — |
 | total    | 数据总数量 | Number | — | — |
 | control-column-width    | 控制列宽度 | String | — | '160' |
+| control-column-config    | 控制列配置 | Object | — | { label: '操作', width: '' } |
 | table-id    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
 | show-expand-all-btn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | show-collapse-all-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
