@@ -41,6 +41,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :rules="rules"
     :data="data"
     :save="save"
+    stripe
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
   >
@@ -1497,6 +1498,8 @@ export default {
 | schema    | 基于[JSON-Schema]的属性 | Object | — | — |
 | ui-schema | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表) | Object | — | - |
 | row-key    | 行主键 | String | — | — |
+| border    | 是否带有边框 | Boolean | — | true |
+| stripe    | 是否带有斑马纹（需要注意的是，在可编辑表格场景下，临时插入的数据不会有斑马纹样式） | Boolean | — | false |
 | height    | 表格高度 | String | — | — |
 | max-height    | 表格最大高度 | String | — | — |
 | selection-type    | 列表选择类型 | String | 'radio', 'checkbox', '' | — |

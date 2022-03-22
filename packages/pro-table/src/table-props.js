@@ -12,6 +12,14 @@ export const COMMON_TABLE_PROPS = {
   uiSchema: Object,
   // 行主键
   rowKey: String,
+  stripe: {
+    type: Boolean,
+    default: false
+  },
+  border: {
+    type: Boolean,
+    default: true
+  },
   height: {
     type: String,
     default: null

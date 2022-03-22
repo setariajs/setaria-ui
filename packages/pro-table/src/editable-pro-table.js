@@ -1175,6 +1175,8 @@ export default Vue.extend({
     const {
       $slots,
       $scopedSlots,
+      border,
+      stripe,
       innerDataList,
       innerTreeDataList,
       currentFormData,
@@ -1412,7 +1414,8 @@ export default Vue.extend({
             size="mini"
             v-show={isShowTable}
             id={tableId}
-            border
+            border={border}
+            stripe={stripe}
             resizable
             auto-resize
             show-overflow
@@ -1486,7 +1489,8 @@ export default Vue.extend({
             class="el-pro-table el-editable-pro-table"
             size="mini"
             v-show={isShowTable}
-            border
+            border={border}
+            stripe={stripe}
             resizable
             auto-resize
             show-overflow

@@ -75,6 +75,8 @@ export default Vue.extend({
     const {
       $slots,
       $attrs,
+      border,
+      stripe,
       innerCurrentPage,
       isTree,
       innerDataList,
@@ -128,7 +130,8 @@ export default Vue.extend({
             size="mini"
             scroll-x={{ gt: 15 }}
             scroll-y={{ gt: 20 }}
-            border
+            border={border}
+            stripe={stripe}
             resizable
             auto-resize
             highlight-hover-row
