@@ -317,8 +317,8 @@ export default {
       const { handleSubmit, handleReset } = this;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
           <el-button onClick={handleReset}>{ this.t('el.proform.reset') }</el-button>
+          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
         </div>
       );
     };
@@ -337,12 +337,12 @@ export default {
             { labelPosition === 'top' ? (
               <span slot="label">&nbsp;</span>
             ) : null }
+            <el-button onClick={handleReset} icon="el-icon-refresh-left">{ this.t('el.proform.reset') }</el-button>
             <el-button
               type="primary"
               icon="el-icon-search"
               onClick={handleSubmit}
               loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>
-            <el-button onClick={handleReset} icon="el-icon-refresh-left">{ this.t('el.proform.reset') }</el-button>
             <el-button
               type="text"
               onClick={handleExpand}
