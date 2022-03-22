@@ -431,6 +431,16 @@ export default {
         return mergeCells(innerDataList, innerCurrentPage, innerPageSize);
       }
       return null;
+    },
+    pagerScopedSlots() {
+      const ret = {};
+      if (this.$slots.pagerLeft) {
+        ret.left = () => (this.$slots.pagerLeft);
+      }
+      if (this.$slots.pagerRight) {
+        ret.right = () => (this.$slots.pagerRight);
+      }
+      return ret;
     }
   },
   created() {

@@ -1245,7 +1245,8 @@ export default Vue.extend({
       handleFormChange,
       formAttrs,
       innerDialogProps,
-      t
+      t,
+      pagerScopedSlots
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1384,6 +1385,7 @@ export default Vue.extend({
             page-sizes={innerPageSizes}
             total={innerTotal}
             on-page-change={onPageChange}
+            scopedSlots={pagerScopedSlots}
           />
         );
       }

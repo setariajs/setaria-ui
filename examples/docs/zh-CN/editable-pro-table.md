@@ -1560,6 +1560,8 @@ export default {
 |------|--------|
 | title | 标题的内容 |
 | modifyDialog | 修改点击后显示的弹窗内容 |
+| pagerLeft | 分页器左侧内容 |
+| pagerRight | 分页器右侧内容 |
 | [propertyKey] | 列自定义插槽 |
 
 ### 事件

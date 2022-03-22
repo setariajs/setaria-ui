@@ -110,7 +110,8 @@ export default Vue.extend({
       onSortChange,
       showPagination,
       getColumnSettingRender,
-      rowClassName
+      rowClassName,
+      pagerScopedSlots
     } = this;
     this.$nextTick(() => {
       // 表格状态发生变化时，临时合并失效，需要重新合并
@@ -174,7 +175,9 @@ export default Vue.extend({
             total={innerTotal}
             page-sizes={innerPageSizes}
             on-page-change={onPageChange}
-          />
+            scopedSlots={pagerScopedSlots}
+          >
+          </vxe-pager>
         ) : null}
       </div>
     );
