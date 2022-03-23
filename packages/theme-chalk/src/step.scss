@@ -27,8 +27,11 @@
     width: 100%;
 
     @include when(process) {
-      color: $--color-text-primary;
-      border-color: $--color-text-primary;
+      color: $--color-white;
+      border-color: $--color-primary;
+      .is-text {
+        background-color: $--color-primary;
+      }
     }
 
     @include when(wait) {
@@ -37,8 +40,12 @@
     }
 
     @include when(success) {
-      color: $--color-success;
-      border-color: $--color-success;
+      color: $--color-primary;
+      border-color: $--color-primary;
+      
+      @include e(line) {
+        background-color: $--color-primary;
+      }
     }
 
     @include when(error) {
@@ -58,9 +65,9 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
     box-sizing: border-box;
     background: $--color-white;
     transition: .15s ease-out;
@@ -131,7 +138,7 @@
     }
 
     @include when(success) {
-      color: $--color-success;
+      color: $--color-text-primary;
     }
 
     @include when(error) {
@@ -139,7 +146,7 @@
     }
 
     @include when(finish) {
-      color: $--color-primary;
+      color: $--color-text-primary;
     }
   }
 
@@ -176,7 +183,7 @@
 
     @include e(line) {
       height: 2px;
-      top: 11px;
+      top: 18px;
       left: 0;
       right: 0;
     }
@@ -230,8 +237,8 @@
     }
 
     @include e(line) {
-      left: 50%;
-      right: -50%;
+      left: 57%;
+      right: -43%;
     }
   }
 
