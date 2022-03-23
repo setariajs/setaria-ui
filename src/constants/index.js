@@ -11,7 +11,8 @@ export const JSON_FORM_UI = {
   UI_PLACEHOLDER: 'ui:placeholder',
   UI_COLSPAN: 'ui:colspan',
   UI_RULE: 'ui:rules',
-  UI_RENDER: 'ui:render'
+  UI_RENDER: 'ui:render',
+  UI_WRAPPER_OPTIONS: 'ui:wrapperOptions'
 };
 
 export const COLUMN_TYPE = {

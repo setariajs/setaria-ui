@@ -269,7 +269,8 @@ export default {
               ],
               props: {
                 label: property.title,
-                prop: key
+                prop: key,
+                ...ui[JSON_FORM_UI.UI_WRAPPER_OPTIONS] || {}
               },
               scopedSlots: {
                 label: labelSlot

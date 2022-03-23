@@ -220,6 +220,7 @@
     :ui-schema="uiSchema"
     label-width="auto"
     @submit="onSubmitForm2"
+    @change="handleChange"
     :columns="3"
   >
     <template slot="scopeSlotCustomRender" slot-scope="scope">
@@ -241,6 +242,7 @@
 <script>
   export default {
     data() {
+      const { ageValidator } = this;
       return {
         form2: {
           firstName: 'first',
@@ -332,7 +334,15 @@
         },
         uiSchema: {
           lastName: {
-            'ui:disabled': true,
+            'ui:disabled': true
+          },
+          age: {
+            'ui:rules': [
+              {
+                validator: ageValidator,
+                trigger: 'blur'
+              },
+            ],
           },
           password: {
             'ui:widget': 'password',
@@ -409,6 +419,12 @@
       handleToggleHiddenField() {
         this.uiSchema.hidden['ui:hidden'] = !this.uiSchema.hidden['ui:hidden']
       },
+      ageValidator(rule, value, callback) {
+        callback();
+      },
+      handleChange(key, val, obj) {
+        console.log(key, val);
+      }
     },
   }
 </script>
