@@ -1,11 +1,12 @@
-import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { JSON_FORM_UI, JSON_FORM_PROPERTY_CLASS } from 'setaria-ui/src/constants/index';
 import ElForm from 'setaria-ui/packages/form/src/form';
 import ElFormItem from 'setaria-ui/packages/form/src/form-item';
 import ElSelect from 'setaria-ui/packages/select';
 import ElInput from 'setaria-ui/packages/input';
 import merge from 'setaria-ui/src/utils/merge';
 import { createElementByProperty, createFormRulesBySchema, initialSetariaSchema } from 'setaria-ui/src/utils/schema';
-import { isEmpty } from 'setaria-ui/src/utils/util';
+import { hasClass } from 'setaria-ui/src/utils/dom';
+import { arrayFind, isEmpty } from 'setaria-ui/src/utils/util';
 
 const CLASSNAME = 'className';
 
@@ -61,14 +62,17 @@ export default {
     }
   },
   computed: {
+    formRef() {
+      return this.$refs.form;
+    },
     innerRules() {
       const { rules = {} } = this;
       const ret = createFormRulesBySchema(this.innerSchema, this.uiSchema, this.requiredTriggerType);
       return merge({}, ret, rules);
     },
     fields() {
-      if (this.$refs.form) {
-        return this.$refs.form.fields;
+      if (this.formRef) {
+        return this.formRef.fields;
       }
       return [];
     }
@@ -78,17 +82,35 @@ export default {
   mounted() {
   },
   methods: {
+    /**
+     * 仅当使用默认处理时，返回表单输入项目的实例
+     * @param {*} propertyKey
+     * @returns
+     */
+    getComponent(propertyKey) {
+      const { fields } = this;
+      if (fields && fields.length > 0) {
+        const formItem = arrayFind(fields, (f) => f.prop === propertyKey);
+        if (formItem &&
+            formItem.$children &&
+            typeof formItem.$children.length === 'number' &&
+            formItem.$children.length > 0) {
+          return formItem.$children.filter((child) => hasClass(child.$el, JSON_FORM_PROPERTY_CLASS));
+        }
+      }
+      return null;
+    },
     handleSubmit() {
       this.$emit('submit');
     },
     validate(callback) {
-      return this.$refs.form.validate(callback);
+      return this.formRef.validate(callback);
     },
     validateField(props, cb) {
-      return this.$refs.form.validateField(props, cb);
+      return this.formRef.validateField(props, cb);
     },
     resetFields() {
-      this.$refs.form.resetFields();
+      this.formRef.resetFields();
     },
     getFormLabelSlot(h, property, columnMaxLabelLength, colSpan) {
       const { componentPrefix } = this;
@@ -222,7 +244,7 @@ export default {
             const className = ui[CLASSNAME] || '';
             const component = createElementByProperty(key, property, ui, model, this.$emit);
             if (component) {
-              component.componentProps.class = `el-json-form__component ${className}`;
+              component.componentProps.class = `el-json-form__component ${JSON_FORM_PROPERTY_CLASS} ${className}`;
               const { componentTagName, componentProps, componentChildrenOptions } = component;
               const componentChildren = [];
               componentChildrenOptions.forEach((item) => {
@@ -269,7 +291,8 @@ export default {
             {
               'class': [
                 `el-form-item-${key}`,
-                'el-json-form-item'
+                'el-json-form-item',
+                'json-schema__wrapper'
               ],
               props: {
                 label: property.title,

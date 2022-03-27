@@ -25,5 +25,7 @@ export const EDIT_TYPE = {
   UPDATE: 'update'
 };
 
+export const JSON_FORM_PROPERTY_CLASS = 'el-json-form__property';
+
 export default {
 };
