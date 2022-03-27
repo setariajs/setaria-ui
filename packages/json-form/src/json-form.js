@@ -40,7 +40,11 @@ export default {
     },
     columnMaxLabelLength: Number,
     rules: Object,
-    labelSuffix: String
+    labelSuffix: String,
+    requiredTriggerType: {
+      type: String,
+      default: 'change'
+    }
   },
   data() {
     return {
@@ -59,7 +63,7 @@ export default {
   computed: {
     innerRules() {
       const { rules = {} } = this;
-      const ret = createFormRulesBySchema(this.innerSchema, this.uiSchema);
+      const ret = createFormRulesBySchema(this.innerSchema, this.uiSchema, this.requiredTriggerType);
       return merge({}, ret, rules);
     },
     fields() {

@@ -53,7 +53,7 @@
           ]
         },
         schema: {
-          required: ['firstName', 'lastName', 'age', 'comment'],
+          required: ['firstName', 'lastName', 'age', 'comment', 'interest', 'profession'],
           properties: {
             firstName: {
               description: 'First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)First Name(名)',

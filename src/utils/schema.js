@@ -55,7 +55,7 @@ export function initialSetariaSchema(schema) {
  * @param {*} uiSchema
  * @returns
  */
-export function createFormRulesBySchema(schema, uiSchema) {
+export function createFormRulesBySchema(schema, uiSchema, requiredTriggerType = 'blur') {
   const ret = {};
   const { required = [], properties = {} } = schema;
   // 优化当实时change schema.required时errorMessage未刷新的问题
@@ -70,7 +70,7 @@ export function createFormRulesBySchema(schema, uiSchema) {
       ret[key].push({
         required: true,
         message: t('el.schema.placeholder', [itemName]),
-        trigger: 'blur'
+        trigger: requiredTriggerType
       });
     }
   });
