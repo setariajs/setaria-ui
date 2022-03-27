@@ -305,6 +305,10 @@
       popperAppendToBody: {
         type: Boolean,
         default: true
+      },
+      validateEvent: {
+        type: Boolean,
+        default: true
       }
     },
 
@@ -589,6 +593,9 @@
         setTimeout(() => {
           if (this.isSilentBlur) {
             this.isSilentBlur = false;
+            if (this.validateEvent) {
+              this.dispatch('ElFormItem', 'el.form.blur', [this.value]);
+            }
           } else {
             this.$emit('blur', event);
           }
