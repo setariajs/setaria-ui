@@ -68,6 +68,10 @@ export default {
     labelSuffix: {
       type: String,
       default: ' :'
+    },
+    collapse: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -146,7 +150,7 @@ export default {
           let propertyColspan = uiProperty['ui:colspan'];
           propertyColspan = typeof propertyColspan === 'number' ? propertyColspan : 1;
           // 收起的场合
-          if (!innerExpand) {
+          if (!innerExpand && this.collapse) {
             if (currentColumns === 1 && index === 0) {
               uiProperty['ui:hidden'] = false;
             // 只显示一行表单项目，其余的隐藏
@@ -197,6 +201,9 @@ export default {
         return this.$refs.proForm.fields;
       }
       return [];
+    },
+    isQueryFilter() {
+      return this.type === 'queryFilter';
     }
   },
   created() {
@@ -298,7 +305,9 @@ export default {
       handleExpand,
       handleSubmit,
       handleChange,
-      handleModalButtonClick
+      handleModalButtonClick,
+      isQueryFilter,
+      collapse
     } = this;
     if (!isMounted) {
       return (<div></div>);
@@ -349,12 +358,12 @@ export default {
               icon="el-icon-search"
               onClick={handleSubmit}
               loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>
-            <el-button
+            { isQueryFilter && collapse ? (<el-button
               type="text"
               onClick={handleExpand}
               class="control__expand-button">
               {totalColSpan >= currentColumns ? getExpandTextLabel() : null}
-            </el-button>
+            </el-button>) : null }
           </el-form-item>
         </el-col>
       );
