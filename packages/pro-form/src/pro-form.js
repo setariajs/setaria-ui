@@ -113,7 +113,13 @@ export default {
       const { direction, widthNumber } = this;
       const breakPoints = BREAKPOINTS[direction];
       const breakPoint = arrayFind(breakPoints, item => widthNumber < item[0]);
-      return breakPoint ? breakPoint[1] : 0;
+      const adjustColumns = breakPoint ? breakPoint[1] : 0;
+      const { columns } = this.$attrs;
+      if (typeof columns === 'number' && adjustColumns >= columns) {
+        return columns;
+      } else {
+        return adjustColumns;
+      }
     },
     widthNumber() {
       const { width } = this;
