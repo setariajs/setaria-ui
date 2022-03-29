@@ -223,6 +223,9 @@
     @change="handleChange"
     :columns="3"
   >
+    <template slot="firstName.append">
+      <el-button type="primary">Click Me</el-button>
+    </template>
     <template slot="scopeSlotCustomRender" slot-scope="scope">
       <el-input
         v-model="scope.data.scopeSlotCustomRender"

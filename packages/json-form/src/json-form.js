@@ -281,6 +281,30 @@ export default {
                   ));
                 }
               });
+              if (this.$slots) {
+                Object.keys(this.$slots).forEach((slotKey) => {
+                  const prefix = `${key}.`;
+                  if (slotKey.indexOf(prefix) === 0) {
+                    componentChildren.push(
+                      h('template', {
+                        slot: slotKey.replace(prefix, '')
+                      }, [this.$slots[slotKey][0]])
+                    );
+                  }
+                });
+              }
+              // if (this.$scopedSlots) {
+              //   Object.keys(this.$scopedSlots).forEach((slotKey) => {
+              //     const prefix = `${key}.`;
+              //     if (slotKey.indexOf(prefix) === 0) {
+              //       if (componentProps.scopedSlots === undefined) {
+              //         componentProps.scopedSlots = {};
+              //       }
+              //       componentProps.scopedSlots[slotKey.replace(prefix, '')] =
+              //         (props) => this.$scopedSlots[slotKey](props);
+              //     }
+              //   });
+              // }
               formItemChildren.push(h(componentTagName, componentProps, componentChildren));
             }
           }
