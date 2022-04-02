@@ -164,7 +164,7 @@
 ```
 :::
 
-### 格式化展示
+### 输入时执行格式化
 
 :::demo 通过 `formatter` 格式化数字，以展示具有具体含义的数据，往往需要配合 `parser` 一起使用。。
 
@@ -174,6 +174,39 @@
                    :precision="2"
                    :formatter="formatter"
                    :parser="parser"></el-input-number>
+  当前值：{{ num }}
+</template>
+<script>
+  export default {
+    data() {
+      return {
+        num: 1
+      }
+    },
+    methods: {
+      formatter(val) {
+        return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+      parser(val) {
+        return val.replace(/(,*)/g, '');
+      }
+    }
+  };
+</script>
+```
+:::
+
+### 离开焦点执行格式化
+
+:::demo 通过 `formatter` 格式化数字，以展示具有具体含义的数据，往往需要配合 `parser` 一起使用。。
+
+```html
+<template>
+  <el-input-number v-model="num"
+                   :precision="2"
+                   :formatter="formatter"
+                   :parser="parser"
+                   format-on-blur></el-input-number>
   当前值：{{ num }}
 </template>
 <script>
@@ -215,6 +248,7 @@
 | placeholder | 输入框默认 placeholder | string | - | - |
 | formatter | 指定输入框展示值的格式，需要与 `parser` 一起使用 | function(value) | - | - |
 | parser | 指定从 formatter 里转换回数字的方式，和 formatter 搭配使用 | function(value) | - | - |
+| format-on-blur | 是否在离开焦点时进行格式化 | boolean | - | false |
 
 ### Events
 

@@ -106,12 +106,14 @@
         }
       },
       formatter: Function,
-      parser: Function
+      parser: Function,
+      formatOnBlur: Boolean
     },
     data() {
       return {
         currentValue: 0,
-        userInput: null
+        userInput: null,
+        isFocused: false
       };
     },
     watch: {
@@ -191,7 +193,9 @@
             currentValue = currentValue.toFixed(this.precision);
           }
 
-          if (typeof this.formatter === 'function') {
+          if ((this.formatOnBlur !== true ||
+            (this.formatOnBlur && this.isFocused === false)) &&
+            typeof this.formatter === 'function') {
             currentValue = this.formatter(currentValue);
           }
         }
@@ -241,9 +245,11 @@
         this.setCurrentValue(newVal);
       },
       handleBlur(event) {
+        this.isFocused = false;
         this.$emit('blur', event);
       },
       handleFocus(event) {
+        this.isFocused = true;
         this.$emit('focus', event);
       },
       setCurrentValue(newVal) {
@@ -261,7 +267,7 @@
       },
       handleInput(value) {
         let userInput = value;
-        if (typeof this.formatter === 'function' && typeof this.parser === 'function') {
+        if (this.formatOnBlur !== true && typeof this.formatter === 'function' && typeof this.parser === 'function') {
           userInput = this.formatter(this.parser(value));
         }
         this.userInput = userInput;
