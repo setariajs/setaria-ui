@@ -4,6 +4,7 @@ import { initialSetariaSchema } from 'setaria-ui/src/utils/schema';
 import { callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
 import Locale from 'setaria-ui/src/mixins/locale';
+import { defaultControlColumnConfig } from './table-props';
 import { convertSchemaToColumns } from './util';
 // import { t as localeT } from 'setaria-ui/src/locale';
 
@@ -118,13 +119,14 @@ export default {
     },
     innerControlColumnConfig() {
       const { controlColumnConfig } = this;
-      if (controlColumnConfig.label === '') {
-        controlColumnConfig.label = this.t('el.protable.operation');
+      const ret = _.assign({}, defaultControlColumnConfig, controlColumnConfig || {});
+      if (_.isEmpty(ret.label)) {
+        ret.label = this.t('el.protable.operation');
       }
-      if (controlColumnConfig.width === '') {
-        controlColumnConfig.width = this.controlColumnWidth;
+      if (_.isEmpty(ret.width)) {
+        ret.width = this.controlColumnWidth;
       }
-      return controlColumnConfig;
+      return ret;
     },
     innerSeqConfig() {
       const {
@@ -658,6 +660,7 @@ export default {
         forceEditOnRow,
         getIsEditOnRow,
         t,
+        $scopedSlots,
         MODIFY_BUTTON,
         DELETE_BUTTON,
         ROW_MANUAL_CANCEL_BUTTON,
@@ -675,6 +678,10 @@ export default {
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];
+            if ($scopedSlots.controlColumn) {
+              controlColumnDefaultSlot.push($scopedSlots.controlColumn(scope));
+              return controlColumnDefaultSlot;
+            }
             let rowButtonList = [];
             // 添加自定义按钮的前提是必须为非行内编辑激活状态
             if (typeof rowButtons === 'function' && !getIsEditOnRow()) {
@@ -713,20 +720,34 @@ export default {
               }
             }
             if (!_.isEmpty(rowButtonList)) {
-              if (rowButtonList.length <= 3) {
+              if (rowButtonList.length <= innerControlColumnConfig.maxDisplayCount ||
+                  !innerControlColumnConfig.collapseButton) {
                 rowButtonList.forEach(({ key, label }) => {
-                  controlColumnDefaultSlot.push(
-                    <el-button
-                      type="text"
-                      on-click={onCustomButtonClick(key, scope)}
-                    >
-                      {label}
-                    </el-button>
-                  );
+                  let ret = {};
+                  const classList = [];
+                  classList.push('pro-table__control_column_button');
+                  if (label && label.indexOf('el-') === 0) {
+                    classList.push('pro-table__control_column_icon_button');
+                    classList.push(label);
+                    ret = (
+                      <i class={classList} on-click={onCustomButtonClick(key, scope)}></i>
+                    );
+                  } else {
+                    ret = (
+                      <el-button
+                        type="text"
+                        class={classList}
+                        on-click={onCustomButtonClick(key, scope)}
+                      >
+                        {label}
+                      </el-button>
+                    );
+                  }
+                  controlColumnDefaultSlot.push(ret);
                 });
               } else {
                 let i;
-                for (i = 0; i < 2; i += 1) {
+                for (i = 0; i < innerControlColumnConfig.maxDisplayCount; i += 1) {
                   const btnFirst = rowButtonList[i];
                   controlColumnDefaultSlot.push(
                     <el-button

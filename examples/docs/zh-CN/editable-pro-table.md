@@ -26,7 +26,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
     <el-button @click="onGetChangeData">取得当前数据状态</el-button>
     <el-button @click="getTableIsEditStatus">获取当前表格是否在行上编辑模式</el-button>
-     <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
+    <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
   </div>
   <el-editable-pro-table
     ref="ept"
@@ -42,8 +42,11 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :data="data"
     :save="save"
     stripe
+    control-column-width="300px"
+    :control-column-config="{collapseButton:false}"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
+    @row-button-click="onRowButtonClick"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -177,6 +180,9 @@ export default {
     onSelectionChange(val,currentItem) {
       console.log(val, currentItem);
     },
+    onRowButtonClick(key, row) {
+      console.log(key, row);
+    },
     getTableIsEditStatus(){
       console.log(this.$refs.ept.getIsEditOnRow());
     },
@@ -191,6 +197,18 @@ export default {
         {
           key: 'watch',
           label: '自定义查看',
+        },
+        {
+          key: 'watch1',
+          label: 'BTN1',
+        },
+        {
+          key: 'watch2',
+          label: 'BTN2',
+        },
+        {
+          key: 'delete',
+          label: 'el-icon-delete',
         },
       ];
     },
@@ -675,6 +693,7 @@ export default {
     :can-delete="canDelete"
     :before-add-row="beforeAddRow"
     :before-update-row="beforeAddRow"
+    :control-column-config="{maxDisplayCount:1, width: '200px'}"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -1533,8 +1552,8 @@ export default {
 | page-num    | 当前页号 | Number | — | — |
 | page-size    | 每页显示数据数量 | Number | — | — |
 | total    | 数据总数量 | Number | — | — |
-| control-column-width    | 控制列宽度 | String | — | '160' |
-| control-column-config    | 控制列配置 | Object | — | { label: '操作', width: '' } |
+| control-column-width    | 数据控制列宽度 | String | — | '160' |
+| control-column-config    | 数据控制列配置 | Object | — | { label: '操作', width: '', collapseButton: true, maxDisplayCount: 2 } |
 | table-id    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
 | show-expand-all-btn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | show-collapse-all-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
@@ -1563,6 +1582,7 @@ export default {
 | pagerLeft | 分页器左侧内容 |
 | pagerRight | 分页器右侧内容 |
 | [propertyKey] | 列自定义插槽 |
+| controlColumn  |  |
 
 ### 事件
 

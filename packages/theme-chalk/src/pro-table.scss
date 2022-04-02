@@ -85,6 +85,16 @@
   & ::-webkit-scrollbar-corner {
     background-color: #ffffff;
   }
+  
+  .pro-table__control_column_icon_button {
+    color: $--color-primary;
+    cursor: pointer;
+  }
+  .pro-table__control_column_button {
+    & + .pro-table__control_column_button {
+      margin-left: 10px;
+    }
+  }
 }
 
 .pro-table__column-setting-tree {

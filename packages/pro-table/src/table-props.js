@@ -1,4 +1,12 @@
 import { t as localeT } from 'setaria-ui/src/locale';
+
+export const defaultControlColumnConfig = {
+  width: '',
+  label: '',
+  collapseButton: true,
+  maxDisplayCount: 2
+};
+
 /**
  * 列表组件通用的props
  */
@@ -161,10 +169,7 @@ export const COMMON_TABLE_PROPS = {
   controlColumnConfig: {
     type: Object,
     default() {
-      return {
-        width: '',
-        label: ''
-      };
+      return defaultControlColumnConfig;
     }
   },
   // 表格ID，主要用于对表格的配置进行缓存
