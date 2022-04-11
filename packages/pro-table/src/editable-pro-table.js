@@ -1246,7 +1246,8 @@ export default Vue.extend({
       formAttrs,
       innerDialogProps,
       t,
-      pagerScopedSlots
+      pagerScopedSlots,
+      validConfig
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1439,6 +1440,7 @@ export default Vue.extend({
             custom-config={innerCustomConfig}
             menu-config={menuConfig}
             export-config={innerExportConfig}
+            valid-config={validConfig}
             row-id={innerRowKey}
             scroll-y={{ gt: 20 }}
             merge-cells={innerMergeCells}
@@ -1509,6 +1511,7 @@ export default Vue.extend({
             radio-config={innerRadioConfig}
             custom-config={innerCustomConfig}
             export-config={innerExportConfig}
+            valid-config={validConfig}
             row-id={innerRowKey}
             on-radio-change={onTableRadioChange}
             on-checkbox-change={onTableCheckboxChange}

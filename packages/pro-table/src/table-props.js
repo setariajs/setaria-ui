@@ -351,7 +351,8 @@ export const EDIT_TABLE_PROPS = {
         cancelButtonText: localeT('el.schema.no')
       };
     }
-  }
+  },
+  validConfig: Object
 };
 
 export default {
