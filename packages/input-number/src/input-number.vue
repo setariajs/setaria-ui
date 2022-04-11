@@ -136,8 +136,10 @@
               newVal = this.toPrecision(newVal, this.precision);
             }
           }
-          if (newVal >= this.max) newVal = this.max;
-          if (newVal <= this.min) newVal = this.min;
+          if (typeof newVal === 'number') {
+            if (newVal >= this.max) newVal = this.max;
+            if (newVal <= this.min) newVal = this.min;
+          }
           this.currentValue = newVal;
           this.userInput = null;
           this.$emit('input', newVal);
