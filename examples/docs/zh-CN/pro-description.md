@@ -9,7 +9,7 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
 ```html
 <template>
   <div>
-    <el-pro-description :schema="schema" :ui-schema="uiSchema" :data="data">
+    <el-pro-description :schema="schema" :ui-schema="uiSchema" :data="data" :bordered="false">
       <span slot="CustomSlot" slot-scope="{data}">
         <el-button type="text">{{ data }}</el-button>
       </span>

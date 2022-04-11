@@ -60,6 +60,7 @@
 | title   | 描述列表的标题，显示在最顶部 | string | — | — |
 | column   | 一行的 `DescriptionItems` 数量 | number | — | 4 |
 | label-suffix   | 标签的后缀 | string | — | — |
+| bordered   | 是否展示边框 | boolean | — | true |
 
 ### Description-Item Attributes
 

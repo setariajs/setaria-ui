@@ -9,7 +9,10 @@
     mixins: [emitter],
     props: {
       title: String,
-      bordered: Boolean,
+      bordered: {
+        type: Boolean,
+        default: true
+      },
       colon: Boolean,
       columns: {
         type: Number,
@@ -257,7 +260,7 @@
       }
       return (
         <div class={rootClassArray}>
-          <table cellspacing="0">
+          <table cellspacing="0" class={bordered ? 'is-bordered' : null}>
             <colgroup>
               {
                 colArray.map(item => (

@@ -24,11 +24,11 @@
       className: String
     },
     render(h) {
-      const { cellType, className, span, $slots } = this;
+      const { bordered, cellType, className, span, $slots } = this;
       if (cellType === 'label') {
         return (
           <th
-            class={[className, 'el-description-item-label']}>{ $slots.default }</th>
+            class={[className, 'el-description-item-label', bordered ? 'is-bordered' : null]}>{ $slots.default }</th>
         );
       } else {
         return (

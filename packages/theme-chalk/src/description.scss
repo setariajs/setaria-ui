@@ -5,7 +5,23 @@
   text-align: left;
   table {
     width: 100%;
-    border-top: $--description-border;
+    &.is-bordered {
+      border-top: $--description-border;
+      tbody {
+        border: $--description-border;
+        tr {
+          th {
+            &:first-child {
+              border-left: $--description-border;
+            }
+          }
+          th, td {
+            border-right: $--description-border;
+            border-bottom: $--description-border;
+          }
+        }
+      }
+    }
     
     thead {
       tr {
@@ -20,24 +36,18 @@
     }
     
     tbody {
-      border: $--description-border;
       font-size: $--description-font-size;
       
       tr {
         th {
           padding: 0 10px;
           font-weight: 400;
-          &:first-child {
-            border-left: $--description-border;
-          }
         }
         td {
           padding: 0 10px;
         }
         th, td {
           color: $--color-text-regular;
-          border-right: $--description-border;
-          border-bottom: $--description-border;
         }
         th,
         td {
