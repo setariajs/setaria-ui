@@ -148,6 +148,7 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
 | tab-list     | 页签列表，当需要使用页签的场合，可传入 { label: '', key: '' } 结构的数组           | Array | — | — |
 | active-tab     | `sync` 默认显示的页签  | String | — | — |
 | label-mode     | 是否为编辑模式           | Boolean | — | true |
+| bordered   | 是否展示边框 | Boolean | — | true |
 | force-content-render     | Tab页签内容被隐藏时是否渲染 DOM 结构    | Boolean | — | true |
 | before-tab-leave | 切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。    | Function | — |  — |
 | before-return | 点击返回按钮后的回调函数，可返回reject状态promise或false以阻止页面返回。  | Function | — |  — |
