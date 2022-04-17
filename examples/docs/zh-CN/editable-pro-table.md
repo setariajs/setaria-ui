@@ -117,12 +117,19 @@ export default {
   created() {
     this.headInfoData = {
       name: 'XXX',
-      price: 12345.678
+      price: null
     };
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 10; i += 1) {
       const data = {
         ...this.headInfoData
       };
+      if (i%2 === 0) {
+        data.price = Math.random() * 100000000;
+      } else if (i%3 === 0) {
+        data.price = 0;
+      } else if (i%5 === 0) {
+        data.price = -Math.random() * 1000;
+      }
       data.name = `${data.name}-${i}`;
       data.noReadName = `${data.name}-${i}`;
       this.data.push({

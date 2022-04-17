@@ -173,10 +173,13 @@ export function createFormRulesBySchema(schema, uiSchema, requiredTriggerType = 
 }
 
 /**
- * 转换为金额格式
+ * 讲数字转换为字符串金额格式
  * @param {string | number} val
  */
 export function priceFormatter(val, config) {
+  if (val === null) {
+    return val;
+  }
   const current = `${val}`;
   if (_.isEmpty(current)) {
     return val;
@@ -185,6 +188,7 @@ export function priceFormatter(val, config) {
     const ret = v.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return ret;
   };
+  // 对整数进行格式化
   if (current.indexOf('.')) {
     const arr = current.split('.');
     arr[0] = format(arr[0]);
@@ -519,6 +523,10 @@ export function createFormatter(property) {
   }
   if (format === 'price') {
     return function formatter(value) {
+      // 对于null值，不显示任何值
+      if (value === null || value === undefined) {
+        return value;
+      }
       const config = {};
       let scaleNum = _.toNumber(scale);
       if (typeof scaleNum === 'number' && !isNaN(scaleNum)) {
@@ -527,7 +535,7 @@ export function createFormatter(property) {
         scaleNum = 0;
       }
       const val = _.toNumber(value);
-      if (!_.isNumber || isNaN(val)) {
+      if (!_.isNumber(val) || isNaN(val)) {
         return value;
       }
       const displayVal = priceFormatter(val, config);
