@@ -229,6 +229,48 @@
 ```
 :::
 
+### 带 icon 的输入框
+
+带有图标标记输入类型
+
+:::demo 可以通过 `suffix-icon` 属性在 input-number 组件尾部增加显示图标，也可以通过 slot 来放置图标或文字。
+```html
+<div class="demo-input-suffix">
+  属性方式：
+  <el-input-number
+    placeholder="请输入"
+    suffix-icon="el-icon-phone"
+    v-model="input1">
+  </el-input-number>
+  <el-input-number
+    placeholder="请输入1"
+    suffix-text="$"
+    v-model="input2">
+  </el-input-number>
+</div>
+<div class="demo-input-suffix">
+  slot 方式：
+  <el-input-number
+    placeholder="请输入"
+    v-model="input3">
+    <span slot="suffix">%</span>
+  </el-input-number>
+</div>
+
+<script>
+export default {
+  data() {
+    return {
+      input1: null,
+      input2: null,
+      input3: null
+    }
+  }
+}
+</script>
+```
+:::
+
 ### Attributes
 
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
@@ -249,6 +291,8 @@
 | formatter | 指定输入框展示值的格式，需要与 `parser` 一起使用 | function(value) | - | - |
 | parser | 指定从 formatter 里转换回数字的方式，和 formatter 搭配使用 | function(value) | - | - |
 | format-on-blur | 是否在离开焦点时进行格式化 | boolean | - | false |
+| suffix-icon   | 输入框尾部图标    | string          | — | — |
+| suffix-text   | 输入框尾部文字    | string          | — | — |
 
 ### Events
 
@@ -258,6 +302,10 @@
 | blur | 在组件 Input 失去焦点时触发 | (event: Event) |
 | focus | 在组件 Input 获得焦点时触发 | (event: Event) |
 
+### Input Slots
+| name | 说明 |
+|------|--------|\
+| suffix | 输入框尾部内容，只对 `type="text"` 有效 |
 ### Methods
 
 | 方法名 | 说明 | 参数 |

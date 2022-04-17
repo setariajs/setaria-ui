@@ -43,6 +43,21 @@
       @input="handleInput"
       @change="handleInputChange">
     </el-input>
+    <span
+      class="el-input-number__suffix"
+      v-if="getSuffixVisible()">
+      <span class="el-input-number__suffix-inner">
+        <slot name="suffix">
+        </slot>
+        <span v-if="suffixText">
+          {{ suffixText }}
+        </span>
+        <i class="el-input-number__icon"
+          v-if="suffixIcon"
+          :class="suffixIcon">
+        </i>
+      </span>
+    </span>
   </div>
 </template>
 <script>
@@ -107,7 +122,9 @@
       },
       formatter: Function,
       parser: Function,
-      formatOnBlur: Boolean
+      formatOnBlur: Boolean,
+      suffixIcon: String,
+      suffixText: String
     },
     data() {
       return {
@@ -288,6 +305,11 @@
       },
       select() {
         this.$refs.input.select();
+      },
+      getSuffixVisible() {
+        return this.$slots.suffix ||
+          this.suffixIcon ||
+          this.suffixText;
       }
     },
     mounted() {

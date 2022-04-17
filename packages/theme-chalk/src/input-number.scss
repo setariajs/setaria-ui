@@ -178,4 +178,18 @@
       }
     }
   }
+  @include e(suffix) {
+    position: absolute;
+    height: 100%;
+    right: 8px;
+    top: 1px;
+    text-align: center;
+    color: $--input-icon-color;
+    transition: all .3s;
+    pointer-events: none;
+  }
+
+  @include e(suffix-inner) {
+    pointer-events: all;
+  }
 }
