@@ -49,9 +49,7 @@
       <span class="el-input-number__suffix-inner">
         <slot name="suffix">
         </slot>
-        <span v-if="suffixText">
-          {{ suffixText }}
-        </span>
+        <span v-if="suffixText">{{ suffixText }}</span>
         <i class="el-input-number__icon"
           v-if="suffixIcon"
           :class="suffixIcon">
