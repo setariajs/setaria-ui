@@ -282,6 +282,19 @@ export default {
 
     if (this.showFileList) {
       const { $scopedSlots } = this;
+      const slots = {};
+      if ($scopedSlots.file) {
+        slots.default = (props) => {
+          if (this.$scopedSlots.file) {
+            return this.$scopedSlots.file({
+              file: props.file
+            });
+          }
+        };
+      }
+      if ($scopedSlots.fileIcon) {
+        slots.fileIcon = $scopedSlots.fileIcon;
+      }
       uploadList = (
         <UploadList
           disabled={this.uploadDisabled}
