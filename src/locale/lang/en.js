@@ -80,7 +80,7 @@ export default {
       sheetName: 'data'
     },
     schema: {
-      placeholder: 'please enter {0}',
+      placeholder: 'Please enter {0}',
       int: 'Integer',
       number: 'Number',
       yes: 'Yes',
