@@ -1278,9 +1278,16 @@ export default {
       this.cloneVxeTableColumnArray = _.cloneDeep(val);
       this.columnSettingKeys = [];
       let settings = XEUtils.mapTree(val, (item) => {
+        let title = item.title;
+        if (title.indexOf('<br/>') !== -1) {
+          title = title.replace('<br/>', '');
+        }
+        if (title.indexOf('\n') !== -1) {
+          title = title.replace('\n', '');
+        }
         const ret = {
           key: item.field,
-          title: item.title,
+          title,
           isColumnVisible: item.visible
         };
         return ret;

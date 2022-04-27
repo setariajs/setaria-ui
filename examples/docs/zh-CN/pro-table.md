@@ -88,7 +88,7 @@ Vue.component('el-pro-table', ProTable);
               updatable: true,
             },
             MaxLengthString: {
-              title: '字符串输入',
+              title: '字符串\n输入',
               type: 'string',
               updatable: true,
               maxLength: 5
@@ -134,13 +134,18 @@ Vue.component('el-pro-table', ProTable);
               updatable: true,
             },
             HtmlContent: {
-              title: '自定义渲染',
+              title: '自定义渲染<br/>111',
               type: 'string'
             }
           },
           required: [ 'MaxLengthString' ],
         },
         uiSchema: {
+          HtmlContent: {
+            'ui:options': {
+              type: 'html',
+            },
+          },
         },
         data: null,
         totalDataLength: total
