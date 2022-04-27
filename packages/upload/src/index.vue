@@ -302,7 +302,7 @@ export default {
           files={this.uploadFiles}
           on-remove={this.handleRemove}
           handlePreview={this.onPreview}
-          {...{scopedSlots: $scopedSlots}}>
+          {...{scopedSlots: slots}}>
         </UploadList>
       );
     }
