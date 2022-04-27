@@ -281,22 +281,15 @@ export default {
     let uploadList;
 
     if (this.showFileList) {
+      const { $scopedSlots } = this;
       uploadList = (
         <UploadList
           disabled={this.uploadDisabled}
           listType={this.listType}
           files={this.uploadFiles}
           on-remove={this.handleRemove}
-          handlePreview={this.onPreview}>
-          {
-            (props) => {
-              if (this.$scopedSlots.file) {
-                return this.$scopedSlots.file({
-                  file: props.file
-                });
-              }
-            }
-          }
+          handlePreview={this.onPreview}
+          {...{scopedSlots: $scopedSlots}}>
         </UploadList>
       );
     }

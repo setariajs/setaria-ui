@@ -25,7 +25,9 @@
           :src="file.url || file.data" alt=""
         >
         <a class="el-upload-list__item-name" @click="handleClick(file)">
-          <i class="el-icon-document"></i>{{file.name}}
+          <slot name="fileIcon" :file="file">
+            <i class="el-icon-document"></i>
+          </slot>{{file.name}}
         </a>
         <label class="el-upload-list__item-status-label">
           <i :class="{
