@@ -12,7 +12,7 @@
         <div class="el-message-box__header" v-if="title !== null">
           <div class="el-message-box__title">
             <div
-              :class="['el-message-box__status', icon]"
+              :class="['el-message-box__status', icon, `el-message-box__status-${type}`]"
               v-if="icon && center">
             </div>
             <span>{{ title }}</span>
@@ -30,7 +30,7 @@
         <div class="el-message-box__content">
           <div class="el-message-box__container">
             <div
-              :class="['el-message-box__status', icon]"
+              :class="['el-message-box__status', icon, `el-message-box__status-${type}`]"
               v-if="icon && !center && message !== ''">
             </div>
             <div class="el-message-box__message" v-if="message !== ''">
