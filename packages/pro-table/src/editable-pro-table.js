@@ -159,11 +159,12 @@ export default Vue.extend({
     },
     innerTableColumns() {
       const {
-        innerUiSchema,
-        isEditOnRow,
         forceEditOnRow,
-        labelMode,
+        getTableRef,
+        innerUiSchema,
         innerSchema,
+        isEditOnRow,
+        labelMode,
         vxeColumns
       } = this;
       const resultColumns = [];
@@ -284,13 +285,18 @@ export default Vue.extend({
             customRender.name === 'el-input' ||
             customRender.name === 'el-input-number')
         ) {
-          slot = ({ row }) => {
+          slot = (scope) => {
             let render = null;
+            const { row } = scope;
             const inputEvent = (val) => {
               const currentRow = row;
               currentRow[field] = val;
             };
+            const blurEvent = () => {
+              getTableRef().checkValidate('blur');
+            };
             const changeEvent = (val) => {
+              getTableRef().updateStatus(scope);
               this.emitDataChange(field, val, row);
             };
             const componentProps = getComponentProps(customRender, row);
@@ -338,6 +344,7 @@ export default Vue.extend({
               render = (
                 <el-input
                   on-input={inputEvent}
+                  on-blur={blurEvent}
                   on-change={changeEvent}
                   {...{
                     attrs: componentAttrs,
@@ -413,7 +420,14 @@ export default Vue.extend({
     },
     innerRules() {
       const ret = {};
-      const { isEditOnRow, rules = {}, innerSchema = {}, uiSchema = {}, t } = this;
+      const {
+        isEditOnRow,
+        rules = {},
+        innerSchema = {},
+        uiSchema = {},
+        t,
+        defaultRequireRuleTriggerType
+      } = this;
       const { required = [], properties = {} } = innerSchema;
 
       Object.keys(rules).forEach((key) => {
@@ -458,7 +472,7 @@ export default Vue.extend({
           const requireRule = {
             required: true,
             message: t('el.schema.placeholder', [property.title]),
-            trigger: 'blur'
+            trigger: defaultRequireRuleTriggerType
           };
           if (Array.isArray(rules[key])) {
             ret[key] = [].concat(rules[key]);

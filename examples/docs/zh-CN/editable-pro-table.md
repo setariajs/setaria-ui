@@ -1579,6 +1579,7 @@ export default {
 | show-control-column  | 是否显示操作列 | Boolean | — | true  |
 | force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |
 | dialog-form-discard-change-message-setting  | 数据修改对话框的显示消息配置 | Object | — | { message: '是否放弃对数据的更改?', confirmButtonText: '是', cancelButtonText: '否' } |
+| default-require-rule-trigger-type  | 默认require rule的触发方式 | String | — | blur |
 
 ### 插槽
 
