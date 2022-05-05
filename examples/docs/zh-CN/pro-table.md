@@ -37,7 +37,8 @@ Vue.component('el-pro-table', ProTable);
     :data="data"
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
-    @selection-change="handleSelectionChange">
+    @selection-change="handleSelectionChange"
+    @filter-change="handleFilterChange">
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
     </template>
@@ -141,6 +142,23 @@ Vue.component('el-pro-table', ProTable);
           required: [ 'MaxLengthString' ],
         },
         uiSchema: {
+          Enum: {
+            'ui:options': {
+              filters: [
+                {
+                  value: '1',
+                  label: '枚举值一'
+                },
+                {
+                  value: '2',
+                  label: '枚举值二'
+                }
+              ],
+              filterMethod: () => {
+                return true;
+              }
+            },
+          },
           HtmlContent: {
             'ui:options': {
               type: 'html',
@@ -214,6 +232,9 @@ Vue.component('el-pro-table', ProTable);
       handleSelectionChange(val, currentItem) {
         console.log(val, currentItem)
         this.multipleSelection = val;
+      },
+      handleFilterChange(val) {
+        console.log(val);
       }
     }
   }
@@ -507,6 +528,7 @@ export default {
 | sort-change | 待补充 | val 待补充 |
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
 | cell-link-click | 待补充 | - |
+| filter-change  | 筛选条件变更 | val 当前值 |
 
 ### ProTable Methods
 

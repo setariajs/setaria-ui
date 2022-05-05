@@ -108,6 +108,7 @@ export default Vue.extend({
       onCellMenu,
       onMenuClick,
       onSortChange,
+      onFilterChange,
       showPagination,
       getColumnSettingRender,
       rowClassName,
@@ -159,6 +160,7 @@ export default Vue.extend({
             on-cell-menu={onCellMenu}
             on-menu-click={onMenuClick}
             on-sort-change={onSortChange}
+            on-filter-change={onFilterChange}
             show-footer={showFooter}
             footer-method={footerMethod}
             merge-footer-items={mergeFooterItems}

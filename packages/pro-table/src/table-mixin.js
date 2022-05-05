@@ -1175,6 +1175,9 @@ export default {
       this.sortList = sortList;
       this.$emit('sort-change', val);
     },
+    onFilterChange(val) {
+      this.$emit('filter-change', val);
+    },
     onPageChange(val) {
       const { currentPage, pageSize } = val;
       this.innerCurrentPage = currentPage;

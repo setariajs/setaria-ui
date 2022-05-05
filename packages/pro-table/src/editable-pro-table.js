@@ -1245,6 +1245,7 @@ export default Vue.extend({
       showFooter,
       virtualTree,
       onSortChange,
+      onFilterChange,
       tableId,
       getColumnSettingRender,
       showExpandAllBtn,
@@ -1451,6 +1452,7 @@ export default Vue.extend({
             radio-config={innerRadioConfig}
             tree-config={innerTreeConfig}
             sort-config={innerSortConfig}
+            on-filter-change={onFilterChange}
             custom-config={innerCustomConfig}
             menu-config={menuConfig}
             export-config={innerExportConfig}
@@ -1529,6 +1531,7 @@ export default Vue.extend({
             row-id={innerRowKey}
             on-radio-change={onTableRadioChange}
             on-checkbox-change={onTableCheckboxChange}
+            on-filter-change={onFilterChange}
             on-checkbox-all={onTableCheckboxAll}
             on-edit-closed={onTableRowEditorClose}
             tree-config={innerTreeConfig}
