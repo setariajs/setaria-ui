@@ -155,6 +155,10 @@ export const COMMON_TABLE_PROPS = {
       ];
     }
   },
+  pagerBackground: {
+    type: Boolean,
+    default: true
+  },
   // 当前页号
   pageNum: Number,
   // 每页显示数据数量

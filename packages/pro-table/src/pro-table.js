@@ -112,7 +112,8 @@ export default Vue.extend({
       showPagination,
       getColumnSettingRender,
       rowClassName,
-      pagerScopedSlots
+      pagerScopedSlots,
+      pagerBackground
     } = this;
     this.$nextTick(() => {
       // 表格状态发生变化时，临时合并失效，需要重新合并
@@ -169,7 +170,7 @@ export default Vue.extend({
         </div>
         {showPagination && !isTree ? (
           <vxe-pager
-            background
+            background={pagerBackground}
             size="small"
             current-page={innerCurrentPage}
             layouts={layouts}

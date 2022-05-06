@@ -1262,6 +1262,7 @@ export default Vue.extend({
       innerDialogProps,
       t,
       pagerScopedSlots,
+      pagerBackground,
       validConfig
     } = this;
     const dialogOnListener = {
@@ -1392,7 +1393,7 @@ export default Vue.extend({
       if (showPagination) {
         return (
           <vxe-pager
-            background
+            background={pagerBackground}
             size="small"
             class="el-pro-table__pager"
             current-page={innerCurrentPage}
