@@ -33,9 +33,6 @@
               tabSize = $el[`client${firstUpperCase(sizeName)}`];
               const tabStyles = window.getComputedStyle($el);
               if (sizeName === 'width' && this.tabs.length > 1) {
-                if (index !== 0) {
-                  offset += index * 30;
-                }
                 tabSize -= parseFloat(tabStyles.paddingLeft) + parseFloat(tabStyles.paddingRight);
               }
               if (sizeName === 'width') {
@@ -44,13 +41,11 @@
               return false;
             }
           });
-
           const transform = `translate${firstUpperCase(sizeDir)}(${offset}px)`;
           style[sizeName] = tabSize + 'px';
           style.transform = transform;
           style.msTransform = transform;
           style.webkitTransform = transform;
-
           return style;
         }
       }
