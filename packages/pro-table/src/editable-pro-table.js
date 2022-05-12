@@ -293,7 +293,7 @@ export default Vue.extend({
               currentRow[field] = val;
             };
             const blurEvent = () => {
-              getTableRef().checkValidate('blur');
+              getTableRef().checkValidate('blur').catch(() => {});
             };
             const changeEvent = (val) => {
               getTableRef().updateStatus(scope);
