@@ -359,7 +359,7 @@ export const EDIT_TABLE_PROPS = {
   validConfig: Object,
   defaultRequireRuleTriggerType: {
     type: String,
-    value: 'change'
+    default: 'change'
   }
 };
 
