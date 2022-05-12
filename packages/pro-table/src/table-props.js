@@ -357,7 +357,10 @@ export const EDIT_TABLE_PROPS = {
     }
   },
   validConfig: Object,
-  defaultRequireRuleTriggerType: 'blur'
+  defaultRequireRuleTriggerType: {
+    type: String,
+    value: 'change'
+  }
 };
 
 export default {
