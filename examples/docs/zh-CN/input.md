@@ -550,6 +550,7 @@ export default {
   v-model="state"
   :fetch-suggestions="querySearchAsync"
   placeholder="请输入内容"
+  only-trigger-on-focus
   @select="handleSelect"
 ></el-autocomplete>
 <script>
@@ -744,6 +745,7 @@ export default {
 | fetch-suggestions | 返回输入建议的方法，仅当你的输入建议数据 resolve 时，通过调用 callback(data:[]) 来返回它  | Function(queryString, callback)  | — | — |
 | popper-class | Autocomplete 下拉列表的类名 | string | — | — |
 | trigger-on-focus | 是否在输入框 focus 时显示建议列表 | boolean | — | true |
+| only-trigger-on-focus | 是否只在输入框 focus 时显示建议列表 | boolean | — | false |
 | name | 原生属性 | string | — | — |
 | select-when-unmatched | 在输入没有任何匹配建议的情况下，按下回车是否触发 `select` 事件 | boolean | — | false |
 | label | 输入框关联的label文字 | string | — | — |

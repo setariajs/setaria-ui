@@ -131,6 +131,10 @@
       highlightFirstItem: {
         type: Boolean,
         default: false
+      },
+      onlyTriggerOnFocus: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -195,7 +199,9 @@
           this.suggestions = [];
           return;
         }
-        this.debouncedGetData(value);
+        if (!this.onlyTriggerOnFocus) {
+          this.debouncedGetData(value);
+        }
       },
       handleChange(value) {
         this.$emit('change', value);
