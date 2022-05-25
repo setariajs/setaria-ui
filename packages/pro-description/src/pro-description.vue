@@ -5,6 +5,8 @@
       :key="key"
       :span="getDescriptionSpan(key)"
       :label="innerItems[key].title"
+      :label-class="`pro-description__label-${key.toLowerCase()}`"
+      :content-class="`pro-description__content-${key.toLowerCase()}`"
     >
       <slot :name="key" :data="innerData[key]">
         {{ innerData[key] }}

@@ -9,7 +9,9 @@
       span: {
         type: Number,
         default: 1
-      }
+      },
+      width: null,
+      class: null
     },
     data() {
       return {

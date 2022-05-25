@@ -14,13 +14,27 @@ Input 为受控组件，它**总会显示 Vue 绑定值**。
 
 :::demo
 ```html
-<el-input v-model="input" placeholder="请输入内容"></el-input>
+<el-input v-model="input" placeholder="请输入内容" @paste.native="onPaste"></el-input>
 
 <script>
 export default {
   data() {
     return {
       input: ''
+    }
+  },
+  methods: {
+    onPaste(e) {
+      const data = (event.clipboardData || window.clipboardData).getData('text');
+      console.log('onPaste', data, data.indexOf('\r\n'),data.split('\r\n').join('-'));
+      const currentValue = this.input;
+      if (data.indexOf('\r\n') !== -1) {
+        console.log('excel');
+        const c = data.split('\r\n').join('-');
+        this.$nextTick(() => {
+          this.input = `${currentValue}${c}`;
+        });
+      }
     }
   }
 }

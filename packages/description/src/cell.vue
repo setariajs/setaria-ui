@@ -21,19 +21,22 @@
         type: Number,
         default: 1
       },
-      className: String
+      className: String,
+      labelClass: String,
+      contentClass: String
     },
     render(h) {
-      const { bordered, cellType, className, span, $slots } = this;
+      const { bordered, cellType, className, labelClass, contentClass, span, $slots } = this;
       if (cellType === 'label') {
         return (
           <th
-            class={[className, 'el-description-item-label', bordered ? 'is-bordered' : null]}>{ $slots.default }</th>
+            class={[labelClass, 'el-description-item-label', bordered ? 'is-bordered' : null]}
+            colSpan={span * 2 - 1}>{ $slots.default }</th>
         );
       } else {
         return (
           <td
-            class={[className, 'el-description-item-content']}
+            class={[className, contentClass, 'el-description-item-content']}
             colSpan={span * 2 - 1}>{ $slots.default }</td>
         );
       }

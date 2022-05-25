@@ -193,6 +193,9 @@
             let colItem = {
               child: label
             };
+            if (child.data && child.data.attrs) {
+              colItem.labelClass = child.data.attrs['label-class'];
+            }
             retChildren.push((
               renderCol(colItem, 'label', index)
             ));
@@ -201,6 +204,9 @@
               span: child.innerSpan,
               className: child.data ? child.data.staticClass : null
             };
+            if (child.data && child.data.attrs) {
+              colItem.contentClass = child.data.attrs['content-class'];
+            }
             // Content
             retChildren.push((
               renderCol(colItem, 'content', index)
@@ -219,8 +225,10 @@
           bordered,
           colon,
           cellType: type,
-          span: colItem.span,
-          className: colItem.className
+          span: typeof colItem.span === 'number' ? colItem.span : 1,
+          className: colItem.className,
+          labelClass: colItem.labelClass,
+          contentClass: colItem.contentClass
         };
         const child = colItem.child;
         return (
@@ -229,7 +237,9 @@
             cell-type={prop.cellType}
             colon={prop.colon}
             span={prop.span}
-            className={prop.className}>{ child }</Cell>
+            className={prop.className}
+            labelClass={prop.labelClass}
+            contentClass={prop.contentClass}>{ child }</Cell>
         );
       }
     },
@@ -261,13 +271,6 @@
       return (
         <div class={rootClassArray}>
           <table cellspacing="0" class={bordered ? 'is-bordered' : null}>
-            <colgroup>
-              {
-                colArray.map(item => (
-                  <col width={`${100 / (columns * 2)}%`}></col>
-                ))
-              }
-            </colgroup>
             { renderTitle(title, columns) }
             <tbody>
               {
