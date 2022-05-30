@@ -75,7 +75,7 @@ export default {
     },
     resetPosition: {
       type: String,
-      default: 'left'
+      default: 'right'
     }
   },
   data() {
