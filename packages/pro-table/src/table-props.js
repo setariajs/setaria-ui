@@ -163,6 +163,7 @@ export const COMMON_TABLE_PROPS = {
   pageNum: Number,
   // 每页显示数据数量
   pageSize: Number,
+  pageSizes: Array,
   // 数据总数量
   total: Number,
   // 控制列宽度
