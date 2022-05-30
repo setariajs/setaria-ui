@@ -291,22 +291,27 @@ export default {
     getControlButtons() {
 
       const TEMPLATE_MAP = {
+        // 搜索
         search: <el-button
           type="primary"
           icon="el-icon-search"
           onClick={this.handleSubmit}
           loading={this.isSubmiting}>{this.t('el.proform.search')}</el-button>,
-
+        // 搜索重置
         searchReset: <el-button
           icon="el-icon-refresh-left"
           onClick={this.handleReset}>{this.t('el.proform.reset')}</el-button>,
-
+        // 重置
         reset: <el-button onClick={this.handleReset}>{this.t('el.proform.reset')}</el-button>,
-
+        // 提交
         submit: <el-button
           type="primary"
           onClick={this.handleSubmit}
-          loading={this.isSubmiting}>{this.t('el.proform.submit')}</el-button>
+          loading={this.isSubmiting}>{this.t('el.proform.submit')}</el-button>,
+        // 取消
+        cancel: <el-button onClick={this.handleCancel}>{this.t('el.proform.cancel')}</el-button>,
+        // 额外插槽
+        slot: this.$slots.controlButtons ? this.$slots.controlButtons : ''
       };
 
       let innerLayout = [];
@@ -315,6 +320,8 @@ export default {
       if (isEmpty(this.controlButtonLayout)) {
         if (this.type === 'queryFilter') {
           innerLayout = ['search', 'searchReset'];
+        } else if (this.type === 'modalForm') {
+          innerLayout = ['submit', 'cancel'];
         } else {
           innerLayout = ['submit', 'reset'];
         }
@@ -341,7 +348,7 @@ export default {
       innerExpand,
       model,
       isMounted,
-      isSubmiting,
+      // isSubmiting,
       isShowModalForm,
       innerUiSchema,
       queryFilterColumnConfig,
@@ -421,11 +428,9 @@ export default {
      * ModalForm的操作区域
      */
     const getModalFormControlContainer = () => {
-      const { handleSubmit, handleCancel } = this;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button onClick={handleCancel}>{this.t('el.proform.cancel')}</el-button>
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{this.t('el.proform.submit')}</el-button>
+          {getControlButtons()}
         </div>
       );
     };

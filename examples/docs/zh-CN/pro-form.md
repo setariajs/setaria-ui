@@ -163,10 +163,10 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :model="form1"
     :schema="schema"
     :ui-schema="uiSchema"
-    :control-button-layout="['reset','search']"
     label-width="100px"
     label-position="top"
     :after-submit="onSubmit">
+    
   </el-pro-form>
   <p>result:</p>
   <div>
@@ -289,6 +289,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :after-submit="onSubmit"
     title="Card表单"
     :card-attrs="{shadow: 'hover'}">
+
   </el-pro-form>
   <p>result:</p>
   <div>
@@ -412,6 +413,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     title="表单"
     :dialog-attrs="{width: '80%'}">
     <el-button type="primary">新建表单</el-button>
+
   </el-pro-form>
   <p>result:</p>
   <div>
@@ -520,6 +522,141 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 ```
 :::
 
+
+### 按钮控制
+
+设置 `control-button-layout` 来控制按钮显示的顺序和显示与否
+
+可通过`slot`并配置插槽`controlButtons`来自定义按钮内容
+
+::: demo 
+
+```html
+<div>
+  <el-pro-form
+    type="queryFilter"
+    :model="form1"
+    :schema="schema"
+    :ui-schema="uiSchema"
+    :control-button-layout="['slot','search']"
+    label-width="100px"
+    label-position="top"
+    :after-submit="onSubmit">
+     <template slot="controlButtons">
+        <el-button type="primary">Test1</el-button>
+        <el-button type="primary">Test2</el-button>
+    </template>
+  </el-pro-form>
+  <p>result:</p>
+  <div>
+    {{ this.form1 }}
+  </div>
+</div>
+<script>
+  export default {
+    data() {
+      return {
+        form1: {
+          id: '',
+          password: '',
+          age: null,
+          gender: 2,
+          birth: '',
+          interest: [],
+          comment: '',
+          profession: '',
+          dateTime: '',
+          time: '',
+        },
+        schema: {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "description": "此处可定义额外辅助信息",
+              "type": "string",
+              "title": "用户ID",
+              "minLength": 3,
+              "maxLength": 6
+            },
+            "password": {
+              "type": "string",
+              "title": "密码"
+            },
+            "age": {
+              "type": "integer",
+              "title": "年龄"
+            },
+            "gender": {
+              "type": "integer",
+              "title": "性别",
+              "oneOf": [
+                {"const": 1, "title": "男"},
+                {"const": 2, "title": "女"}
+              ]
+            },
+            "birth": {
+              "type": "string",
+              "title": "出生年月日",
+              "format": "date"
+            },
+            "time": {
+              "type": "array",
+              "title": "时间",
+              "format": "time"
+            },
+            "dateTime": {
+              "type": "string",
+              "title": "日期时间",
+              "format": "date-time"
+            },
+            "interest": {
+              "type": "array",
+              "title": "兴趣",
+              "anyOf": [
+                {"const": "1", "title": "游戏"},
+                {"const": "2", "title": "音乐"},
+                {"const": "3", "title": "运动"}
+              ]
+            },
+            "comment": {
+              "type": "string",
+              "title": "备注"
+            }
+          }
+        },
+        uiSchema: {
+          "interest": {
+            "ui:colspan": 2
+          },
+          "comment": {
+            "ui:options": {
+              type: 'textarea'
+            },
+            "ui:colspan": 2
+          }
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.$message.success('查询执行成功');
+            resolve();
+          }, 1000);
+        });
+      }
+    }
+  }
+</script>
+```
+:::
+
+
+
+
 ### ProForm Attributes
 
 **此处只列出ElProForm独有属性，其他属性请参考ElJsonForm**
@@ -539,7 +676,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | card-attrs | `type` 为 `cardForm` 时有效，值为ElCard的Props | object | — | — |
 | modal-attrs | `type` 为 `modalForm` 时有效，值为ElDialog的Props | object | — | — |
 | collapse | `type` 为 `queryFilter` 时有效，是否开启查询条件折叠功能 | boolean | — | true |
-| reset-position | 重置按钮的显示位置 | string | 'left','right' | 'right' |
+| control-button-layout | 按钮组件布局| Array | `search`, `searchReset`, `submit` , `reset`, `cancel` , `slot`  | `type` 为 `queryFilter`默认值为['search','searchReset'] ,  `type` 为 空 默认值为['submit','reset'] ,  `type` 为 `modalForm` 默认值为['submit','cancel'] |
 
 
 
@@ -550,4 +687,11 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | visibleChange  | `type` 为 `modalForm` 时有效，对话框显示/隐藏状态变更时触发 | key 表单字段的Key, val 表单字段的值 |
 | clear  | 表单重置按钮点击后触发 | — |
 | change   | 表单字段值变更时回调 | key 表单字段的 Key, val 表单字段的值 |
+
+
+### ProForm Slot
+| name | 说明 |
+|------|--------|
+| — | 默认的内容 |
+| controlButtons | 需要配合`control-button-layout`来显示插槽中的内容 |
 
