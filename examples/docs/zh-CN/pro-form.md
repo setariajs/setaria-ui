@@ -163,6 +163,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :model="form1"
     :schema="schema"
     :ui-schema="uiSchema"
+    :reset-position="'right'"
     label-width="100px"
     label-position="top"
     :after-submit="onSubmit">
@@ -538,6 +539,9 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | card-attrs | `type` 为 `cardForm` 时有效，值为ElCard的Props | object | — | — |
 | modal-attrs | `type` 为 `modalForm` 时有效，值为ElDialog的Props | object | — | — |
 | collapse | `type` 为 `queryFilter` 时有效，是否开启查询条件折叠功能 | boolean | — | true |
+| reset-position | 重置按钮的显示位置 | string | 'left','right' | 'left' |
+
+
 
 ### ProForm Events
 

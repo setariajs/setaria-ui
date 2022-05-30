@@ -72,6 +72,10 @@ export default {
     collapse: {
       type: Boolean,
       default: true
+    },
+    resetPosition: {
+      type: String,
+      default: 'left'
     }
   },
   data() {
@@ -325,15 +329,30 @@ export default {
         ? (<div><i class="el-icon-arrow-up"></i><span>{ this.t('el.proform.stow') }</span></div>)
         : (<div><i class="el-icon-arrow-down"></i><span>{ this.t('el.proform.expand') }</span></div>);
     };
+
+    // 设置重置按钮位置
+    const getResetButton = (otherButton, icon = '') => {
+      const { handleReset, resetPosition } = this;
+      const resetBtn = <el-button icon={icon} onClick={handleReset}>{ this.t('el.proform.reset') }</el-button>;
+      const res = [otherButton];
+      if (resetPosition === 'left') {
+        res.unshift(resetBtn);
+      } else {
+        res.push(resetBtn);
+
+      }
+      return res;
+
+    };
     /**
      * 正常表单的操作区域
      */
     const getNormalFormControlContainer = () => {
-      const { handleSubmit, handleReset } = this;
+      const { handleSubmit } = this;
+      const baseBtn = <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button onClick={handleReset}>{ this.t('el.proform.reset') }</el-button>
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
+          {getResetButton(baseBtn)}
         </div>
       );
     };
@@ -341,7 +360,13 @@ export default {
      * 渲染查询筛选的操作区域
      */
     const getQueryFillterControlContainer = () => {
-      const { handleSubmit, handleReset } = this;
+      const { handleSubmit } = this;
+      const baseBtn = <el-button
+        type="primary"
+        icon="el-icon-search"
+        onClick={handleSubmit}
+        loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>;
+
       return (
         <el-col
           span={queryFilterColumnConfig.span}
@@ -352,12 +377,10 @@ export default {
             { labelPosition === 'top' ? (
               <span slot="label">&nbsp;</span>
             ) : null }
-            <el-button onClick={handleReset} icon="el-icon-refresh-left">{ this.t('el.proform.reset') }</el-button>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              onClick={handleSubmit}
-              loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>
+            {
+              getResetButton(baseBtn, 'el-icon-refresh-left')
+            }
+
             { isQueryFilter && collapse ? (<el-button
               type="text"
               onClick={handleExpand}
