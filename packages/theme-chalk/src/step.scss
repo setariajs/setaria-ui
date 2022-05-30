@@ -166,7 +166,7 @@
     }
 
     @include when(success) {
-      color: $--color-success;
+      color: $--color-text-primary;
     }
 
     @include when(error) {
