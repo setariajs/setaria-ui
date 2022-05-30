@@ -6,8 +6,9 @@
       !isSimple && `is-${$parent.direction}`,
       isSimple && 'is-simple',
       isLast && !space && !isCenter && 'is-flex',
-      isCenter && !isVertical && !isSimple && 'is-center'
-     ]">
+      isCenter && !isVertical && !isSimple && 'is-center',
+      isTitleHorizontal && 'is-title-horizontal'
+    ]">
     <!-- icon & line -->
     <div
       class="el-step__head"
@@ -15,6 +16,7 @@
       <div
         class="el-step__line"
         :style="isLast ? '' : { marginRight: $parent.stepOffset + 'px' }"
+        v-if="!isTitleHorizontal"
       >
         <i class="el-step__line-inner" :style="lineStyle"></i>
       </div>
@@ -33,9 +35,22 @@
         >
         </i>
       </div>
+      
+      <div class="el-step__item-content" v-if="isTitleHorizontal">
+        <div
+          class="el-step__title el-step__title-horizontal"
+          :class="['is-' + currentStatus, isLast ? 'is-last' : null]">
+          {{ title }}
+        </div>
+        <div
+          class="el-step__description"
+          :class="['is-' + currentStatus]">
+          <slot name="description">{{ description }}</slot>
+        </div>
+      </div>
     </div>
     <!-- title & description -->
-    <div class="el-step__main">
+    <div class="el-step__main" v-if="!isTitleHorizontal">
       <div
         class="el-step__title"
         ref="title"
@@ -100,6 +115,9 @@ export default {
     },
     isSimple() {
       return this.$parent.simple;
+    },
+    isTitleHorizontal() {
+      return this.$parent.titlePosition === 'horizontal';
     },
     isLast() {
       const parent = this.$parent;

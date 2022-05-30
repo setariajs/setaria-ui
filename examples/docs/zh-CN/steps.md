@@ -47,6 +47,38 @@
 ```
 :::
 
+### 步骤条标题与步骤图标位于同一行
+
+步骤条的标题位置支持放在图标右侧。
+
+:::demo 不能同时设置align-center属性
+```html
+<el-steps :active="active" finish-status="success" title-position="horizontal">
+  <el-step title="步骤 1" description="这段就没那么长了"></el-step>
+  <el-step title="步骤 2" description="这段就没那么长了"></el-step>
+  <el-step title="步骤 3" description="这段就没那么长了"></el-step>
+</el-steps>
+
+<el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+
+<script>
+  export default {
+    data() {
+      return {
+        active: 1
+      };
+    },
+
+    methods: {
+      next() {
+        if (this.active++ > 2) this.active = 0;
+      }
+    }
+  }
+</script>
+```
+:::
+
 ### 有描述的步骤条
 
 每个步骤有其对应的步骤状态描述。

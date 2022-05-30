@@ -33,6 +33,10 @@ export default {
     processStatus: {
       type: String,
       default: 'process'
+    },
+    titlePosition: {
+      type: String,
+      default: 'vertical'
     }
   },
 

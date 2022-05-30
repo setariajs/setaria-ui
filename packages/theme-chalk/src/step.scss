@@ -65,8 +65,8 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 36px;
-    height: 36px;
+    width: $--steps-icon-size;
+    height: $--steps-icon-size;
     font-size: 16px;
     box-sizing: border-box;
     background: $--color-white;
@@ -184,8 +184,8 @@
     @include e(line) {
       height: 2px;
       top: 18px;
-      left: 0;
-      right: 0;
+      left: calc(#{$--steps-icon-size} + #{$--steps-horizontal-line-padding-left});
+      width: calc(100% - #{$--steps-icon-size} - #{$--steps-horizontal-line-padding-left} - #{$--steps-horizontal-line-padding-left});
     }
   }
 
@@ -237,8 +237,7 @@
     }
 
     @include e(line) {
-      left: 57%;
-      right: -43%;
+      left: calc(50% + #{$--steps-icon-size}/2 + #{$--steps-horizontal-line-padding-left});
     }
   }
 
@@ -318,6 +317,95 @@
     @include pseudo(last-of-type) {
       @include e(arrow) {
         display: none;
+      }
+    }
+  }
+  
+  
+  @include when(title-horizontal) {
+    overflow: hidden;
+    & +.is-title-horizontal {
+      padding-left: $--steps-horizontal-line-padding-left;
+    }
+    @include e(icon) {
+      margin-right: $--steps-horizontal-line-padding-left;
+      vertical-align: top;
+    }
+    @include e(title-horizontal) {
+      display: inline-block;
+    }
+    @include e(item-content) {
+      display: inline-block;
+      @include e(title) {
+        padding-right: $--steps-horizontal-line-padding-left;
+        position: relative;
+        &:after {
+          position: absolute;
+          top: 16px;
+          left: 100%;
+          display: block;
+          width: 9999px;
+          height: 2px;
+          background: rgba(0,0,0,1);
+          content: "";
+        }
+        &.is-last {
+          &:after {
+            background: transparent;
+          }
+        }
+      }
+    }
+    &.is-center {
+      @include e(title-horizontal) {
+        left: calc(50% + 25px);
+      }
+    }
+    .is-success {
+      @include e(title) {
+        &:after {
+          background-color: $--color-primary;
+        }
+      }
+    }
+    
+    .is-process {
+      @include e(title) {
+        &:after {
+          background-color: $--color-text-placeholder;
+        }
+      }
+    }
+
+    .is-wait {
+      @include e(title) {
+        &:after {
+          background-color: $--color-text-placeholder;
+        }
+      }
+    }
+
+    .is-success {
+      @include e(title) {
+        &:after {
+          background-color: $--color-primary;
+        }
+      }
+    }
+
+    .is-error {
+      @include e(title) {
+        &:after {
+          background-color: $--color-danger;
+        }
+      }
+    }
+
+    .is-finish {
+      @include e(title) {
+        &:after {
+          background-color: $--color-primary;
+        }
       }
     }
   }
