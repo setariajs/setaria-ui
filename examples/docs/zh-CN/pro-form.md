@@ -163,7 +163,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :model="form1"
     :schema="schema"
     :ui-schema="uiSchema"
-    :reset-position="'right'"
+    :control-button-layout="['reset','search']"
     label-width="100px"
     label-position="top"
     :after-submit="onSubmit">

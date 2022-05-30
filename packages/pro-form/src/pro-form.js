@@ -76,7 +76,12 @@ export default {
     resetPosition: {
       type: String,
       default: 'right'
+    },
+    controlButtonLayout: {
+      type: Array
+
     }
+
   },
   data() {
     return {
@@ -157,13 +162,13 @@ export default {
           if (!innerExpand && this.collapse) {
             if (currentColumns === 1 && index === 0) {
               uiProperty['ui:hidden'] = false;
-            // 只显示一行表单项目，其余的隐藏
+              // 只显示一行表单项目，其余的隐藏
             } else if (this.currentDisplayTotalColSpan + propertyColspan + 1 > currentColumns) {
               uiProperty['ui:hidden'] = true;
             } else {
               uiProperty['ui:hidden'] = false;
             }
-          // 展开的场合
+            // 展开的场合
           } else {
             uiProperty['ui:hidden'] = false;
           }
@@ -281,6 +286,47 @@ export default {
     },
     validate(callbackFunc) {
       return this.$refs.proForm.validate(callbackFunc);
+    },
+    // 获取各种按钮内容
+    getControlButtons() {
+
+      const TEMPLATE_MAP = {
+        search: <el-button
+          type="primary"
+          icon="el-icon-search"
+          onClick={this.handleSubmit}
+          loading={this.isSubmiting}>{this.t('el.proform.search')}</el-button>,
+
+        searchReset: <el-button
+          icon="el-icon-refresh-left"
+          onClick={this.handleReset}>{this.t('el.proform.reset')}</el-button>,
+
+        reset: <el-button onClick={this.handleReset}>{this.t('el.proform.reset')}</el-button>,
+
+        submit: <el-button
+          type="primary"
+          onClick={this.handleSubmit}
+          loading={this.isSubmiting}>{this.t('el.proform.submit')}</el-button>
+      };
+
+      let innerLayout = [];
+      const template = [];
+
+      if (isEmpty(this.controlButtonLayout)) {
+        if (this.type === 'queryFilter') {
+          innerLayout = ['search', 'searchReset'];
+        } else {
+          innerLayout = ['submit', 'reset'];
+        }
+      } else {
+        innerLayout = this.controlButtonLayout;
+      }
+      innerLayout.forEach(compo => {
+        template.push(TEMPLATE_MAP[compo]);
+      });
+
+      return template;
+
     }
   },
   render(h) {
@@ -310,6 +356,7 @@ export default {
       handleSubmit,
       handleChange,
       handleModalButtonClick,
+      getControlButtons,
       isQueryFilter,
       collapse
     } = this;
@@ -326,33 +373,17 @@ export default {
     // console.log('元素所占列数总和', currentDisplayTotalColSpan, totalColSpan);
     const getExpandTextLabel = () => {
       return innerExpand
-        ? (<div><i class="el-icon-arrow-up"></i><span>{ this.t('el.proform.stow') }</span></div>)
-        : (<div><i class="el-icon-arrow-down"></i><span>{ this.t('el.proform.expand') }</span></div>);
+        ? (<div><i class="el-icon-arrow-up"></i><span>{this.t('el.proform.stow')}</span></div>)
+        : (<div><i class="el-icon-arrow-down"></i><span>{this.t('el.proform.expand')}</span></div>);
     };
 
-    // 设置重置按钮位置
-    const getResetButton = (otherButton, icon = '') => {
-      const { handleReset, resetPosition } = this;
-      const resetBtn = <el-button icon={icon} onClick={handleReset}>{ this.t('el.proform.reset') }</el-button>;
-      const res = [otherButton];
-      if (resetPosition === 'left') {
-        res.unshift(resetBtn);
-      } else {
-        res.push(resetBtn);
-
-      }
-      return res;
-
-    };
     /**
      * 正常表单的操作区域
      */
     const getNormalFormControlContainer = () => {
-      const { handleSubmit } = this;
-      const baseBtn = <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          {getResetButton(baseBtn)}
+          {getControlButtons()}
         </div>
       );
     };
@@ -360,12 +391,7 @@ export default {
      * 渲染查询筛选的操作区域
      */
     const getQueryFillterControlContainer = () => {
-      const { handleSubmit } = this;
-      const baseBtn = <el-button
-        type="primary"
-        icon="el-icon-search"
-        onClick={handleSubmit}
-        loading={isSubmiting}>{ this.t('el.proform.search') }</el-button>;
+      // const { handleSubmit } = this;
 
       return (
         <el-col
@@ -374,19 +400,19 @@ export default {
           slot="formItems"
           class="el-pro-form__control">
           <el-form-item >
-            { labelPosition === 'top' ? (
+            {labelPosition === 'top' ? (
               <span slot="label">&nbsp;</span>
-            ) : null }
+            ) : null}
             {
-              getResetButton(baseBtn, 'el-icon-refresh-left')
+              getControlButtons()
             }
 
-            { isQueryFilter && collapse ? (<el-button
+            {isQueryFilter && collapse ? (<el-button
               type="text"
               onClick={handleExpand}
               class="control__expand-button">
               {totalColSpan >= currentColumns ? getExpandTextLabel() : null}
-            </el-button>) : null }
+            </el-button>) : null}
           </el-form-item>
         </el-col>
       );
@@ -398,8 +424,8 @@ export default {
       const { handleSubmit, handleCancel } = this;
       return (
         <div class="pro-form-control-button-container" slot="button">
-          <el-button onClick={handleCancel}>{ this.t('el.proform.cancel') }</el-button>
-          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{ this.t('el.proform.submit') }</el-button>
+          <el-button onClick={handleCancel}>{this.t('el.proform.cancel')}</el-button>
+          <el-button type="primary" onClick={handleSubmit} loading={isSubmiting}>{this.t('el.proform.submit')}</el-button>
         </div>
       );
     };
@@ -428,7 +454,7 @@ export default {
         {...attributes}
         label-position={labelPosition}
         label-suffix={labelSuffix}>
-        { getControlButton() }
+        {getControlButton()}
       </ElJsonForm>
     );
     const cardFormAttrs = {
@@ -452,7 +478,7 @@ export default {
         visible={isShowModalForm}
         title={title}
         {...modalFormAttrs}
-        {...{on: onListener }}>
+        {...{ on: onListener }}>
         {formRender}
         <span slot="footer" class="dialog-footer">
           {getModalFormControlContainer()}
