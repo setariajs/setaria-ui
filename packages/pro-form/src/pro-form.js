@@ -308,9 +308,9 @@ export default {
           type="primary"
           onClick={this.handleSubmit}
           loading={this.isSubmiting}>{this.t('el.proform.submit')}</el-button>,
-        // 取消
+        //  取消
         cancel: <el-button onClick={this.handleCancel}>{this.t('el.proform.cancel')}</el-button>,
-        // 额外插槽
+        //  额外插槽
         slot: this.$slots.controlButtons ? this.$slots.controlButtons : ''
       };
 
