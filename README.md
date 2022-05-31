@@ -60,7 +60,7 @@ For more information, please refer to [Quick Start](https://bluejfox.github.io/s
 
 ## Browser Support
 
-Modern browsers and Internet Explorer 10+.
+Modern browsers and Internet Explorer 10+. 
 
 ## Development
 
