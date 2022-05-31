@@ -174,7 +174,7 @@
     }
 
     @include when(finish) {
-      color: $--color-primary;
+      color: $--color-text-primary;
     }
   }
 
