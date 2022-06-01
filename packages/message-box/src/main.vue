@@ -13,8 +13,12 @@
           <div class="el-message-box__title">
             <div
               :class="['el-message-box__status', icon, `el-message-box__status-${type}`]"
-              v-if="icon && center">
+              v-if="icon && center && typeof iconHtml !== 'function'">
             </div>
+            <div
+              :class="['el-message-box__status', `el-message-box__status-${type}`]"
+              v-else-if="type && center && message !== '' && typeof iconHtml === 'function'"
+              v-html="displayIconHtml()"></div>
             <span>{{ title }}</span>
           </div>
           <button
@@ -31,8 +35,12 @@
           <div class="el-message-box__container">
             <div
               :class="['el-message-box__status', icon, `el-message-box__status-${type}`]"
-              v-if="icon && !center && message !== ''">
+              v-if="icon && !center && message !== '' && (typeof iconHtml !== 'function')">
             </div>
+            <div
+              :class="['el-message-box__status', `el-message-box__status-${type}`]"
+              v-else-if="type && !center && message !== '' && typeof iconHtml === 'function'"
+              v-html="displayIconHtml()"></div>
             <div class="el-message-box__message" v-if="message !== ''">
               <slot>
                 <p v-if="!dangerouslyUseHTMLString">{{ message }}</p>
@@ -125,7 +133,8 @@
       roundButton: {
         default: false,
         type: Boolean
-      }
+      },
+      iconHtml: Function
     },
 
     components: {
@@ -236,6 +245,15 @@
       },
       handleClose() {
         this.handleAction('close');
+      },
+      displayIconHtml() {
+        const { type } = this;
+        if (this.iconHtml) {
+          return this.iconHtml({
+            type
+          });
+        }
+        return null;
       }
     },
 

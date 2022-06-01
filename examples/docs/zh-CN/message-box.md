@@ -255,7 +255,8 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-          center: true
+          center: true,
+          iconHtml() {return '<img style="width:16px;height:16px;" src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"/>'}
         }).then(() => {
           this.$message({
             type: 'success',
@@ -325,3 +326,4 @@ import { MessageBox } from 'setaria-ui';
 | inputErrorMessage | 校验未通过时的提示文本 | string | — | 输入的数据不合法! |
 | center | 是否居中布局 | boolean | — | false |
 | roundButton | 是否使用圆角按钮 | boolean | — | false |
+| iconHtml | 图标自定义html | function | — | — |
