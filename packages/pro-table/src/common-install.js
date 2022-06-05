@@ -1,4 +1,4 @@
-import VXETable from 'vxe-table';
+import VXETable from 'setaria-vxe-table';
 import VXETablePluginElement from 'vxe-table-plugin-element';
 import 'vxe-table-plugin-element/dist/style.css';
 import VXETablePluginVirtualTree from 'vxe-table-plugin-virtual-tree';

@@ -8804,6 +8804,11 @@ set-value@^2.0.0, set-value@^2.0.1:
     is-plain-object "^2.0.3"
     split-string "^3.0.1"
 
+setaria-vxe-table@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/setaria-vxe-table/-/setaria-vxe-table-1.0.2.tgz#69beb52810bc85d3d0d391a1db22b7d48db6c3e9"
+  integrity sha512-0nPAYvY8jCwkvbOWjVV0HwsSlmyzSkLKNBasosqIpzlPlbKsVVy1tLZytW3Z+JEdXIFhjLYVIGLPEDXlrl4J9g==
+
 setimmediate@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npm.taobao.org/setimmediate/download/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
@@ -10256,11 +10261,6 @@ vxe-table-plugin-virtual-tree@^0.6.7:
   version "0.6.11"
   resolved "https://registry.npmmirror.com/vxe-table-plugin-virtual-tree/download/vxe-table-plugin-virtual-tree-0.6.11.tgz#24d058a4f2cb2f97736dc5a34cd2b1eb838d1ec4"
   integrity sha1-JNBYpPLLL5dzbcWjTNKx64ONHsQ=
-
-vxe-table@^3.3.12:
-  version "3.3.16"
-  resolved "https://registry.npmmirror.com/vxe-table/download/vxe-table-3.3.16.tgz#56ad7d7cef0e08a01ec4fee36a2c3d31974e8690"
-  integrity sha1-Vq19fO8OCKAexP7jaiw9MZdOhpA=
 
 watchpack-chokidar2@^2.0.1:
   version "2.0.1"

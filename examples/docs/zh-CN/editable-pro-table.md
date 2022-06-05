@@ -19,7 +19,8 @@ Vue.component('el-editable-pro-table', EditableProTable);
 
 ### 基本用法
 
-:::demo
+:::demo 可通过设置属性`labelMode`控制表格的编辑状态。
+
 ```html
 <template>
   <div>
@@ -44,6 +45,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     stripe
     control-column-width="300px"
     :control-column-config="{collapseButton:false}"
+    :valid-config="{message: 'inline'}"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
@@ -119,7 +121,7 @@ export default {
       name: 'XXX',
       price: null
     };
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 1; i += 1) {
       const data = {
         ...this.headInfoData
       };
