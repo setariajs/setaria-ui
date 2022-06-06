@@ -144,18 +144,13 @@ export default {
     cellDblclick(val){
       console.log('cellDblclick',val)
     },
-     beforeAddRow(row) {
-      // 自定义返回数据 Promise 方式
-       return new Promise((resovle)=>{
-           setTimeout(()=>{
-             resovle({
-              ...row,
-              ...{
-                name: 333444
-            }});
-
-           },1500);
-      });
+    beforeAddRow(row) {
+      return {
+        ...row,
+        ...{
+          name: 333444
+        }
+      };
     },
     beforeUpdateRow(scope) {
       console.log(scope);
@@ -262,6 +257,7 @@ export default {
   <div>
   </div>
   <el-editable-pro-table
+    v-loading="loading"
     ref="ept"
     :label-mode="false"
     multiple-selection
@@ -306,6 +302,7 @@ export default {
   data() {
     return {
       labelMode: true,
+      loading: false,
       schema: {
         properties: {
           name: {
@@ -387,17 +384,18 @@ export default {
     cellDblclick(val){
       console.log('cellDblclick',val)
     },
-     beforeAddRow(row) {
+    beforeAddRow(row) {
       // 自定义返回数据 Promise 方式
        return new Promise((resovle)=>{
-           setTimeout(()=>{
-             resovle({
-              ...row,
-              ...{
-                name: 333444
-            }});
-
-           },1500);
+        this.loading = true;
+        setTimeout(()=>{
+          this.loading = false;
+          resovle({
+            ...row,
+            ...{
+              name: 333444
+          }});
+        },500);
       });
     },
     beforeUpdateRow(scope) {
@@ -428,7 +426,6 @@ export default {
       return new window.Promise((resolve, reject) => {
         const loading = this.$loading();
         setTimeout(() => {
-          console.log('test',data)
           if(data.name === 'save'){
             this.$message.warning('测试自定义校验拒绝');
             reject();
