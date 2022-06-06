@@ -157,12 +157,6 @@ export default {
            },1500);
       });
     },
-    // beforeAddRow(row) {
-    //   return {
-    //     ...row,
-    //     name: 33333
-    //   };
-    // },
     beforeUpdateRow(scope) {
       console.log(scope);
       // 自定义返回数据
@@ -173,19 +167,6 @@ export default {
         }
       };
     },
-    //  beforeUpdateRow(scope) {
-    //   // 自定义返回数据 Promise 方式
-    //    return new Promise((resovle)=>{
-    //        setTimeout(()=>{
-    //          resovle({
-    //           ...scope.row,
-    //           ...{
-    //             name: 2222
-    //         }});
-
-    //        },1500);
-    //   });
-    // },
     onSelectionChange(val,currentItem) {
       console.log(val, currentItem);
     },
@@ -235,14 +216,228 @@ export default {
           if (mode === 'delete') {
             const targetIndex = data.findIndex(item => item.id === 1);
             if (targetIndex === -1) {
-              // const deleteRowDataArr = [];
-              // data.forEach((tableRowData) => {
-              //   console.log(tableRowData.id);
-              //   const deleteRowIndex = this.data.findIndex(item => item.id === tableRowData.id);
-              //   if (deleteRowIndex !== -1) {
-              //     this.data.splice(deleteRowIndex, 1);
-              //   }
-              // });
+              resolve();
+            } else {
+              this.$message.warning('不允许删除id为1的数据');
+              reject();
+              loading.close();
+              return;
+            }
+          } else {
+            console.log(mode, this.data[0], data, this.data[0] === data);
+            resolve({});
+          }
+          loading.close();
+          let label = '';
+          switch(mode) {
+            case 'add':
+              label = '新增';
+              break;
+            case 'update':
+              label = '修改';
+              break;
+            case 'delete':
+              label = '删除';
+              break;
+            default:
+              label = '保存';
+          }
+          const saveData = Array.isArray(data) ? data : [data];
+          this.$message.success(`名称为 ${saveData.map(item => item.name).join(',')} 的数据已成功${label}。`);
+        }, 500);
+      })
+    }
+  }
+};
+</script>
+```
+:::
+
+### 自定义控制按钮
+
+:::demo
+
+```html
+<template>
+  <div>
+  </div>
+  <el-editable-pro-table
+    ref="ept"
+    :label-mode="false"
+    multiple-selection
+    row-key="id"
+    :schema="schema"
+    :ui-schema="uiSchema"
+    :before-add-row="beforeAddRow"
+    :before-update-row="beforeUpdateRow"
+    :rules="rules"
+    :data="data"
+    :save="save"
+    stripe
+    control-column-width="300px"
+    :control-column-config="{collapseButton:false}"
+    :valid-config="{message: 'inline'}"
+    @cell-dblclick="cellDblclick"
+    @selection-change="onSelectionChange"
+    @row-button-click="onRowButtonClick"
+  >
+    <template slot="addData">
+      <el-button size="mini">Custom Add</el-button>
+    </template>
+    <template slot="modifyData" slot-scope="scope">
+      <el-button size="mini">Custom Modify</el-button>
+    </template>
+    <template slot="deleteData" slot-scope="scope">
+      <el-button size="mini">Custom Delete</el-button>
+    </template>
+    <template slot="saveData" slot-scope="scope">
+      <el-button size="mini">Custom Save</el-button>
+    </template>
+    <template slot="cancelData" slot-scope="scope">
+      <el-button size="mini">Custom Cancel</el-button>
+    </template>
+  </el-editable-pro-table>
+  <div>
+    <el-json-viewer :data="data"></el-json-viewer>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      labelMode: true,
+      schema: {
+        properties: {
+          name: {
+            title: '名称',
+            type: 'string',
+          },
+          price: {
+            title: '价格',
+            type: 'number',
+            precision: '16',
+            scale: '2',
+            format: 'price',
+          },
+          noReadName: {
+            title: '不可编辑字段占位',
+            type: 'string',
+            editable: false,
+          },
+        },
+        required: [ 'name' ],
+      },
+      uiSchema:{
+      },
+      rules:{
+        price: [
+            {
+              validator:(rule, value, callback) => {
+                if (value === '') {
+                  callback(new Error('请输入内容'));
+                } else if (value < 0 ){
+                  callback(new Error('请输入大于0的数'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
+        noReadName: [ 
+            {
+              validator:(rule, value, callback) => {
+                console.log(value)
+                if (value === '') {
+                  callback(new Error('请输入内容'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
+      },
+      data: []
+    };
+  },
+  created() {
+    this.headInfoData = {
+      name: 'XXX',
+      price: null
+    };
+    for (let i = 0; i < 1; i += 1) {
+      const data = {
+        ...this.headInfoData
+      };
+      if (i%2 === 0) {
+        data.price = Math.random() * 100000000;
+      } else if (i%3 === 0) {
+        data.price = 0;
+      } else if (i%5 === 0) {
+        data.price = -Math.random() * 1000;
+      }
+      data.name = `${data.name}-${i}`;
+      data.noReadName = `${data.name}-${i}`;
+      this.data.push({
+        id: i,
+        ...data
+      }); 
+    }
+  },
+  methods: {
+    cellDblclick(val){
+      console.log('cellDblclick',val)
+    },
+     beforeAddRow(row) {
+      // 自定义返回数据 Promise 方式
+       return new Promise((resovle)=>{
+           setTimeout(()=>{
+             resovle({
+              ...row,
+              ...{
+                name: 333444
+            }});
+
+           },1500);
+      });
+    },
+    beforeUpdateRow(scope) {
+      // 自定义返回数据
+      return {
+        ...scope.row,
+        ...{
+          name: 13323
+        }
+      };
+    },
+    onSelectionChange(val,currentItem) {
+      console.log(val, currentItem);
+    },
+    onRowButtonClick(key, row) {
+      console.log(key, row);
+    },
+    getTableIsEditStatus(){
+      console.log(this.$refs.ept.getIsEditOnRow());
+    },
+    setActiveRowByIndex(){
+      this.$refs.ept.setActiveRowByIndex(0);
+    },
+    onGetChangeData() {
+      console.log(this.$refs.ept.getChangedRecords());
+    },
+    save(data, mode) {
+      return new window.Promise((resolve, reject) => {
+        const loading = this.$loading();
+        setTimeout(() => {
+          console.log('test',data)
+          if(data.name === 'save'){
+            this.$message.warning('测试自定义校验拒绝');
+            reject();
+            loading.close();
+            return;
+          }
+          if (mode === 'delete') {
+            const targetIndex = data.findIndex(item => item.id === 1);
+            if (targetIndex === -1) {
               resolve();
             } else {
               this.$message.warning('不允许删除id为1的数据');
@@ -1592,7 +1787,12 @@ export default {
 | pagerLeft | 分页器左侧内容 |
 | pagerRight | 分页器右侧内容 |
 | [propertyKey] | 列自定义插槽 |
-| controlColumn  |  |
+| controlColumn  | 控制列插槽 |
+| addData | 新增按钮插槽 |
+| modifyData | 修改按钮作用域插槽 |
+| deleteData | 删除按钮作用域插槽 |
+| saveData | 保存按钮作用域插槽 |
+| cancelData | 保存取消按钮作用域插槽 |
 
 ### 事件
 

@@ -675,6 +675,7 @@ export default {
         fixed: 'right',
         align: 'center',
         width: innerControlColumnConfig.width,
+        className: 'control-column',
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];
@@ -690,31 +691,72 @@ export default {
             if (labelMode !== true) {
               // 添加删除按钮
               // 当前编辑状态为激活状态时，需要隐藏删除按钮
+              // 以行维度控制是否可以显示删除按钮
               if (canDelete && !getIsEditOnRow()) {
-
-                // 以上逻辑是整体控制
-                // 这里的控制是以行维度控制是否可以显示删除按钮
+                const deleteButtonRender = () => {
+                  if ($scopedSlots.deleteData) {
+                    DELETE_BUTTON.render = (scope) => {
+                      return (
+                        <span class="pro-table__control_column_button" on-click={onCustomButtonClick(DELETE_BUTTON.key, scope)}>
+                          { $scopedSlots.deleteData(scope) }
+                        </span>
+                      );
+                    };
+                  }
+                  rowButtonList.unshift(DELETE_BUTTON);
+                };
                 if (canDeleteRow) {
                   if (canDeleteRow(scope)) {
-                    rowButtonList.push(DELETE_BUTTON);
+                    deleteButtonRender(scope);
                   }
                 } else {
-                  rowButtonList.push(DELETE_BUTTON);
+                  deleteButtonRender(scope);
                 }
               }
               if (canUpdate && forceEditOnRow !== true) {
                 if (isActiveByRow(scope.row)) {
+                  if ($scopedSlots.cancelData) {
+                    ROW_MANUAL_CANCEL_BUTTON.render = (scope) => {
+                      return (
+                        <span
+                          class="pro-table__control_column_button"
+                          on-click={onCustomButtonClick(ROW_MANUAL_CANCEL_BUTTON.key, scope)}>
+                          { $scopedSlots.cancelData(scope) }
+                        </span>
+                      );
+                    };
+                  }
                   rowButtonList.unshift(ROW_MANUAL_CANCEL_BUTTON);
+                  if ($scopedSlots.saveData) {
+                    ROW_MANUAL_SAVE_BUTTON.render = (scope) => {
+                      return (
+                        <span class="pro-table__control_column_button" on-click={onCustomButtonClick(ROW_MANUAL_SAVE_BUTTON.key, scope)}>
+                          { $scopedSlots.saveData(scope) }
+                        </span>
+                      );
+                    };
+                  }
                   rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
+                // 以行维度控制是否可以显示删除按钮
                 } else {
-                  // 以上逻辑是整体控制
-                  // 这里的控制是以行维度控制是否可以显示删除按钮
+                  const modifyButtonRender = () => {
+                    if ($scopedSlots.modifyData) {
+                      MODIFY_BUTTON.render = (scope) => {
+                        return (
+                          <span class="pro-table__control_column_button" on-click={onCustomButtonClick(MODIFY_BUTTON.key, scope)}>
+                            { $scopedSlots.modifyData(scope) }
+                          </span>
+                        );
+                      };
+                    }
+                    rowButtonList.unshift(MODIFY_BUTTON);
+                  };
                   if (canUpdateRow) {
                     if (canUpdateRow(scope)) {
-                      rowButtonList.unshift(MODIFY_BUTTON);
+                      modifyButtonRender();
                     }
                   } else {
-                    rowButtonList.unshift(MODIFY_BUTTON);
+                    modifyButtonRender();
                   }
                 }
               }
@@ -722,11 +764,13 @@ export default {
             if (!_.isEmpty(rowButtonList)) {
               if (rowButtonList.length <= innerControlColumnConfig.maxDisplayCount ||
                   !innerControlColumnConfig.collapseButton) {
-                rowButtonList.forEach(({ key, label }) => {
+                rowButtonList.forEach(({ key, label, render }) => {
                   let ret = {};
                   const classList = [];
                   classList.push('pro-table__control_column_button');
-                  if (label && label.indexOf('el-') === 0) {
+                  if (render) {
+                    ret = render(scope);
+                  } else if (label && label.indexOf('el-') === 0) {
                     classList.push('pro-table__control_column_icon_button');
                     classList.push(label);
                     ret = (

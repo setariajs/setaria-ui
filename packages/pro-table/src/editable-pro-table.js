@@ -972,17 +972,12 @@ export default Vue.extend({
           this.initialDialogFormData(res);
           this.isShowForm = true;
         });
-        // this.initialDialogFormData(this.createDefaultRowData());
-        // this.isShowForm = true;
       } else {
         // 行上直接编辑的场合
         this.tableAddRow().then((addRow) => {
           this.editingRow = addRow;
           this.setActiveRow();
         });
-        // const addRow = this.tableAddRow();
-        // this.editingRow = addRow;
-        // this.setActiveRow();
       }
     },
     // 表格添加行信息
@@ -996,13 +991,6 @@ export default Vue.extend({
         this.data.splice(position || 0, 0, defaultItem);
         return defaultItem;
       });
-      // const item = this.createDefaultRowData();
-      // const defaultItem = {
-      //   ...item,
-      //   [changeModeField]: EDIT_TYPE.ADD
-      // };
-      // this.data.splice(position || 0, 0, defaultItem);
-      // return defaultItem;
     },
     // 表格删除行信息
     tableDelete(rows) {
@@ -1305,17 +1293,21 @@ export default Vue.extend({
           ret.push(addChildButton);
           // 显示flat数据的场合
         } else {
-          const addRowButton = (
-            canAdd ? (
-              <el-button
-                type="text"
-                on-click={onTableAddRowClick}
-              >
-                {t('el.protable.addData')}
-              </el-button>
-            ) : null
+          const { addData } = this.$slots;
+          const defaultAddButton = (
+            <el-button
+              type="text"
+              on-click={onTableAddRowClick}
+            >
+              {t('el.protable.addData')}
+            </el-button>
           );
-          ret.push(addRowButton);
+          const addRowButton = addData ? (
+            <span on-click={onTableAddRowClick}>
+              { addData }
+            </span>
+          ) : defaultAddButton;
+          ret.push(canAdd ? addRowButton : null);
         }
         // const style = {
         //   display: innerCanDelete ? 'inline-block' : 'none'
