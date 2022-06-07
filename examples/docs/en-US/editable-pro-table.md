@@ -31,7 +31,6 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <el-editable-pro-table
     ref="ept"
     :label-mode="labelMode"
-    multiple-selection
     :show-control-column="false"
     row-key="id"
     :row-buttons="getRowButton"
@@ -175,12 +174,12 @@ export default {
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
-  
   </div>
   <el-editable-pro-table
     :label-mode="labelMode"
     multiple-selection
     column-width="auto"
+    force-edit-on-row
     :row-buttons="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"

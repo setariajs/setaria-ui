@@ -19,7 +19,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
 
 ### 基本用法
 
-:::demo 可通过设置属性`labelMode`控制表格的编辑状态。
+:::demo 可通过设置属性`labelMode`控制表格的编辑状态。指定`editConfig`中`trigger`为`manual`的场合，可手动控制行编辑状态。
 
 ```html
 <template>
@@ -32,7 +32,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
   <el-editable-pro-table
     ref="ept"
     :label-mode="labelMode"
-    multiple-selection
+    force-edit-on-row
     row-key="id"
     :row-buttons="getRowButton"
     :schema="schema"
@@ -46,6 +46,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     control-column-width="300px"
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
+    :edit-config="{trigger: 'manual'}"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
@@ -147,19 +148,13 @@ export default {
     beforeAddRow(row) {
       return {
         ...row,
-        ...{
-          name: 333444
-        }
+        name: 333444
       };
     },
     beforeUpdateRow(scope) {
-      console.log(scope);
       // 自定义返回数据
       return {
         ...scope.row,
-        ...{
-          name: 13323
-        }
       };
     },
     onSelectionChange(val,currentItem) {
@@ -192,8 +187,8 @@ export default {
           label: 'BTN2',
         },
         {
-          key: 'delete',
-          label: 'el-icon-delete',
+          key: 'setting',
+          label: 'el-icon-setting',
         },
       ];
     },
@@ -479,7 +474,6 @@ export default {
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
-  
   </div>
   <el-editable-pro-table
     :label-mode="labelMode"

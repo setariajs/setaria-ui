@@ -46,7 +46,6 @@ export default Vue.extend({
     innerEditConfig() {
       const { editConfig } = this;
       const defaultConfig = {
-        trigger: 'manual',
         mode: 'row',
         showIcon: false,
         autoClear: false,
@@ -161,9 +160,10 @@ export default Vue.extend({
       const {
         forceEditOnRow,
         getTableRef,
+        innerEditConfig,
+        isEditOnRow,
         innerUiSchema,
         innerSchema,
-        isEditOnRow,
         labelMode,
         vxeColumns
       } = this;
@@ -371,7 +371,7 @@ export default Vue.extend({
           const vxeColumnSlots = {
             edit: slot
           };
-          if (forceEditOnRow) {
+          if (forceEditOnRow && innerEditConfig.trigger !== 'manual') {
             vxeColumnSlots.default = slot;
           } else {
             // if (vxeColumnSlots.default) {
@@ -969,7 +969,7 @@ export default Vue.extend({
       if (!isEditOnRow) {
         // 弹窗编辑数据的场合
         this.createDefaultRowData().then(res => {
-          this.initialDialogFormData(res);
+          this.initialRowData(res);
           this.isShowForm = true;
         });
       } else {

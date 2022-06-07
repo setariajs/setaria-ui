@@ -656,6 +656,7 @@ export default {
         canDelete,
         canDeleteRow,
         canUpdateRow,
+        innerEditConfig,
         isActiveByRow,
         forceEditOnRow,
         getIsEditOnRow,
@@ -688,11 +689,11 @@ export default {
             if (typeof rowButtons === 'function' && !getIsEditOnRow()) {
               rowButtonList = rowButtons(scope) || [];
             }
-            if (labelMode !== true) {
+            if (!labelMode) {
               // 添加删除按钮
               // 当前编辑状态为激活状态时，需要隐藏删除按钮
               // 以行维度控制是否可以显示删除按钮
-              if (canDelete && !getIsEditOnRow()) {
+              if (canDelete && !isActiveByRow(scope.row)) {
                 const deleteButtonRender = () => {
                   if ($scopedSlots.deleteData) {
                     DELETE_BUTTON.render = (scope) => {
@@ -713,7 +714,7 @@ export default {
                   deleteButtonRender(scope);
                 }
               }
-              if (canUpdate && forceEditOnRow !== true) {
+              if (canUpdate && ((forceEditOnRow !== true) || (forceEditOnRow && innerEditConfig.trigger === 'manual'))) {
                 if (isActiveByRow(scope.row)) {
                   if ($scopedSlots.cancelData) {
                     ROW_MANUAL_CANCEL_BUTTON.render = (scope) => {
@@ -737,7 +738,7 @@ export default {
                     };
                   }
                   rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
-                // 以行维度控制是否可以显示删除按钮
+                // 以行维度控制是否可以显示修改按钮
                 } else {
                   const modifyButtonRender = () => {
                     if ($scopedSlots.modifyData) {
@@ -862,7 +863,7 @@ export default {
         xTable.reloadColumn(this.vxeTableColumnArray);
       }
     },
-    initialDialogFormData(data) {
+    initialRowData(data) {
       this.originFormData = data;
       this.currentFormData = _.cloneDeep(this.originFormData);
     },
@@ -963,7 +964,7 @@ export default {
       if (index >= 0) {
         const list = this.isTree ? this.innerTreeDataList : this.innerDataList;
         const item = list[index];
-        this.initialDialogFormData(item);
+        this.initialRowData(item);
         this.editingRow = item;
         this.controlStatus = controlStatus;
         this.setChangeMode(item, this.controlStatus);
@@ -1040,7 +1041,7 @@ export default {
                   currentRow = _.assign(currentRow, updatedRow);
                 }
                 exec();
-                this.initialDialogFormData(currentRow);
+                this.initialRowData(currentRow);
               };
 
               const updateRes = beforeUpdateRow(scope);
@@ -1053,7 +1054,7 @@ export default {
               }
             } else {
               exec();
-              this.initialDialogFormData(currentRow);
+              this.initialRowData(currentRow);
             }
           } else {
             // 行上编辑数据的场合
@@ -1071,7 +1072,7 @@ export default {
                 currentRow = _.assign(currentRow, updatedRow);
               }
 
-              this.initialDialogFormData(currentRow);
+              this.initialRowData(currentRow);
               this.editingRow = scope.row;
               this.setActiveRow();
             };
