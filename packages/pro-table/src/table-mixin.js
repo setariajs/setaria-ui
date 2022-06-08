@@ -658,6 +658,7 @@ export default {
         canUpdateRow,
         innerEditConfig,
         isActiveByRow,
+        editingRow,
         forceEditOnRow,
         getIsEditOnRow,
         t,
@@ -697,13 +698,23 @@ export default {
                 const deleteButtonRender = () => {
                   if ($scopedSlots.deleteData) {
                     DELETE_BUTTON.render = (scope) => {
+                      scope.$tableDataEditing = (editingRow !== null);
+                      const handleClick = (evt) => {
+                        if (scope.$tableDataEditing) {
+                          evt.preventDefault();
+                          evt.stopPropagation();
+                          return () => {};
+                        }
+                        return onCustomButtonClick(DELETE_BUTTON.key, scope)(evt);
+                      };
                       return (
-                        <span class="pro-table__control_column_button" on-click={onCustomButtonClick(DELETE_BUTTON.key, scope)}>
+                        <span class="pro-table__control_column_button" on-click={handleClick}>
                           { $scopedSlots.deleteData(scope) }
                         </span>
                       );
                     };
                   }
+                  DELETE_BUTTON.disabled = (editingRow !== null);
                   rowButtonList.unshift(DELETE_BUTTON);
                 };
                 if (canDeleteRow) {
@@ -742,14 +753,24 @@ export default {
                 } else {
                   const modifyButtonRender = () => {
                     if ($scopedSlots.modifyData) {
+                      scope.$tableDataEditing = (editingRow !== null);
+                      const handleClick = (evt) => {
+                        if (scope.$tableDataEditing) {
+                          evt.preventDefault();
+                          evt.stopPropagation();
+                          return () => {};
+                        }
+                        return onCustomButtonClick(MODIFY_BUTTON.key, scope)(evt);
+                      };
                       MODIFY_BUTTON.render = (scope) => {
                         return (
-                          <span class="pro-table__control_column_button" on-click={onCustomButtonClick(MODIFY_BUTTON.key, scope)}>
-                            { $scopedSlots.modifyData(scope) }
+                          <span class="pro-table__control_column_button" on-click={handleClick}>
+                            { $scopedSlots.modifyData(scope, editingRow) }
                           </span>
                         );
                       };
                     }
+                    MODIFY_BUTTON.disabled = (editingRow !== null);
                     rowButtonList.unshift(MODIFY_BUTTON);
                   };
                   if (canUpdateRow) {
@@ -765,7 +786,7 @@ export default {
             if (!_.isEmpty(rowButtonList)) {
               if (rowButtonList.length <= innerControlColumnConfig.maxDisplayCount ||
                   !innerControlColumnConfig.collapseButton) {
-                rowButtonList.forEach(({ key, label, render }) => {
+                rowButtonList.forEach(({ key, label, render, disabled }) => {
                   let ret = {};
                   const classList = [];
                   classList.push('pro-table__control_column_button');
@@ -782,6 +803,7 @@ export default {
                       <el-button
                         type="text"
                         class={classList}
+                        disabled={disabled}
                         on-click={onCustomButtonClick(key, scope)}
                       >
                         {label}
@@ -1013,7 +1035,7 @@ export default {
         beforeUpdateRow,
         isEditOnRow,
         onTableDeleteClick,
-        t,
+        // t,
         MODIFY_BUTTON,
         DELETE_BUTTON,
         ROW_MANUAL_SAVE_BUTTON,
@@ -1057,14 +1079,14 @@ export default {
               this.initialRowData(currentRow);
             }
           } else {
-            // 行上编辑数据的场合
-            if (this.editingRow) {
-              this.$message({
-                message: t('el.protable.onlyEditOne'),
-                type: 'error'
-              });
-              return;
-            }
+            // // 行上编辑数据的场合
+            // if (this.editingRow) {
+            //   this.$message({
+            //     message: t('el.protable.onlyEditOne'),
+            //     type: 'error'
+            //   });
+            //   return;
+            // }
 
             const afterExec = (updatedRow) => {
               if (updatedRow) {

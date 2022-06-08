@@ -276,10 +276,10 @@ export default {
       <el-button size="mini">Custom Add</el-button>
     </template>
     <template slot="modifyData" slot-scope="scope">
-      <el-button size="mini">Custom Modify</el-button>
+      <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Modify</el-button>
     </template>
     <template slot="deleteData" slot-scope="scope">
-      <el-button size="mini">Custom Delete</el-button>
+      <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Delete</el-button>
     </template>
     <template slot="saveData" slot-scope="scope">
       <el-button size="mini">Custom Save</el-button>
