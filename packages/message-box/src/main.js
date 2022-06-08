@@ -30,7 +30,8 @@ const defaults = {
   dangerouslyUseHTMLString: false,
   center: false,
   roundButton: false,
-  distinguishCancelAndClose: false
+  distinguishCancelAndClose: false,
+  iconHtml: null
 };
 
 import Vue from 'vue';
