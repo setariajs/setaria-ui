@@ -969,10 +969,12 @@ export default {
         // !FIXME 后面的逻辑会触发表格列的dom刷新，需要判明原因
         setTimeout(() => {
           tableRef.setActiveRow(this.editingRow).then(() => {
-            // !FIXME vxe-table的focus功能基于未知原因不可用，所以手动进行focus
-            const dom = document.querySelector('.el-editable-pro-table .vxe-table--body-wrapper .vxe-table--body .vxe-body--row .el-input__inner');
-            if (dom) {
-              dom.focus();
+            if (this.controlStatus === EDIT_TYPE.ADD) {
+              // !FIXME vxe-table的focus功能基于未知原因不可用，所以手动进行focus
+              const dom = document.querySelector('.el-editable-pro-table .vxe-table--body-wrapper .vxe-table--body .vxe-body--row .el-input__inner');
+              if (dom) {
+                dom.focus();
+              }
             }
           });
         }, 0);
