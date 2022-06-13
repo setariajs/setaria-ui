@@ -810,7 +810,10 @@ export default Vue.extend({
       return this.xTableRef.validate(true);
     },
     onTableRowEditorClose({ row }) {
-      console.log('editor close', row);
+      this.$emit('edit-closed', row);
+    },
+    onTableRowEditorActive({row}) {
+      this.$emit('edit-actived', row);
     },
     /**
      * 表格在编辑状态下触发数据变动事件处理
@@ -1202,6 +1205,7 @@ export default Vue.extend({
       onTableCheckboxChange,
       onTableRadioChange,
       onTableCheckboxAll,
+      onTableRowEditorActive,
       onTableRowEditorClose,
       onDialogSaveButtonClick,
       onDialogCancelButtonClick,
@@ -1463,6 +1467,7 @@ export default Vue.extend({
             on-radio-change={onTableRadioChange}
             on-checkbox-change={onTableCheckboxChange}
             on-checkbox-all={onTableCheckboxAll}
+            on-edit-actived={onTableRowEditorActive}
             on-edit-closed={onTableRowEditorClose}
             on-cell-menu={onCellMenu}
             on-menu-click={onMenuClick}
@@ -1526,6 +1531,7 @@ export default Vue.extend({
             on-checkbox-change={onTableCheckboxChange}
             on-filter-change={onFilterChange}
             on-checkbox-all={onTableCheckboxAll}
+            on-edit-actived={onTableRowEditorActive}
             on-edit-closed={onTableRowEditorClose}
             tree-config={innerTreeConfig}
             scroll-y={{ gt: 20 }}

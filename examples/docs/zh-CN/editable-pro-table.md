@@ -50,6 +50,8 @@ Vue.component('el-editable-pro-table', EditableProTable);
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
+    @edit-actived="onEditActived"
+    @edit-closed="onEditClosed"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -236,6 +238,12 @@ export default {
           this.$message.success(`名称为 ${saveData.map(item => item.name).join(',')} 的数据已成功${label}。`);
         }, 500);
       })
+    },
+    onEditActived() {
+      console.log('onEditActived');
+    },
+    onEditClosed() {
+      console.log('onEditClosed');
     }
   }
 };
@@ -1802,6 +1810,8 @@ export default {
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
 | data-change | 行项目修改后(原始组件change事件)触发 | key 表单字段的 Key, val 表单字段的值, data 当前修改的数据（行编辑模式时为行数据，弹窗编辑模式时为展开的表单数据）, originData 行编辑前数据，仅为行编辑模式时存在 |
 | dialog-open | 表单对话框显示时触发 | val 当前行数据 |
+| edit-actived | 行或单元格激活编辑状态时触发 | - |
+| dialog-open | 行或单元格编辑状态被关闭时触发 | - |
 
 
 ### 方法

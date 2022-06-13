@@ -949,6 +949,7 @@ export default {
         if (this.editingRow) {
           this.tableDelete([this.editingRow]);
         }
+        tableRef.clearActived();
       } else {
         tableRef.clearActived()
           .then(() => {
