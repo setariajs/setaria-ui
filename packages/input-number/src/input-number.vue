@@ -274,8 +274,8 @@
         if (typeof newVal === 'number' && this.precision !== undefined) {
           newVal = this.toPrecision(newVal, this.precision);
         }
-        if (newVal >= this.max) newVal = this.max;
-        if (newVal <= this.min) newVal = this.min;
+        if (typeof newVal === 'number' && newVal >= this.max) newVal = this.max;
+        if (typeof newVal === 'number' && newVal <= this.min) newVal = this.min;
         if (oldVal === newVal) return;
         this.userInput = null;
         this.$emit('input', newVal);
@@ -295,6 +295,9 @@
           newVal = Number(this.parser(value));
         } else {
           newVal = Number(value);
+        }
+        if (value === '') {
+          newVal = null;
         }
         if (!isNaN(newVal) || value === '') {
           this.setCurrentValue(newVal);

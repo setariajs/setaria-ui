@@ -13,7 +13,7 @@
   export default {
     data() {
       return {
-        num: null
+        num: 1
       };
     },
     methods: {
