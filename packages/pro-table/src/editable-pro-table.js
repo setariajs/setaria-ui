@@ -954,14 +954,9 @@ export default Vue.extend({
       const {
         onAddRowClick,
         isEditOnRow,
-        editingRow,
-        t
+        editingRow
       } = this;
-      if (isEditOnRow && editingRow) {
-        this.$message({
-          message: t('el.protable.onlyEditOne'),
-          type: 'error'
-        });
+      if (editingRow) {
         return;
       }
       this.controlStatus = EDIT_TYPE.ADD;
@@ -1255,7 +1250,8 @@ export default Vue.extend({
       t,
       pagerScopedSlots,
       pagerBackground,
-      validConfig
+      validConfig,
+      editingRow
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1297,18 +1293,24 @@ export default Vue.extend({
           ret.push(addChildButton);
           // 显示flat数据的场合
         } else {
-          const { addData } = this.$slots;
+          let { addData } = this.$slots;
+          if (addData === undefined || addData === null) {
+            addData = this.$scopedSlots.addData;
+          }
           const defaultAddButton = (
             <el-button
               type="text"
               on-click={onTableAddRowClick}
+              disabled={!!editingRow}
             >
               {t('el.protable.addData')}
             </el-button>
           );
           const addRowButton = addData ? (
             <span on-click={onTableAddRowClick}>
-              { addData }
+              { typeof addData === 'function' ? addData({
+                $tableDataEditing: !!editingRow
+              }) : addData }
             </span>
           ) : defaultAddButton;
           ret.push(canAdd ? addRowButton : null);

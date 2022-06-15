@@ -280,8 +280,8 @@ export default {
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
   >
-    <template slot="addData">
-      <el-button size="mini">Custom Add</el-button>
+    <template slot="addData" slot-scope="scope">
+      <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Add</el-button>
     </template>
     <template slot="modifyData" slot-scope="scope">
       <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Modify</el-button>
