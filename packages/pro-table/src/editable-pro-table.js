@@ -1169,6 +1169,9 @@ export default Vue.extend({
     },
     handleFormDialogOpen() {
       this.$emit('dialog-open', this.currentFormData);
+    },
+    handleValidError(scope) {
+      this.$emit('valid-error', scope);
     }
   },
   render() {
@@ -1251,7 +1254,8 @@ export default Vue.extend({
       pagerScopedSlots,
       pagerBackground,
       validConfig,
-      editingRow
+      editingRow,
+      handleValidError
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1474,6 +1478,7 @@ export default Vue.extend({
             on-cell-menu={onCellMenu}
             on-menu-click={onMenuClick}
             on-sort-change={onSortChange}
+            on-valid-error={handleValidError}
           />
         </div>
         {currentFormData ? (

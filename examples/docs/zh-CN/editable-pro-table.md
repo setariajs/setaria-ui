@@ -52,6 +52,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     @row-button-click="onRowButtonClick"
     @edit-actived="onEditActived"
     @edit-closed="onEditClosed"
+    @valid-error="onValidError"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -244,6 +245,9 @@ export default {
     },
     onEditClosed() {
       console.log('onEditClosed');
+    },
+    onValidError(scope) {
+      console.log('valid-error', scope);
     }
   }
 };
