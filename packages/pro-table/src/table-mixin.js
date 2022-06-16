@@ -725,7 +725,7 @@ export default {
                   deleteButtonRender(scope);
                 }
               }
-              if (canUpdate && ((forceEditOnRow !== true) || (forceEditOnRow && innerEditConfig.trigger === 'manual'))) {
+              if ((forceEditOnRow !== true) || (forceEditOnRow && innerEditConfig.trigger === 'manual')) {
                 if (isActiveByRow(scope.row)) {
                   if ($scopedSlots.cancelData) {
                     ROW_MANUAL_CANCEL_BUTTON.render = (scope) => {
@@ -750,7 +750,7 @@ export default {
                   }
                   rowButtonList.unshift(ROW_MANUAL_SAVE_BUTTON);
                 // 以行维度控制是否可以显示修改按钮
-                } else {
+                } else if (canUpdate) {
                   const modifyButtonRender = () => {
                     if ($scopedSlots.modifyData) {
                       scope.$tableDataEditing = (editingRow !== null);
