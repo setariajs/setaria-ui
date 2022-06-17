@@ -361,6 +361,10 @@ export const EDIT_TABLE_PROPS = {
   defaultRequireRuleTriggerType: {
     type: String,
     default: 'blur'
+  },
+  autoFocusOnAdd: {
+    type: Boolean,
+    default: false
   }
 };
 
