@@ -35,6 +35,7 @@ Vue.component('el-pro-table', ProTable);
     row-key="id"
     multiple-selection
     :data="data"
+    :default-visible-column-keys="defaultVisibleColumnKeys"
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
     @selection-change="handleSelectionChange"
@@ -49,96 +50,97 @@ Vue.component('el-pro-table', ProTable);
 
   export default {
     data() {
+      const properties = {
+        Name: {
+          title: '名称',
+          type: 'string',
+        },
+        Enum: {
+          title: '枚举值',
+          type: 'string',
+          oneOf: [
+            {
+              const: '1',
+              title: '枚举值一'
+            },
+            {
+              const: '2',
+              title: '枚举值二'
+            }
+          ],
+          updatable: true,
+        },
+        AnyOf: {
+          title: '多选枚举值',
+          type: 'array',
+          anyOf: [
+            {
+              const: '1',
+              title: '枚举值一'
+            },
+            {
+              const: '2',
+              title: '枚举值二'
+            }
+          ],
+          updatable: true,
+        },
+        MaxLengthString: {
+          title: '字符串\n输入',
+          type: 'string',
+          updatable: true,
+          maxLength: 5
+        },
+        Number: {
+          title: '数字',
+          type: 'number',
+          updatable: true,
+        },
+        Price: {
+          title: '价格',
+          type: 'number',
+          precision: '16',
+          scale: '2',
+          format: 'price',
+          updatable: true,
+        },
+        Comment: {
+          title: '备注',
+          type: 'string',
+          updatable: true,
+        },
+        Date: {
+          title: '日期',
+          type: 'string',
+          format: 'date',
+          updatable: true,
+        },
+        Time: {
+          title: '时间',
+          type: 'string',
+          format: 'time',
+          updatable: true,
+        },
+        Boolean: {
+          title: '布尔值',
+          type: 'boolean',
+          updatable: true,
+        },
+        CustomSlot: {
+          title: '自定义插槽',
+          type: 'string',
+          updatable: true,
+        },
+        HtmlContent: {
+          title: '自定义渲染<br/>111',
+          type: 'string'
+        }
+      };
       return {
         tableData: [],
         multipleSelection: [],
         schema: {
-          properties: {
-            Name: {
-              title: '名称',
-              type: 'string',
-            },
-            Enum: {
-              title: '枚举值',
-              type: 'string',
-              oneOf: [
-                {
-                  const: '1',
-                  title: '枚举值一'
-                },
-                {
-                  const: '2',
-                  title: '枚举值二'
-                }
-              ],
-              updatable: true,
-            },
-            AnyOf: {
-              title: '多选枚举值',
-              type: 'array',
-              anyOf: [
-                {
-                  const: '1',
-                  title: '枚举值一'
-                },
-                {
-                  const: '2',
-                  title: '枚举值二'
-                }
-              ],
-              updatable: true,
-            },
-            MaxLengthString: {
-              title: '字符串\n输入',
-              type: 'string',
-              updatable: true,
-              maxLength: 5
-            },
-            Number: {
-              title: '数字',
-              type: 'number',
-              updatable: true,
-            },
-            Price: {
-              title: '价格',
-              type: 'number',
-              precision: '16',
-              scale: '2',
-              format: 'price',
-              updatable: true,
-            },
-            Comment: {
-              title: '备注',
-              type: 'string',
-              updatable: true,
-            },
-            Date: {
-              title: '日期',
-              type: 'string',
-              format: 'date',
-              updatable: true,
-            },
-            Time: {
-              title: '时间',
-              type: 'string',
-              format: 'time',
-              updatable: true,
-            },
-            Boolean: {
-              title: '布尔值',
-              type: 'boolean',
-              updatable: true,
-            },
-            CustomSlot: {
-              title: '自定义插槽',
-              type: 'string',
-              updatable: true,
-            },
-            HtmlContent: {
-              title: '自定义渲染<br/>111',
-              type: 'string'
-            }
-          },
+          properties,
           required: [ 'MaxLengthString' ],
         },
         uiSchema: {
@@ -166,7 +168,8 @@ Vue.component('el-pro-table', ProTable);
           },
         },
         data: null,
-        totalDataLength: total
+        totalDataLength: total,
+        defaultVisibleColumnKeys: Object.keys(properties).filter((key) => key !== 'Price')
       }
     },
     computed: {
@@ -241,6 +244,238 @@ Vue.component('el-pro-table', ProTable);
 </script>
 ```
 :::
+
+<!-- ### 多级表头
+
+TODO: 多级表头下筛选存在问题
+
+::: demo
+```html
+<div>
+  <el-pro-table
+    :schema="schema"
+    :ui-schema="uiSchema"
+    row-key="id"
+    multiple-selection
+    :data="data"
+    :default-visible-column-keys="defaultVisibleColumnKeys"
+    @current-change="handleCurrentChange"
+    @size-change="handleSizeChange"
+    @selection-change="handleSelectionChange"
+    @filter-change="handleFilterChange">
+    <template slot="batchControl">
+      <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
+    </template>
+  </el-pro-table>
+</div>
+<script>
+  const total = parseInt(Math.random() * 100, 10);
+
+  export default {
+    data() {
+      const properties = {
+        Name: {
+          title: '名称',
+          type: 'string',
+        },
+        Enum: {
+          title: '枚举值',
+          type: 'string',
+          oneOf: [
+            {
+              const: '1',
+              title: '枚举值一'
+            },
+            {
+              const: '2',
+              title: '枚举值二'
+            }
+          ],
+          updatable: true,
+        },
+        AnyOf: {
+          title: '多选枚举值',
+          type: 'array',
+          anyOf: [
+            {
+              const: '1',
+              title: '枚举值一'
+            },
+            {
+              const: '2',
+              title: '枚举值二'
+            }
+          ],
+          updatable: true,
+        },
+        MaxLengthString: {
+          title: '字符串\n输入',
+          type: 'string',
+          updatable: true,
+          maxLength: 5
+        },
+        NumberParent: {
+          title: '数字一级表头'
+        },
+        Number: {
+          title: '数字',
+          type: 'number',
+          updatable: true,
+        },
+        Price: {
+          title: '价格',
+          type: 'number',
+          precision: '16',
+          scale: '2',
+          format: 'price',
+          updatable: true,
+        },
+        Comment: {
+          title: '备注',
+          type: 'string',
+          updatable: true,
+        },
+        Date: {
+          title: '日期',
+          type: 'string',
+          format: 'date',
+          updatable: true,
+        },
+        Time: {
+          title: '时间',
+          type: 'string',
+          format: 'time',
+          updatable: true,
+        },
+        Boolean: {
+          title: '布尔值',
+          type: 'boolean',
+          updatable: true,
+        },
+        CustomSlot: {
+          title: '自定义插槽',
+          type: 'string',
+          updatable: true,
+        },
+        HtmlContent: {
+          title: '自定义渲染<br/>111',
+          type: 'string'
+        }
+      };
+      return {
+        tableData: [],
+        multipleSelection: [],
+        schema: {
+          properties,
+          required: [ 'MaxLengthString' ],
+        },
+        uiSchema: {
+          Number: {
+            'ui:parentColumnId': 'NumberParent'
+          },
+          Price: {
+            'ui:parentColumnId': 'NumberParent'
+          },
+          Enum: {
+            'ui:options': {
+              filters: [
+                {
+                  value: '1',
+                  label: '枚举值一'
+                },
+                {
+                  value: '2',
+                  label: '枚举值二'
+                }
+              ],
+              filterMethod: () => {
+                return true;
+              }
+            },
+          },
+          HtmlContent: {
+            'ui:options': {
+              type: 'html',
+            },
+          },
+        },
+        data: null,
+        totalDataLength: total,
+        defaultVisibleColumnKeys: Object.keys(properties).filter((key) => key !== 'Price')
+      }
+    },
+    computed: {
+      isBatchButtonEnable() {
+        return this.multipleSelection.length > 0;
+      }
+    },
+    mounted() {
+      const tableData = [];
+      for (let i = 0; i < total; i++) {
+        tableData.push({
+          Name: 'XXX',
+          Price: 12345.678,
+          Enum: '2',
+          AnyOf: ['1', '2'],
+          MaxLengthString: null,
+          Number: 98765,
+          Date: '2021-08-31',
+          Time: '11:29:00',
+          Comment: 'setaria-ui',
+          'Boolean': true,
+          CustomSlotCode: '4104.01.03.01.02.05.10',
+          CustomSlot: '装饰线条',
+          HtmlContent: 'Link'
+        });
+      }
+      this.data = tableData;
+    },
+    methods: {
+      onRequest(params) {
+        const { pageNum, pageSize } = params;
+        const tableData = [];
+        const startIndex = ((pageNum - 1) * pageSize) + 1;
+        const endIndex = (pageNum * pageSize) > total ? total : (pageNum * pageSize);
+        for (let i = startIndex; i <= endIndex; i++) {
+          tableData.push({
+            no: i,
+            id: `zhangsan${i}`,
+            age: parseInt(Math.random() * 100, 10),
+            gender: (parseInt(Math.random() * 10, 10) % 2) + 1,
+            birth: '1990-10-01',
+            interest: '1'
+          });
+        }
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              data: tableData,
+              total
+            });
+          }, 2000);
+        });
+      },
+      handleUpdateButtonClick({ row }) {
+        this.$message.warning(`修改 ${row.id} 数据!`);
+      },
+      handleCurrentChange(val) {
+        this.$message.info(`跳转至 ${val} 页`);
+      },
+      handleSizeChange(val) {
+        this.$message.info(`每页数据显示数量改为 ${val}`);
+      },
+      handleSelectionChange(val, currentItem) {
+        console.log(val, currentItem)
+        this.multipleSelection = val;
+      },
+      handleFilterChange(val) {
+        console.log(val);
+      }
+    }
+  }
+</script>
+```
+::: -->
 
 ### 行选择
 

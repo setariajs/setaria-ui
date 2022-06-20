@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { COLUMN_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { COLUMN_TYPE, JSON_FORM_UI, ORIGIN_UI_OPTION } from 'setaria-ui/src/constants/index';
 import {
   createElementByProperty,
   createFormatter,
@@ -214,6 +214,9 @@ export function convertSchemaToColumns(
           column[optionKey] = uiProperty[JSON_FORM_UI.UI_OPTIONS][optionKey];
         }
       });
+      if (typeof uiProperty[JSON_FORM_UI.UI_OPTIONS].visible === 'boolean') {
+        column[ORIGIN_UI_OPTION] = uiProperty[JSON_FORM_UI.UI_OPTIONS];
+      }
     }
     if (!uiProperty[JSON_FORM_UI.UI_HIDDEN]) {
       ret.push(column);

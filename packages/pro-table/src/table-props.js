@@ -199,7 +199,9 @@ export const COMMON_TABLE_PROPS = {
   showControlColumn: {
     type: Boolean,
     default: true
-  }
+  },
+  // Array<String>，定义初始化显示的列，此属性可被ui-schema内的'ui:options'.visible覆盖
+  defaultVisibleColumnKeys: Array
 };
 
 export const EDIT_TABLE_PROPS = {

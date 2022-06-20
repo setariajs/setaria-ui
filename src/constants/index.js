@@ -15,6 +15,11 @@ export const JSON_FORM_UI = {
   UI_WRAPPER_OPTIONS: 'ui:wrapperOptions'
 };
 
+/**
+ * ui-options的原始值
+ */
+export const ORIGIN_UI_OPTION = '$uiOptions';
+
 export const COLUMN_TYPE = {
   INDEX: 'index'
 };

@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { EDIT_TYPE } from 'setaria-ui/src/constants/index';
+import { EDIT_TYPE, ORIGIN_UI_OPTION } from 'setaria-ui/src/constants/index';
 import { initialSetariaSchema } from 'setaria-ui/src/utils/schema';
-import { callbackExec } from 'setaria-ui/src/utils/util';
+import { arrayFindIndex, callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
 import Locale from 'setaria-ui/src/mixins/locale';
 import { defaultControlColumnConfig } from './table-props';
@@ -1321,6 +1321,10 @@ export default {
           // 更新表格的临时状态
           this.refreshTempState();
           this.refreshColumnSettingTopCheckboxStatus();
+          this.$nextTick(() => {
+            // data 选择的列节点状态 { isColumnVisible: false, key: 'price', title: '价格' }
+            this.$emit('column-visible-change', data, this.$refs.columnSettingTree.getCheckedKeys());
+          });
         });
     },
     refreshColumnSettingTopCheckboxStatus() {
@@ -1348,20 +1352,35 @@ export default {
         this.columnSettingKeys = [];
         return;
       }
+      const { defaultVisibleColumnKeys } = this;
       this.cloneVxeTableColumnArray = _.cloneDeep(val);
       this.columnSettingKeys = [];
+      // 多级表头场合，column为tree结构
       let settings = XEUtils.mapTree(val, (item) => {
         let title = item.title;
+        // 处理column title中的换行符
         if (title.indexOf('<br/>') !== -1) {
           title = title.replace('<br/>', '');
         }
         if (title.indexOf('\n') !== -1) {
           title = title.replace('\n', '');
         }
+        let isColumnVisible = item.visible;
+        // ui-schema内的定义最优先
+        if (item[ORIGIN_UI_OPTION] && typeof item[ORIGIN_UI_OPTION].visible === 'boolean') {
+          isColumnVisible = item[ORIGIN_UI_OPTION].visible;
+        } else if (item.field && Array.isArray(defaultVisibleColumnKeys) && defaultVisibleColumnKeys.length > 0) {
+          const index = arrayFindIndex(defaultVisibleColumnKeys, (key) => key === item.field);
+          // 没在defaultVisibleColumnKeys里定义的column默认隐藏
+          if (index === -1) {
+            isColumnVisible = false;
+            item.visible = false;
+          }
+        }
         const ret = {
           key: item.field,
           title,
-          isColumnVisible: item.visible
+          isColumnVisible
         };
         return ret;
       });

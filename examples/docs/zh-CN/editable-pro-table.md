@@ -47,12 +47,14 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
     :edit-config="{trigger: 'manual'}"
+    :default-visible-column-keys="['name', 'price']"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
     @edit-actived="onEditActived"
     @edit-closed="onEditClosed"
     @valid-error="onValidError"
+    @column-visible-change="onColumnVisibleChange"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -248,6 +250,9 @@ export default {
     },
     onValidError(scope) {
       console.log('valid-error', scope);
+    },
+    onColumnVisibleChange(data, visibleColumnKeys) {
+      console.log(data, visibleColumnKeys);
     }
   }
 };
