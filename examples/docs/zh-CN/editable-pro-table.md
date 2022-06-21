@@ -259,8 +259,8 @@ export default {
     onValidError(scope) {
       console.log('valid-error', scope);
     },
-    onColumnVisibleChange(data, visibleColumnKeys) {
-      console.log(data, visibleColumnKeys);
+    onColumnVisibleChange(visibleColumnKeys) {
+      console.log(visibleColumnKeys);
     }
   }
 };
