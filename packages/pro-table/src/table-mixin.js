@@ -1275,6 +1275,7 @@ export default {
     },
     onColumnSettingTreeCheckboxChange(val) {
       this.isAllColumnShow = val;
+      let checkedKeys = [];
       if (!val) {
         this.columnSettingDefaultCheckedKeys.forEach((key) => {
           this.getTableActionRef().hideColumn(key);
@@ -1288,12 +1289,16 @@ export default {
         this.columnSettingDefaultCheckedKeys.forEach((key) => {
           this.getTableActionRef().showColumn(key);
         });
+        checkedKeys = keys;
       }
       // 更新列设置树的checkbox状态
       this.$refs.columnSettingTree.setCheckedKeys(
         this.columnSettingDefaultCheckedKeys,
         val
       );
+      this.$nextTick(() => {
+        this.$emit('column-visible-change', checkedKeys);
+      });
     },
     /**
      * 点击checkbox时触发
@@ -1303,7 +1308,7 @@ export default {
     onColumnSettingCheck(data, option) {
       const { checkedKeys } = option;
       // data 选择的列节点状态 { isColumnVisible: false, key: 'price', title: '价格' }
-      this.$emit('column-visible-change', data, checkedKeys, option);
+      this.$emit('column-visible-change', checkedKeys, data, option);
     },
     onColumnSettingTreeNodeCheck(data, checked, indeterminate) {
       const nodeData = data;
