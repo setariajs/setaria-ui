@@ -1,4 +1,4 @@
-import { JSON_FORM_UI, JSON_FORM_PROPERTY_CLASS } from 'setaria-ui/src/constants/index';
+import { JSON_UI_SCHEMA, JSON_FORM_PROPERTY_CLASS } from 'setaria-ui/src/constants/index';
 import ElForm from 'setaria-ui/packages/form/src/form';
 import ElFormItem from 'setaria-ui/packages/form/src/form-item';
 import ElSelect from 'setaria-ui/packages/select';
@@ -309,7 +309,7 @@ export default {
             }
           }
           const labelSlot = self.getFormLabelSlot(h, property, self.columnMaxLabelLength, colSpan);
-          const colSpan = ui[JSON_FORM_UI.UI_COLSPAN];
+          const colSpan = ui[JSON_UI_SCHEMA.UI_COLSPAN];
           formItem = h(
             `${componentPrefix}-form-item`,
             {
@@ -321,7 +321,7 @@ export default {
               props: {
                 label: property.title,
                 prop: key,
-                ...ui[JSON_FORM_UI.UI_WRAPPER_OPTIONS] || {}
+                ...ui[JSON_UI_SCHEMA.UI_WRAPPER_OPTIONS] || {}
               },
               scopedSlots: {
                 label: labelSlot
@@ -329,8 +329,8 @@ export default {
             },
             [formItemChildren]
           );
-        } else if (typeof ui[JSON_FORM_UI.UI_RENDER] === 'function') {
-          formItem = ui[JSON_FORM_UI.UI_RENDER](h, { data: model });
+        } else if (typeof ui[JSON_UI_SCHEMA.UI_RENDER] === 'function') {
+          formItem = ui[JSON_UI_SCHEMA.UI_RENDER](h, { data: model });
         }
         if (!isEmpty(formItem)) {
           formItemArray.push({
@@ -358,7 +358,7 @@ export default {
       for (let index = 0; index < formItemArray.length; index += 1) {
         const formItem = formItemArray[index];
         const itemUISchema = this.uiSchema[formItem.id] || {};
-        let uiColspan = itemUISchema[JSON_FORM_UI.UI_COLSPAN];
+        let uiColspan = itemUISchema[JSON_UI_SCHEMA.UI_COLSPAN];
         uiColspan = uiColspan > self.columns ? self.columns : uiColspan;
         let spanProp = null;
         const span = typeof uiColspan === 'number' ? ((24 / self.columns) * uiColspan) : (24 / self.columns);
@@ -386,9 +386,9 @@ export default {
         } else {
           spanProp = span;
         }
-        let isDisplay = itemUISchema[JSON_FORM_UI.UI_HIDDEN];
-        if (typeof itemUISchema[JSON_FORM_UI.UI_HIDDEN] === 'function') {
-          isDisplay = itemUISchema[JSON_FORM_UI.UI_HIDDEN](model);
+        let isDisplay = itemUISchema[JSON_UI_SCHEMA.UI_HIDDEN];
+        if (typeof itemUISchema[JSON_UI_SCHEMA.UI_HIDDEN] === 'function') {
+          isDisplay = itemUISchema[JSON_UI_SCHEMA.UI_HIDDEN](model);
         }
         let column = h(
           `${componentPrefix}-col`,

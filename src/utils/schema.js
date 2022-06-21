@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import numeral from 'numeral';
 import moment from 'moment';
-import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { JSON_UI_SCHEMA } from 'setaria-ui/src/constants/index';
 import { isEmpty } from 'setaria-ui/src/utils/util';
 import { t } from 'setaria-ui/src/locale';
 
@@ -82,7 +82,7 @@ export function createFormRulesBySchema(schema, uiSchema, requiredTriggerType = 
       itemName = item.title;
     }
     const uiSchemaItemObj = uiSchema[key];
-    const customRules = uiSchemaItemObj && uiSchemaItemObj[JSON_FORM_UI.UI_RULE];
+    const customRules = uiSchemaItemObj && uiSchemaItemObj[JSON_UI_SCHEMA.UI_RULE];
     // 自定义rule
     if (customRules) {
       const originRule = ret[key];
@@ -231,8 +231,8 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   const props = {
     value: model[key]
   };
-  if (typeof uiProperty[JSON_FORM_UI.UI_DISABLED] === 'boolean') {
-    props.disabled = uiProperty[JSON_FORM_UI.UI_DISABLED];
+  if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLED] === 'boolean') {
+    props.disabled = uiProperty[JSON_UI_SCHEMA.UI_DISABLED];
   }
   // DOM 属性
   const domProps = {};
@@ -257,9 +257,9 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
       emit('change', key, val, model);
     };
     if (property.enum || property.oneOf || property.anyOf) {
-      if (property.oneOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'radio') {
+      if (property.oneOf && uiProperty[JSON_UI_SCHEMA.UI_WIDGET] === 'radio') {
         componentTagName = 'el-radio-group';
-      } else if (property.anyOf && uiProperty[JSON_FORM_UI.UI_WIDGET] === 'checkbox' && property.type === 'array') {
+      } else if (property.anyOf && uiProperty[JSON_UI_SCHEMA.UI_WIDGET] === 'checkbox' && property.type === 'array') {
         componentTagName = 'el-checkbox-group';
       } else {
         componentTagName = 'el-select';
@@ -318,8 +318,8 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
       } else if (property.type === 'array') {
         props.type = `${property.format}-range`.replace(/-/g, '');
       }
-      if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
-        props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
+      if (uiProperty[JSON_UI_SCHEMA.UI_FORMAT] !== undefined && uiProperty[JSON_UI_SCHEMA.UI_FORMAT] !== null) {
+        props['value-format'] = uiProperty[JSON_UI_SCHEMA.UI_FORMAT];
       } else if (property.format === 'date' || property.format === 'date-range') {
         props['value-format'] = DEFAULT_DATE_FORMAT;
       } else if (property.format === 'date-time' || property.format === 'date-time-range') {
@@ -330,21 +330,21 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
       if (property.type === 'array') {
         props['is-range'] = true;
       }
-      if (uiProperty[JSON_FORM_UI.UI_FORMAT] !== undefined && uiProperty[JSON_FORM_UI.UI_FORMAT] !== null) {
-        props['value-format'] = uiProperty[JSON_FORM_UI.UI_FORMAT];
+      if (uiProperty[JSON_UI_SCHEMA.UI_FORMAT] !== undefined && uiProperty[JSON_UI_SCHEMA.UI_FORMAT] !== null) {
+        props['value-format'] = uiProperty[JSON_UI_SCHEMA.UI_FORMAT];
       } else if (property.format === 'time' || property.format === 'time-range') {
         props['value-format'] = DEFAULT_TIME_FORMAT;
       }
     } else if (property.type === 'string') {
       componentTagName = 'el-input';
       // 组件类型
-      const widgetType = uiProperty[JSON_FORM_UI.UI_WIDGET];
+      const widgetType = uiProperty[JSON_UI_SCHEMA.UI_WIDGET];
       if (widgetType !== undefined) {
         if (widgetType === 'password') {
           props.type = 'password';
         } else if (widgetType === 'textarea') {
           props.type = 'textarea';
-          const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
+          const options = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] || {};
           if (typeof options.rows === 'number') {
             attrs.rows = options.rows;
           }
@@ -368,7 +368,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
         model[key] = ret;
         emit('input', key, ret, model);
       };
-      const options = uiProperty[JSON_FORM_UI.UI_OPTIONS] || {};
+      const options = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] || {};
       // 小数位
       const { format, precision, scale } = property;
       const scaleNum = _.toNumber(scale);
@@ -402,7 +402,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
         }
       }
       componentTagName = 'el-input-number';
-    } else if (property.type === 'boolean' && uiProperty[JSON_FORM_UI.UI_WIDGET] === undefined) {
+    } else if (property.type === 'boolean' && uiProperty[JSON_UI_SCHEMA.UI_WIDGET] === undefined) {
       componentTagName = 'el-checkbox';
     }
   }
@@ -414,7 +414,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   }
   // placeholder处理
   if (isEmpty(attrs.placeholder)) {
-    let placeholder = uiProperty[JSON_FORM_UI.UI_PLACEHOLDER];
+    let placeholder = uiProperty[JSON_UI_SCHEMA.UI_PLACEHOLDER];
     if (isEmpty(placeholder) && !props.disabled) {
       placeholder = t('el.schema.placeholder', [property.title]);
     }
@@ -423,8 +423,8 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   if (Object.keys(attrs).length > 0) {
     componentProps.attrs = attrs;
   }
-  if (uiProperty[JSON_FORM_UI.UI_ON]) {
-    const uiOn = uiProperty[JSON_FORM_UI.UI_ON];
+  if (uiProperty[JSON_UI_SCHEMA.UI_ON]) {
+    const uiOn = uiProperty[JSON_UI_SCHEMA.UI_ON];
     // 合并事件定义
     Object.keys(uiOn).forEach(uiOnKey => {
       // 自定义事件已被注册的场合，把注册的事件和自定义的事件按顺序执行
@@ -438,8 +438,8 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
       }
     });
   }
-  if (uiProperty[JSON_FORM_UI.UI_NATIVE_ON]) {
-    const uiNativeOn = uiProperty[JSON_FORM_UI.UI_NATIVE_ON];
+  if (uiProperty[JSON_UI_SCHEMA.UI_NATIVE_ON]) {
+    const uiNativeOn = uiProperty[JSON_UI_SCHEMA.UI_NATIVE_ON];
     // 合并事件定义
     Object.keys(uiNativeOn).forEach(uiOnKey => {
       // 自定义事件已被注册的场合，把注册的事件和自定义的事件按顺序执行
@@ -455,7 +455,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   }
   // 合并ui:options属性至组件属性中
   // 用户自定义的options属性为最优先
-  const mergedProps = Object.assign({}, componentProps.props, uiProperty[JSON_FORM_UI.UI_OPTIONS] || {});
+  const mergedProps = Object.assign({}, componentProps.props, uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] || {});
   componentProps.props = mergedProps;
   return {
     componentTagName,

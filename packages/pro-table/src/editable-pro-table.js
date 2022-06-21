@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Vue from 'vue';
 import XEUtils from 'xe-utils';
 import Locale from 'setaria-ui/src/mixins/locale';
-import { EDIT_TYPE, JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { EDIT_TYPE, JSON_UI_SCHEMA } from 'setaria-ui/src/constants/index';
 import { callbackExec, looseEqual } from 'setaria-ui/src/utils/util';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
@@ -485,7 +485,7 @@ export default Vue.extend({
       // 自定义规则
       Object.keys(uiSchema || {}).forEach((key) => {
         const uiProperty = uiSchema[key];
-        let uiRules = _.get(uiProperty, JSON_FORM_UI.UI_RULES);
+        let uiRules = _.get(uiProperty, JSON_UI_SCHEMA.UI_RULES);
         if (_.isEmpty(ret[key])) {
           ret[key] = [];
         }

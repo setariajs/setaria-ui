@@ -1276,19 +1276,33 @@ export default {
     onColumnSettingTreeCheckboxChange(val) {
       this.isAllColumnShow = val;
       let checkedKeys = [];
+      const plainColumnSettingKeyList = XEUtils.toTreeArray(this.columnSettingKeys);
       if (!val) {
+        const remainCheckedKeyArray = [];
         this.columnSettingDefaultCheckedKeys.forEach((key) => {
-          this.getTableActionRef().hideColumn(key);
+          const index = plainColumnSettingKeyList.findIndex((item) => item.key === key);
+          let disabled = false;
+          if (index !== -1) {
+            disabled = plainColumnSettingKeyList[index].disabled;
+          }
+          if (!disabled) {
+            this.getTableActionRef().hideColumn(key);
+          } else {
+            remainCheckedKeyArray.push(key);
+          }
         });
-        this.columnSettingDefaultCheckedKeys = [];
+        this.columnSettingDefaultCheckedKeys = remainCheckedKeyArray;
       } else {
-        const keys = XEUtils.toTreeArray(this.columnSettingKeys).map(
-          (item) => item.key
-        );
-        this.columnSettingDefaultCheckedKeys = keys;
-        this.columnSettingDefaultCheckedKeys.forEach((key) => {
-          this.getTableActionRef().showColumn(key);
+        const keys = [];
+        plainColumnSettingKeyList.forEach(({ key, disabled }) => {
+          if (!disabled) {
+            this.getTableActionRef().showColumn(key);
+            keys.push(key);
+          } else if (this.columnSettingDefaultCheckedKeys.findIndex((k) => k === key) !== -1) {
+            keys.push(key);
+          }
         });
+        this.columnSettingDefaultCheckedKeys = keys;
         checkedKeys = keys;
       }
       // 更新列设置树的checkbox状态
@@ -1339,7 +1353,8 @@ export default {
         });
     },
     refreshColumnSettingTopCheckboxStatus() {
-      const columnFlatArray = XEUtils.toTreeArray(this.columnSettingKeys);
+      const columnFlatArray = XEUtils.toTreeArray(this.columnSettingKeys)
+        .filter((item) => item.disabled === false);
       const settingColumnTotalCount = columnFlatArray.length;
       // const visibleColumnCount = _.filter(columnFlatArray,
       //   (item) => item.isColumnVisible).length;
@@ -1347,7 +1362,7 @@ export default {
       this.columnSettingKeys.forEach((cs) => {
         if (this.getTableActionRef()) {
           const column = this.getTableActionRef().getColumnByField(cs.key);
-          if (column && column.visible) {
+          if (column && column.visible && cs.disabled === false) {
             visibleColumnCount += 1;
           }
         }
@@ -1388,10 +1403,15 @@ export default {
             item.visible = false;
           }
         }
+        let disabled = false;
+        if (typeof item.disableColumnControl === 'boolean') {
+          disabled = item.disableColumnControl;
+        }
         const ret = {
           key: item.field,
           title,
-          isColumnVisible
+          isColumnVisible,
+          disabled
         };
         return ret;
       });
@@ -1484,11 +1504,9 @@ export default {
               on-check-change={onColumnSettingTreeNodeCheck}
               render-content={renderContent}
             />
-            <el-tooltip content={t('el.protable.settingColumns')} placement="top" slot="reference">
-              <el-button icon="el-icon-setting" type="text">
-                {t('el.protable.settingColumns')}
-              </el-button>
-            </el-tooltip>
+            <el-button icon="el-icon-setting" type="text" slot="reference">
+              {t('el.protable.settingColumns')}
+            </el-button>
           </el-popover>
         );
       }

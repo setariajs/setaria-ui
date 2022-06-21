@@ -15,7 +15,7 @@
   </el-description>
 </template>
 <script>
-import { JSON_FORM_UI } from 'setaria-ui/src/constants/index';
+import { JSON_UI_SCHEMA } from 'setaria-ui/src/constants/index';
 import { createFormatter } from 'setaria-ui/src/utils/schema';
 import { isEmpty } from 'setaria-ui/src/utils/util';
 
@@ -55,7 +55,7 @@ export default {
       }
       Object.keys(schema.properties).forEach((key) => {
         // 隐藏的项目不显示
-        if (!(uiSchema[key] && uiSchema[key][JSON_FORM_UI.UI_HIDDEN] === true)) {
+        if (!(uiSchema[key] && uiSchema[key][JSON_UI_SCHEMA.UI_HIDDEN] === true)) {
           ret[key] = schema.properties[key];
         }
       });
@@ -81,8 +81,8 @@ export default {
   methods: {
     getDescriptionSpan(key) {
       const { uiSchema } = this;
-      if (uiSchema[key] && typeof uiSchema[key][JSON_FORM_UI.UI_COLSPAN] === 'number') {
-        return uiSchema[key][JSON_FORM_UI.UI_COLSPAN];
+      if (uiSchema[key] && typeof uiSchema[key][JSON_UI_SCHEMA.UI_COLSPAN] === 'number') {
+        return uiSchema[key][JSON_UI_SCHEMA.UI_COLSPAN];
       }
       return DEFAULT_COL_SPAN;
     }

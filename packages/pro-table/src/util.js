@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { COLUMN_TYPE, JSON_FORM_UI, ORIGIN_UI_OPTION } from 'setaria-ui/src/constants/index';
+import { COLUMN_TYPE, JSON_UI_SCHEMA, ORIGIN_UI_OPTION } from 'setaria-ui/src/constants/index';
 import {
   createElementByProperty,
   createFormatter,
@@ -77,8 +77,8 @@ export function convertSchemaToColumns(
     const column = new VxeColumn();
     // 列字段名
     column.field = key;
-    if (!_.isEmpty(uiProperty[JSON_FORM_UI.UI_PARENT_COLUMN_ID])) {
-      column.srParentField = uiProperty[JSON_FORM_UI.UI_PARENT_COLUMN_ID];
+    if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID])) {
+      column.srParentField = uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID];
     }
     // 列提示
     if (!_.isEmpty(property.description)) {
@@ -119,7 +119,7 @@ export function convertSchemaToColumns(
       // 排序
       let { sortable } = property;
       const uiSchemaOptionsSortable = _.get(uiProperty, [
-        JSON_FORM_UI.UI_OPTIONS,
+        JSON_UI_SCHEMA.UI_OPTIONS,
         'sortable'
       ]);
       // ui-schema内的属性最优先
@@ -208,17 +208,21 @@ export function convertSchemaToColumns(
     ) {
       column.slots.content = scopedSlots[SLOT_NAME_EXPAND_CONTENT];
     }
-    if (!_.isEmpty(uiProperty[JSON_FORM_UI.UI_OPTIONS])) {
-      Object.keys(uiProperty[JSON_FORM_UI.UI_OPTIONS]).forEach((optionKey) => {
+    if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS])) {
+      Object.keys(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS]).forEach((optionKey) => {
         if (_.has(column, optionKey)) {
-          column[optionKey] = uiProperty[JSON_FORM_UI.UI_OPTIONS][optionKey];
+          column[optionKey] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS][optionKey];
         }
       });
-      if (typeof uiProperty[JSON_FORM_UI.UI_OPTIONS].visible === 'boolean') {
-        column[ORIGIN_UI_OPTION] = uiProperty[JSON_FORM_UI.UI_OPTIONS];
+      if (typeof uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].visible === 'boolean') {
+        column[ORIGIN_UI_OPTION] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS];
       }
     }
-    if (!uiProperty[JSON_FORM_UI.UI_HIDDEN]) {
+    // 禁止手动更改列的显示/隐藏
+    if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL] === 'boolean') {
+      column.disableColumnControl = uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL];
+    }
+    if (!uiProperty[JSON_UI_SCHEMA.UI_HIDDEN]) {
       ret.push(column);
     }
   });
@@ -235,15 +239,15 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
     events: {},
     nativeEvents: {}
   };
-  if (typeof uiProperty[JSON_FORM_UI.UI_DISABLED] === 'function') {
-    props.disabledFunction = uiProperty[JSON_FORM_UI.UI_DISABLED];
-  } else if (typeof uiProperty[JSON_FORM_UI.UI_DISABLED] === 'boolean') {
-    props.disabled = uiProperty[JSON_FORM_UI.UI_DISABLED];
+  if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLED] === 'function') {
+    props.disabledFunction = uiProperty[JSON_UI_SCHEMA.UI_DISABLED];
+  } else if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLED] === 'boolean') {
+    props.disabled = uiProperty[JSON_UI_SCHEMA.UI_DISABLED];
   }
   const component = createElementByProperty(key, property, uiProperty, {}, () => {});
   props = Object.assign({}, props, component.componentProps.props);
-  if (uiProperty[JSON_FORM_UI.UI_ON]) {
-    const uiOn = uiProperty[JSON_FORM_UI.UI_ON];
+  if (uiProperty[JSON_UI_SCHEMA.UI_ON]) {
+    const uiOn = uiProperty[JSON_UI_SCHEMA.UI_ON];
     // 合并事件定义
     Object.keys(uiOn).forEach((uiOnKey) => {
       // 自定义事件已被注册的场合，把注册的事件和自定义的事件按顺序执行
@@ -257,8 +261,8 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
       }
     });
   }
-  if (uiProperty[JSON_FORM_UI.UI_NATIVE_ON]) {
-    const uiNativeOn = uiProperty[JSON_FORM_UI.UI_NATIVE_ON];
+  if (uiProperty[JSON_UI_SCHEMA.UI_NATIVE_ON]) {
+    const uiNativeOn = uiProperty[JSON_UI_SCHEMA.UI_NATIVE_ON];
     // 合并事件定义
     Object.keys(uiNativeOn).forEach((uiOnKey) => {
       // 自定义事件已被注册的场合，把注册的事件和自定义的事件按顺序执行

@@ -1,4 +1,4 @@
-export const JSON_FORM_UI = {
+export const JSON_UI_SCHEMA = {
   UI_WIDGET: 'ui:widget',
   UI_OPTIONS: 'ui:options',
   UI_DISABLED: 'ui:disabled',
@@ -12,7 +12,8 @@ export const JSON_FORM_UI = {
   UI_COLSPAN: 'ui:colspan',
   UI_RULE: 'ui:rules',
   UI_RENDER: 'ui:render',
-  UI_WRAPPER_OPTIONS: 'ui:wrapperOptions'
+  UI_WRAPPER_OPTIONS: 'ui:wrapperOptions',
+  UI_DISABLE_COLUMN_CONTROL: 'ui:disableColumnControl'
 };
 
 /**

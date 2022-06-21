@@ -91,6 +91,12 @@ export default {
         required: [ 'name' ],
       },
       uiSchema:{
+        price: {
+          'ui:options': {
+            visible: true,
+          },
+          'ui:disableColumnControl': true,
+        },
         noReadName: {
           'ui:options': {
             visible: false,

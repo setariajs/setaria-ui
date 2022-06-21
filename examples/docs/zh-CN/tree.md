@@ -449,6 +449,7 @@
       const data = [{
         id: 1,
         label: '一级 1',
+        disabled: true,
         children: [{
           id: 4,
           label: '二级 1-1',
