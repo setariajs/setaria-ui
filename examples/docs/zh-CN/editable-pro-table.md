@@ -25,6 +25,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
 <template>
   <div>
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
+    <el-button @click="onChangeColumnVisible">显示第三列</el-button>
     <el-button @click="onGetChangeData">取得当前数据状态</el-button>
     <el-button @click="getTableIsEditStatus">获取当前表格是否在行上编辑模式</el-button>
     <el-button @click="setActiveRowByIndex">设置第一行为编辑状态(先点击'进入编辑')</el-button>
@@ -47,7 +48,6 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
     :edit-config="{trigger: 'manual'}"
-    :default-visible-column-keys="['name', 'price']"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
@@ -91,6 +91,11 @@ export default {
         required: [ 'name' ],
       },
       uiSchema:{
+        noReadName: {
+          'ui:options': {
+            visible: false,
+          }
+        }
       },
       rules:{
         price: [
@@ -241,6 +246,9 @@ export default {
           this.$message.success(`名称为 ${saveData.map(item => item.name).join(',')} 的数据已成功${label}。`);
         }, 500);
       })
+    },
+    onChangeColumnVisible() {
+      this.uiSchema.noReadName['ui:options'].visible = true;
     },
     onEditActived() {
       console.log('onEditActived');

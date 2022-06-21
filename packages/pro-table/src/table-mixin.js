@@ -1295,6 +1295,16 @@ export default {
         val
       );
     },
+    /**
+     * 点击checkbox时触发
+     * @param {*} data 传递给 data 属性的数组中该节点所对应的对象
+     * @param {*} option 树目前的选中状态对象，包含 checkedNodes、checkedKeys、halfCheckedNodes、halfCheckedKeys 四个属性
+     */
+    onColumnSettingCheck(data, option) {
+      const { checkedKeys } = option;
+      // data 选择的列节点状态 { isColumnVisible: false, key: 'price', title: '价格' }
+      this.$emit('column-visible-change', data, checkedKeys, option);
+    },
     onColumnSettingTreeNodeCheck(data, checked, indeterminate) {
       const nodeData = data;
       const { key } = nodeData;
@@ -1321,10 +1331,6 @@ export default {
           // 更新表格的临时状态
           this.refreshTempState();
           this.refreshColumnSettingTopCheckboxStatus();
-          this.$nextTick(() => {
-            // data 选择的列节点状态 { isColumnVisible: false, key: 'price', title: '价格' }
-            this.$emit('column-visible-change', data, this.$refs.columnSettingTree.getCheckedKeys());
-          });
         });
     },
     refreshColumnSettingTopCheckboxStatus() {
@@ -1400,6 +1406,7 @@ export default {
       const {
         columnSettingKeys,
         onColumnSettingTreeCheckboxChange,
+        onColumnSettingCheck,
         onColumnSettingTreeNodeCheck,
         columnSettingDefaultCheckedKeys,
         isAllColumnShow,
@@ -1468,6 +1475,7 @@ export default {
               default-checked-keys={columnSettingDefaultCheckedKeys}
               show-checkbox
               check-on-click-node
+              on-check={onColumnSettingCheck}
               on-check-change={onColumnSettingTreeNodeCheck}
               render-content={renderContent}
             />
