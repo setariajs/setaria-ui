@@ -48,6 +48,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
     :edit-config="{trigger: 'manual'}"
+    control-column-trigger="hover"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
@@ -83,7 +84,7 @@ export default {
             format: 'price',
           },
           noReadName: {
-            title: '不可编辑字段占位',
+            title: '不可编辑\n字段占位',
             type: 'string',
             editable: false,
           },

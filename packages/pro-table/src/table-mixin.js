@@ -1292,6 +1292,7 @@ export default {
           }
         });
         this.columnSettingDefaultCheckedKeys = remainCheckedKeyArray;
+        checkedKeys = remainCheckedKeyArray;
       } else {
         const keys = [];
         plainColumnSettingKeyList.forEach(({ key, disabled }) => {
@@ -1437,7 +1438,8 @@ export default {
         isAllColumnShow,
         isParticalColumnShow,
         showColumnSetting,
-        t
+        t,
+        controlColumnTrigger
       } = this;
       if (showColumnSetting === false) {
         return null;
@@ -1470,7 +1472,7 @@ export default {
             placement="bottom"
             class="column-setting"
             width="240"
-            trigger="hover"
+            trigger={controlColumnTrigger}
             popper-class="pro-table__column-setting-tree"
           >
             <div class="column-setting__toolbar">
