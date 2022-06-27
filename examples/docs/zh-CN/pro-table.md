@@ -43,6 +43,15 @@ Vue.component('el-pro-table', ProTable);
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
     </template>
+    <template slot="num1_filter" slot-scope="{ column, $panel }">
+      <div style="padding: 0 5px;height: 40px;display: flex;align-items: center;">
+        <div v-for="(option, index) in column.filters" :key="index">
+          <el-input v-model="option.data"
+                    @input="$panel.changeOption($event, !!option.data, option)"
+                    @keyup.enter="$panel.confirmFilter()"/>
+        </div>
+      </div>
+    </template>
   </el-pro-table>
 </div>
 <script>
@@ -161,6 +170,26 @@ Vue.component('el-pro-table', ProTable);
               }
             },
           },
+          Number: {
+            'ui:options': {
+              filters: [{data: ''}],
+              // filterRender: {
+              //   name: 'input',
+              //   class: '11222'
+              // },
+              slots: {
+                filter: 'num1_filter'
+              },
+              filterMethod(val) {
+                if (val.option.data === undefined || val.option.data === null || val.option.data === '') {
+                  return true;
+                } else if (`${val.cellValue}` === val.option.data) {
+                  return true;
+                }
+                return false;
+              }
+            }
+          },
           HtmlContent: {
             'ui:options': {
               type: 'html',
@@ -186,7 +215,7 @@ Vue.component('el-pro-table', ProTable);
           Enum: '2',
           AnyOf: ['1', '2'],
           MaxLengthString: null,
-          Number: 98765,
+          Number: i % total,
           Date: '2021-08-31',
           Time: '11:29:00',
           Comment: 'setaria-ui',

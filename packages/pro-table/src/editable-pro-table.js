@@ -1479,6 +1479,7 @@ export default Vue.extend({
             on-menu-click={onMenuClick}
             on-sort-change={onSortChange}
             on-valid-error={handleValidError}
+            scopedSlots={$scopedSlots}
           />
         </div>
         {currentFormData ? (
@@ -1552,6 +1553,7 @@ export default Vue.extend({
             footer-method={footerMethod}
             merge-footer-items={mergeFooterItems}
             row-class-name={rowClassName}
+            scopedSlots={$scopedSlots}
           />
         </div>
         {currentFormData ? (

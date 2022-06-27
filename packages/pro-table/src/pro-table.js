@@ -74,6 +74,7 @@ export default Vue.extend({
   render() {
     const {
       $slots,
+      $scopedSlots,
       $attrs,
       border,
       stripe,
@@ -166,6 +167,7 @@ export default Vue.extend({
             footer-method={footerMethod}
             merge-footer-items={mergeFooterItems}
             row-class-name={rowClassName}
+            scopedSlots={$scopedSlots}
           />
         </div>
         {showPagination && !isTree ? (
@@ -182,6 +184,7 @@ export default Vue.extend({
           >
           </vxe-pager>
         ) : null}
+        { this.$slots.default }
       </div>
     );
   }

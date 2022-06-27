@@ -225,6 +225,11 @@ export function convertSchemaToColumns(
     if (!uiProperty[JSON_UI_SCHEMA.UI_HIDDEN]) {
       ret.push(column);
     }
+    if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] && uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots) {
+      if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter) {
+        column.slots.filter = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter;
+      }
+    }
   });
   return ret;
 }
