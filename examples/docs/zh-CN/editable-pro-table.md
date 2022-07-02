@@ -536,6 +536,7 @@ export default {
       <el-button type="text" @click="canAdd=!canAdd">{{ canAdd ? '禁止' : '允许' }}新增</el-button>
       <el-button type="text" @click="canUpdate=!canUpdate">{{ canUpdate ? '禁止' : '允许' }}修改</el-button>
       <el-button type="text" @click="canDelete=!canDelete">{{ canDelete ? '禁止' : '允许' }}删除</el-button>
+      <el-button type="text" @click="addDataByManual">手动控制新增</el-button>
     </template>
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}{{scope.data.test}}</el-button>
@@ -782,6 +783,16 @@ export default {
     }
   },
   methods: {
+    addDataByManual(){
+      this.$refs.editTable.triggerAddRow({
+         Name: 'XXX',
+      Price: '22345',
+      Enum: 2,
+      AnyOf: ['1', '2'],
+      MaxLengthString: null,
+      Number: 98765,
+      })
+    },
     canDeleteRow({row}){
       return row.id !== 1
     },
@@ -1846,6 +1857,9 @@ export default {
 | setActiveRowByIndex      | 按照下标激活行   | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
 | getIsEditOnRow      | 获取当前表格是否在行上编辑模式   | Function():Boolean) |
 | cancelRowEdit      | 移除表格编辑状态  | Function() |
+| triggerAddRow      | 手动触发新增按钮逻辑  | Function(appendItem：手动初始化的Item) |
+
+
 
 
 

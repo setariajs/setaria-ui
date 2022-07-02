@@ -947,10 +947,17 @@ export default Vue.extend({
       });
     },
     /**
+     * 向外暴漏新增一条数据的逻辑
+     * ROW-ADD
+     */
+    triggerAddRow(appendItem = {}) {
+      this.onTableAddRowClick(appendItem);
+    },
+    /**
      * 新增一条数据
      * ROW-ADD
      */
-    onTableAddRowClick() {
+    onTableAddRowClick(appendItem = {}) {
       const {
         onAddRowClick,
         isEditOnRow,
@@ -966,27 +973,27 @@ export default Vue.extend({
       }
       if (!isEditOnRow) {
         // 弹窗编辑数据的场合
-        this.createDefaultRowData().then(res => {
+        this.createDefaultRowData(appendItem).then(res => {
           this.initialRowData(res);
           this.isShowForm = true;
         });
       } else {
         // 行上直接编辑的场合
-        this.tableAddRow().then((addRow) => {
+        this.tableAddRow(0, appendItem).then((addRow) => {
           this.editingRow = addRow;
           this.setActiveRow();
         });
       }
     },
     // 表格添加行信息
-    tableAddRow(position) {
-      return this.createDefaultRowData().then((item) => {
+    tableAddRow(position = 0, appendItem = {}) {
+      return this.createDefaultRowData(appendItem).then((item) => {
         const { changeModeField } = this;
         const defaultItem = {
           ...item,
           [changeModeField]: EDIT_TYPE.ADD
         };
-        this.data.splice(position || 0, 0, defaultItem);
+        this.data.splice(position, 0, defaultItem);
         return defaultItem;
       });
     },
@@ -1304,14 +1311,14 @@ export default Vue.extend({
           const defaultAddButton = (
             <el-button
               type="text"
-              on-click={onTableAddRowClick}
+              on-click={()=>{onTableAddRowClick();}}
               disabled={!!editingRow}
             >
               {t('el.protable.addData')}
             </el-button>
           );
           const addRowButton = addData ? (
-            <span on-click={onTableAddRowClick}>
+            <span on-click={()=>{onTableAddRowClick();}}>
               { typeof addData === 'function' ? addData({
                 $tableDataEditing: !!editingRow
               }) : addData }

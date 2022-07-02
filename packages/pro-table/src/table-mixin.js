@@ -7,6 +7,7 @@ import Locale from 'setaria-ui/src/mixins/locale';
 import { defaultControlColumnConfig } from './table-props';
 import { convertSchemaToColumns } from './util';
 // import { t as localeT } from 'setaria-ui/src/locale';
+import merge from 'setaria-ui/src/utils/merge';
 
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
@@ -918,25 +919,25 @@ export default {
      *
      * @returns Object
      */
-    createDefaultRowData() {
+    createDefaultRowData(appendItem = {}) {
       return new window.Promise((resolve) => {
         const { innerDefaultEntity, beforeAddRow } = this;
         let item = _.cloneDeep(innerDefaultEntity);
         const afterExec = (res) => {
-          resolve(res);
+          resolve(merge({}, res, appendItem));
         };
         if (typeof beforeAddRow === 'function') {
           const addRes = beforeAddRow(item);
           if (addRes && addRes.then) {
             addRes.then((res) => {
-              afterExec(res);
+              afterExec(merge({}, res, appendItem));
             });
           } else {
-            afterExec(addRes);
+            afterExec(merge({}, addRes, appendItem));
           }
           // item = beforeAddRow(item);
         } else {
-          afterExec(item);
+          afterExec(merge({}, item, appendItem));
         }
         // return item;
       });
