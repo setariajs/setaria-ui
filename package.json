@@ -71,7 +71,6 @@
     "normalize-wheel": "^1.0.1",
     "numeral": "^2.0.6",
     "resize-observer-polyfill": "^1.5.0",
-    "setaria-vxe-table": "^1.0.3",
     "throttle-debounce": "^1.0.1",
     "vxe-table-plugin-element": "^1.11.0",
     "vxe-table-plugin-export-xlsx": "^2.2.1",
@@ -80,6 +79,7 @@
     "xe-utils": "^3.3.1"
   },
   "peerDependencies": {
+    "setaria-vxe-table": "^1.0.3",
     "vue": "^2.5.17"
   },
   "devDependencies": {
@@ -156,6 +156,7 @@
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.11",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "setaria-vxe-table": "^1.0.3"
   }
 }
