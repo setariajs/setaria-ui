@@ -8805,9 +8805,9 @@ set-value@^2.0.0, set-value@^2.0.1:
     split-string "^3.0.1"
 
 setaria-vxe-table@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/setaria-vxe-table/-/setaria-vxe-table-1.0.2.tgz#69beb52810bc85d3d0d391a1db22b7d48db6c3e9"
-  integrity sha512-0nPAYvY8jCwkvbOWjVV0HwsSlmyzSkLKNBasosqIpzlPlbKsVVy1tLZytW3Z+JEdXIFhjLYVIGLPEDXlrl4J9g==
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/setaria-vxe-table/-/setaria-vxe-table-1.0.3.tgz#02c4d19dc239d1dec689e84afcba3fc28e72691b"
+  integrity sha512-oXpvXxjTi8/Ed58pBqKBaoA8sy16anP4lXjs6qHVit4WsCGxwyGBWi5bDqBNY925VXvqiV1iIwqF4rp7iOp92A==
 
 setimmediate@^1.0.4:
   version "1.0.5"
