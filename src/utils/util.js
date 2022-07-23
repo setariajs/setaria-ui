@@ -278,3 +278,27 @@ export const callbackExec = function(func) {
     }
   });
 };
+
+export function getSeparatedContent(text, tokens) {
+  if (!tokens || !tokens.length) {
+    return null;
+  }
+
+  let match = false;
+
+  function separate(str, [token, ...restTokens]) {
+    if (!token) {
+      return [str];
+    }
+
+    const list = str.split(token);
+    match = match || list.length > 1;
+
+    return list
+      .reduce((prevList, unitStr) => [...prevList, ...separate(unitStr, restTokens)], [])
+      .filter((unit) => unit);
+  }
+
+  const list = separate(text, tokens);
+  return match ? list : null;
+}

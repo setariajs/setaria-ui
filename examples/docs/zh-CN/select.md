@@ -543,6 +543,61 @@
 如果 Select 的绑定值为对象类型，请务必指定 `value-key` 作为它的唯一性标识。
 :::
 
+### 自动分词
+
+试下复制 `露西,杰克` 并粘贴到输入框里。从Excel拷贝的场合，可指定 `token-separators` 属性为 `['\r\n', '\t']`。
+
+:::demo 使用`token-separators`属性即可切分粘贴的数据，只在`multiple`和`allow-create`为 true 时生效。
+```html
+<template>
+  <div>
+    <el-select
+      style="width: 400px"
+      v-model="value"
+      multiple
+      filterable
+      allow-create
+      default-first-option
+      show-create-option
+      clearable
+      :show-caret-icon="false"
+      :token-separators="[',', '\r\n', '\t']"
+      placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <div>
+      当前值:{{ value }}
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        options: [{
+          value: 'HTML',
+          label: 'HTML'
+        }, {
+          value: 'CSS',
+          label: 'CSS'
+        }, {
+          value: 'JavaScript',
+          label: 'JavaScript'
+        }],
+        value: []
+      }
+    }
+  }
+</script>
+```
+:::
+
 ### Select Attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
@@ -572,6 +627,9 @@
 | default-first-option | 在输入框按下回车，选择第一个匹配项。需配合 `filterable` 或 `remote` 使用 | boolean | - | false |
 | popper-append-to-body | 是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false | boolean | - | true |
 | automatic-dropdown | 对于不可搜索的 Select，是否在输入框获得焦点后自动弹出选项菜单 | boolean | - | false |
+| token-separators | 分词符数组 | array | - | - |
+| show-create-option | 是否显示创建的选项 | boolean | - | false |
+| show-caret-icon | 是否显示图标 | boolean | - | true |
 
 ### Select Events
 | 事件名称 | 说明 | 回调参数 |

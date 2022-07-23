@@ -63,6 +63,7 @@
         @compositionend="handleComposition"
         v-model="query"
         @input="debouncedQueryChange"
+        @paste="handlePaste"
         v-if="filterable"
         :style="{ 'flex-grow': '1', width: inputLength / (inputWidth - 32) + '%', 'max-width': inputWidth - 42 + 'px' }"
         ref="input">
@@ -96,7 +97,7 @@
         <slot name="prefix"></slot>
       </template>
       <template slot="suffix">
-        <i v-show="!showClose" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
+        <i v-show="!showClose && showCaretIcon" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
         <i v-if="showClose" class="el-select__caret el-input__icon el-icon-circle-close" @click="handleClearClick"></i>
       </template>
     </el-input>
@@ -123,6 +124,15 @@
             created
             v-if="showNewOption">
           </el-option>
+          <el-option
+            v-for="(str, index) in pasteValueArray"
+            created
+            :key="`paste_${str}_${index}`"
+            :value="str"></el-option>
+          <el-option
+            v-for="(str, index) in createdOptionList"
+            :key="`create_option_${str}_${index}`"
+            :value="str"></el-option>
           <slot></slot>
         </el-scrollbar>
         <template v-if="emptyText && (!allowCreate || loading || (allowCreate && options.length === 0 ))">
@@ -149,7 +159,16 @@
   import Clickoutside from 'setaria-ui/src/utils/clickoutside';
   import { addResizeListener, removeResizeListener } from 'setaria-ui/src/utils/resize-event';
   import scrollIntoView from 'setaria-ui/src/utils/scroll-into-view';
-  import { getValueByPath, valueEquals, isIE, isEdge } from 'setaria-ui/src/utils/util';
+  import {
+    arrayFind,
+    arrayFindIndex,
+    getValueByPath,
+    valueEquals,
+    isEmpty,
+    isIE,
+    isEdge,
+    getSeparatedContent
+  } from 'setaria-ui/src/utils/util';
   import NavigationMixin from './navigation-mixin';
   import { isKorean } from 'setaria-ui/src/utils/shared';
 
@@ -309,6 +328,15 @@
       validateEvent: {
         type: Boolean,
         default: true
+      },
+      tokenSeparators: Array,
+      showCreateOption: {
+        type: Boolean,
+        default: false
+      },
+      showCaretIcon: {
+        type: Boolean,
+        default: true
       }
     },
 
@@ -318,6 +346,7 @@
         cachedOptions: [],
         createdLabel: null,
         createdSelected: false,
+        createdOptionList: [],
         selected: this.multiple ? [] : {},
         inputLength: 20,
         inputWidth: 0,
@@ -335,7 +364,8 @@
         currentPlaceholder: '',
         menuVisibleOnFocus: false,
         isOnComposition: false,
-        isSilentBlur: false
+        isSilentBlur: false,
+        pasteValueArray: null
       };
     },
 
@@ -456,6 +486,32 @@
         } else {
           const lastCharacter = text[text.length - 1] || '';
           this.isOnComposition = !isKorean(lastCharacter);
+        }
+      },
+      handlePaste(evt) {
+        const { tokenSeparators } = this;
+        const { clipboardData } = evt;
+        const value = clipboardData.getData('text');
+        if (this.allowCreate &&
+          this.multiple &&
+          Array.isArray(this.tokenSeparators) &&
+          tokenSeparators.length > 0 &&
+          !isEmpty(value)) {
+          const sc = getSeparatedContent(value, tokenSeparators) || [];
+          this.pasteValueArray = sc;
+          this.$nextTick(() => {
+            const ret = [];
+            sc.forEach((str) => {
+              if (this.options) {
+                const currentOption = arrayFind(this.options, (o) => o.value === str);
+                if (currentOption) {
+                  ret.push(currentOption);
+                }
+              }
+            });
+            this.handleOptionSelect(ret);
+            this.pasteValueArray = null;
+          });
         }
       },
       handleQueryChange(val) {
@@ -684,17 +740,55 @@
         }, 300);
       },
 
-      handleOptionSelect(option, byClick) {
-        if (this.multiple) {
-          const value = (this.value || []).slice();
-          const optionIndex = this.getValueIndex(value, option.value);
-          if (optionIndex > -1) {
-            value.splice(optionIndex, 1);
-          } else if (this.multipleLimit <= 0 || value.length < this.multipleLimit) {
-            value.push(option.value);
+      setSelectMultipleValue(option) {
+        const ret = {
+          created: [],
+          deleted: []
+        };
+        if (option) {
+          let targetOptions = option;
+          if (!Array.isArray(option)) {
+            targetOptions = [option];
           }
+          const value = (this.value || []).slice();
+          targetOptions.forEach((o) => {
+            const optionIndex = this.getValueIndex(value, o.value);
+            if (optionIndex > -1) {
+              value.splice(optionIndex, 1);
+              ret.deleted.push(o.value);
+            } else if (this.multipleLimit <= 0 || value.length < this.multipleLimit) {
+              value.push(o.value);
+              ret.created.push(o.value);
+            }
+          });
           this.$emit('input', value);
           this.emitChange(value);
+        }
+        return ret;
+      },
+      /**
+       * 同步显示创建的选项
+       * @param {*} val
+       */
+      syncCreatedOptionList(val) {
+        if (this.showCreateOption === true) {
+          const { createdOptionList } = this;
+          val.deleted.forEach((v) => {
+            const index = arrayFindIndex(createdOptionList, (c) => c === v);
+            if (index !== -1) {
+              createdOptionList.splice(index, 1);
+            }
+          });
+          val.created.forEach((v) => {
+            createdOptionList.push(v);
+          });
+        }
+      },
+
+      handleOptionSelect(option, byClick) {
+        if (this.multiple) {
+          const optionStatus = this.setSelectMultipleValue(option);
+          this.syncCreatedOptionList(optionStatus);
           if (option.created) {
             this.query = '';
             this.handleQueryChange('');
