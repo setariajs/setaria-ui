@@ -758,7 +758,9 @@
               ret.deleted.push(o.value);
             } else if (this.multipleLimit <= 0 || value.length < this.multipleLimit) {
               value.push(o.value);
-              ret.created.push(o.value);
+              if (o.created) {
+                ret.created.push(o.value);
+              }
             }
           });
           this.$emit('input', value);
