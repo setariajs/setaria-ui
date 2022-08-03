@@ -279,7 +279,7 @@ export const callbackExec = function(func) {
   });
 };
 
-export function getSeparatedContent(text, tokens) {
+export function getSeparatedContent(text, tokens, isRemoveRepeat = true) {
   if (!tokens || !tokens.length) {
     return null;
   }
@@ -300,5 +300,14 @@ export function getSeparatedContent(text, tokens) {
   }
 
   const list = separate(text, tokens);
-  return match ? list : null;
+  let result = list;
+  if (isRemoveRepeat) {
+    result = [];
+    list.forEach((v) => {
+      if (!result.includes(v)) {
+        result.push(v);
+      }
+    });
+  }
+  return match ? result : null;
 }

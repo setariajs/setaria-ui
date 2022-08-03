@@ -29,6 +29,9 @@ Vue.component('el-pro-table', ProTable);
 ::: demo
 ```html
 <div>
+  <div style="positon: sticky;top: 10px;">
+    1111aa22
+  </div>
   <el-pro-table
     :schema="schema"
     :ui-schema="uiSchema"
