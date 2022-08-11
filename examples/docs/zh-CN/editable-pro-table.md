@@ -1112,7 +1112,7 @@ export default {
       'Boolean': true,
       CustomSlotCode: 4.3,
       CustomSlot: '装饰线条',
-      Readonly: '信息不可修改',
+      Readonly: '信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改信息不可修改',
       linkage: 'b'
     };
     for (let i = 0; i < 5; i += 1) {

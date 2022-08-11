@@ -1262,7 +1262,8 @@ export default Vue.extend({
       pagerBackground,
       validConfig,
       editingRow,
-      handleValidError
+      handleValidError,
+      showOverflow
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1446,10 +1447,10 @@ export default Vue.extend({
             stripe={stripe}
             resizable
             auto-resize
-            show-overflow
             highlight-hover-row
             highlight-current-row
             keep-source
+            show-overflow={showOverflow}
             edit-config={innerEditConfig}
             data={isTree ? innerTreeDataList : innerDataList}
             height={height}
@@ -1486,6 +1487,7 @@ export default Vue.extend({
             on-menu-click={onMenuClick}
             on-sort-change={onSortChange}
             on-valid-error={handleValidError}
+            showOver
             scopedSlots={$scopedSlots}
           />
         </div>
@@ -1526,9 +1528,9 @@ export default Vue.extend({
             stripe={stripe}
             resizable
             auto-resize
-            show-overflow
             highlight-hover-row
             highlight-current-row
+            show-overflow={showOverflow}
             edit-config={innerEditConfig}
             data={isTree ? innerTreeDataList : innerDataList}
             height={height}

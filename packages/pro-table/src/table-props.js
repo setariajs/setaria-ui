@@ -108,6 +108,11 @@ export const COMMON_TABLE_PROPS = {
   footerMethod: Function,
   // 是否显示页脚
   showFooter: Boolean,
+  // 是否显示溢出省略号
+  showOverflow: {
+    type: Boolean,
+    default: true
+  },
   // 序号配置项
   seqConfig: Object,
   // 复选框配置项
