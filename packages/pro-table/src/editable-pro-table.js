@@ -1233,6 +1233,8 @@ export default Vue.extend({
       isShowTable,
       onCellClick,
       onCellDblClick,
+      onCellMouseenter,
+      onCellMouseleave,
       innerMergeCells,
       menuConfig,
       onCellMenu,
@@ -1478,6 +1480,8 @@ export default Vue.extend({
             row-class-name={rowClassName}
             on-cell-click={onCellClick}
             on-cell-dblclick={onCellDblClick}
+            on-cell-mouseenter={onCellMouseenter}
+            on-cell-mouseleave={onCellMouseleave}
             on-radio-change={onTableRadioChange}
             on-checkbox-change={onTableCheckboxChange}
             on-checkbox-all={onTableCheckboxAll}
@@ -1554,6 +1558,8 @@ export default Vue.extend({
             scroll-y={{ gt: 20 }}
             on-cell-click={onCellClick}
             on-cell-dblclick={onCellDblClick}
+            on-cell-mouseenter={onCellMouseenter}
+            on-cell-mouseleave={onCellMouseleave}
             merge-cells={innerMergeCells}
             menu-config={menuConfig}
             on-cell-menu={onCellMenu}

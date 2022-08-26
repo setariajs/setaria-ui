@@ -102,6 +102,8 @@ export default Vue.extend({
       onTableCheckboxChange,
       onTableRadioChange,
       onCellClick,
+      onCellMouseenter,
+      onCellMouseleave,
       onCellDblClick,
       mergeFooterItems,
       footerMethod,
@@ -159,6 +161,8 @@ export default Vue.extend({
             on-radio-change={onTableRadioChange}
             on-cell-click={onCellClick}
             on-cell-dblclick={onCellDblClick}
+            on-cell-mouseenter={onCellMouseenter}
+            on-cell-mouseleave={onCellMouseleave}
             on-cell-menu={onCellMenu}
             on-menu-click={onMenuClick}
             on-sort-change={onSortChange}

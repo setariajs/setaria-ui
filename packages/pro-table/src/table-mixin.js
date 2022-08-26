@@ -1238,6 +1238,12 @@ export default {
     onMenuClick(val) {
       this.$emit('menu-click', val);
     },
+    onCellMouseenter(val) {
+      this.$emit('cell-mouseenter', val);
+    },
+    onCellMouseleave(val) {
+      this.$emit('cell-mouseleave', val);
+    },
     onCellMenu(val) {
       this.$emit('cell-menu', val);
     },

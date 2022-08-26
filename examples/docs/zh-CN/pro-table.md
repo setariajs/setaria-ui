@@ -39,7 +39,9 @@ Vue.component('el-pro-table', ProTable);
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
     @selection-change="handleSelectionChange"
-    @filter-change="handleFilterChange">
+    @filter-change="handleFilterChange"
+    @cell-mouseenter="cellMouseenter"
+    @cell-mouseleave="cellMouseleave">
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
     </template>
@@ -267,6 +269,12 @@ Vue.component('el-pro-table', ProTable);
       },
       handleFilterChange(val) {
         console.log(val);
+      },
+      cellMouseenter(val){
+        console.log('cellMouseenter',val);
+      },
+      cellMouseleave(val){
+        console.log('cellMousleave',val);
       }
     }
   }
@@ -793,6 +801,8 @@ export default {
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
 | cell-link-click | 待补充 | - |
 | filter-change  | 筛选条件变更 | val 当前值 |
+| cell-mouseenter  | 当鼠标移动到单元格时会触发该事件 | val 当前值 |
+| cell-mouseleave  | 当鼠标移开单元格时会触发该事件 | val 当前值 |
 
 ### ProTable Methods
 
