@@ -1470,6 +1470,8 @@ export default {
               this.columnSettingDefaultCheckedKeys,
               true
             );
+            this.$emit('column-visible-change', this.columnSettingDefaultCheckedKeys);
+            this.$emit('column-visible-reset');
           });
       };
       if (columnSettingKeys.length > 0) {

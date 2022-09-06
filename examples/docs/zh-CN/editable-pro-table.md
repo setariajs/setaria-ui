@@ -56,6 +56,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     @edit-closed="onEditClosed"
     @valid-error="onValidError"
     @column-visible-change="onColumnVisibleChange"
+    @column-visible-reset="onColumnVisibleReset"
   >
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -268,6 +269,9 @@ export default {
     },
     onColumnVisibleChange(visibleColumnKeys) {
       console.log(visibleColumnKeys);
+    },
+    onColumnVisibleReset(){
+      console.log('onColumnVisibleReset')
     }
   }
 };
@@ -1811,6 +1815,8 @@ export default {
 | force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |
 | dialog-form-discard-change-message-setting  | 数据修改对话框的显示消息配置 | Object | — | { message: '是否放弃对数据的更改?', confirmButtonText: '是', cancelButtonText: '否' } |
 | default-require-rule-trigger-type  | 默认require rule的触发方式 | String | — | blur |
+| control-column-trigger  | 操作列的触发方式 | String | — | click,hover |
+
 
 ### 插槽
 
@@ -1846,7 +1852,12 @@ export default {
 | data-change | 行项目修改后(原始组件change事件)触发 | key 表单字段的 Key, val 表单字段的值, data 当前修改的数据（行编辑模式时为行数据，弹窗编辑模式时为展开的表单数据）, originData 行编辑前数据，仅为行编辑模式时存在 |
 | dialog-open | 表单对话框显示时触发 | val 当前行数据 |
 | edit-actived | 行或单元格激活编辑状态时触发 | - |
-| dialog-open | 行或单元格编辑状态被关闭时触发 | - |
+| edit-closed | 行或单元格编辑状态被关闭时触发 | - |
+| cell-mouseenter  | 当鼠标移动到单元格时会触发该事件 | val 当前值 |
+| cell-mouseleave  | 当鼠标移开单元格时会触发该事件 | val 当前值 |
+| column-visible-change  | 当用户操作右上角显示列功能时的回调 | checkedKeys 显示列的key数组 |
+| column-visible-reset  | 当用户操作右上角显示列功能的重置按钮回调 | - |
+
 
 
 ### 方法
@@ -1860,8 +1871,14 @@ export default {
 | triggerAddRow      | 手动触发新增按钮逻辑  | Function(appendItem：手动初始化的Item) |
 
 
+### UI-Schema Attributes
 
-
-
-
+| 参数      | 说明          | 类型      | 可选值                           | 默认值  |
+|---------- |-------------- |---------- |--------------------------------  |-------- |
+| ui:widget | 表单字段的组件类型 | string | password, textarea, select, checkbox, radio  |  — |
+| ui:disabled | 表单字段的组件是否可用 | boolean | - | false |
+| ui:hidden | 表单字段的组件是否可见 | boolean | - | false |
+| ui:options | 表单字段的组件独有属性 | object | UI组件独有属性 | - |
+| ui:colspan | 跨越的列数 | number | - | - |
+| ui:disableColumnControl | 默认是否操作列中的checkbox状态disabled | boolean | - | - |
 

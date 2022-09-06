@@ -774,6 +774,7 @@ export default {
 | show-collapseall-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | show-column-setting    | 是否显示右上角的列设置 | Boolean | — | true |
 | row-class-name    | 待补充 | String | — | —  |
+| control-column-trigger  | 操作列的触发方式 | String | — | click,hover |
 
 ### UI-Schema Attributes
 
@@ -784,6 +785,9 @@ export default {
 | ui:hidden | 表单字段的组件是否可见 | boolean | - | false |
 | ui:options | 表单字段的组件独有属性 | object | UI组件独有属性 | - |
 | ui:colspan | 跨越的列数 | number | - | - |
+| ui:disableColumnControl | 默认是否操作列中的checkbox状态disabled | boolean | - | - |
+
+
 
 ### ProTable Events
 
@@ -803,6 +807,9 @@ export default {
 | filter-change  | 筛选条件变更 | val 当前值 |
 | cell-mouseenter  | 当鼠标移动到单元格时会触发该事件 | val 当前值 |
 | cell-mouseleave  | 当鼠标移开单元格时会触发该事件 | val 当前值 |
+| column-visible-change  | 当用户操作右上角显示列功能时的回调 | checkedKeys 显示列的key数组 |
+| column-visible-reset  | 当用户操作右上角显示列功能的重置按钮回调 | -  |
+
 
 ### ProTable Methods
 
