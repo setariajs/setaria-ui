@@ -552,9 +552,9 @@ export default Vue.extend({
       return defaultBeforeClose(dialogAttrs.beforeClose || dialogAttrs[BEFORE_CLOSE_PROP_KEY]);
     },
     innerDialogProps() {
-      const { beforeCloseFunction, dialogAttrs = {}, t } = this;
+      const { beforeCloseFunction, dialogAttrs = {}, t, controlStatus } = this;
       const defaultDialogProps = {
-        title: t('el.schema.edit'),
+        title: controlStatus === EDIT_TYPE.ADD ? t('el.schema.add') : t('el.schema.edit'),
         'close-on-click-modal': false
       };
       const ret = _.assign({}, defaultDialogProps, dialogAttrs);

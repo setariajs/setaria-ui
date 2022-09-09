@@ -86,6 +86,7 @@ export default {
       yes: 'Yes',
       no: 'No',
       edit: 'Edit',
+      add: 'Add',
       validate1: 'The input format must conform to{0}',
       validate2: 'The length must be greater than {0} characters',
       validate3: 'The length can only be between {0}-{1} characters',
