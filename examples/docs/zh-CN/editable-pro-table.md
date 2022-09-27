@@ -530,6 +530,9 @@ export default {
     :before-add-row="beforeAddRow"
     :before-update-row="beforeUpdateRow"
     :rules="rules"
+    :control-column-config="{
+      align:'left'
+    }"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -941,6 +944,7 @@ export default {
     @selection-change="onSelectionChange"
     @dialog-open="onDialogOpen"
     :save="save"
+    :tool-bar-button-type="'button'"
   >
     <template slot="batchControl" v-if="!labelMode">
       <el-button type="text" @click="canAdd=!canAdd">{{ canAdd ? '禁止' : '允许' }}新增</el-button>
@@ -1795,7 +1799,7 @@ export default {
 | page-size    | 每页显示数据数量 | Number | — | — |
 | total    | 数据总数量 | Number | — | — |
 | control-column-width    | 数据控制列宽度 | String | — | '160' |
-| control-column-config    | 数据控制列配置 | Object | — | { label: '操作', width: '', collapseButton: true, maxDisplayCount: 2 } |
+| control-column-config    | 数据控制列配置 | Object | — | { label: '操作', width: '', collapseButton: true, maxDisplayCount: 2, align:'center' } |
 | table-id    | 表格ID，主要用于对表格的配置进行缓存 | String | — | — |
 | show-expand-all-btn    | 是否显示"全部展开"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | show-collapse-all-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
@@ -1816,6 +1820,8 @@ export default {
 | dialog-form-discard-change-message-setting  | 数据修改对话框的显示消息配置 | Object | — | { message: '是否放弃对数据的更改?', confirmButtonText: '是', cancelButtonText: '否' } |
 | default-require-rule-trigger-type  | 默认require rule的触发方式 | String | — | blur |
 | control-column-trigger  | 操作列的触发方式 | String | — | click,hover |
+| tool-bar-button-type  | 表格顶部操作按钮的显示样式 | String | text | text,button |
+
 
 
 ### 插槽

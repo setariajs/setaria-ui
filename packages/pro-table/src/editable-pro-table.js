@@ -1265,7 +1265,8 @@ export default Vue.extend({
       validConfig,
       editingRow,
       handleValidError,
-      showOverflow
+      showOverflow,
+      toolBarButtonType
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1285,7 +1286,7 @@ export default Vue.extend({
           const addCurrentButton = (
             innerCanAddTree ? (
               <el-button
-                type="text"
+                type={toolBarButtonType}
                 on-click={onTableAddCurrentClick}
               >
                 {t('el.protable.addSibling')}
@@ -1297,7 +1298,7 @@ export default Vue.extend({
           const addChildButton = (
             innerCanAddChild ? (
               <el-button
-                type="text"
+                type={toolBarButtonType}
                 on-click={onTableAddChildClick}
               >
                 {t('el.protable.addChild')}
@@ -1313,7 +1314,7 @@ export default Vue.extend({
           }
           const defaultAddButton = (
             <el-button
-              type="text"
+              type={toolBarButtonType}
               on-click={()=>{onTableAddRowClick();}}
               disabled={!!editingRow}
             >
@@ -1348,7 +1349,7 @@ export default Vue.extend({
       if (isTree) {
         if (showExpandAllBtn) {
           const expandAllButton = (
-            <el-button type="text" on-click={onTableExpandRowsClick}>
+            <el-button type={toolBarButtonType} on-click={onTableExpandRowsClick}>
               {t('el.protable.allExpand')}
             </el-button>
           );
@@ -1356,7 +1357,7 @@ export default Vue.extend({
         }
         if (showCollapseAllBtn) {
           const collapseAllButton = (
-            <el-button type="text" on-click={onTableCollapseRowsClick}>
+            <el-button type={toolBarButtonType} on-click={onTableCollapseRowsClick}>
               {t('el.protable.allStow')}
             </el-button>
           );
@@ -1376,7 +1377,7 @@ export default Vue.extend({
           // innerCanDelete ? (
           <el-button
             style={style}
-            type="text"
+            type={toolBarButtonType}
             on-click={onBatchDeleteData}
           >
             {t('el.protable.batchDelete')}

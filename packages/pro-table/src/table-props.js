@@ -376,6 +376,10 @@ export const EDIT_TABLE_PROPS = {
   autoFocusOnAdd: {
     type: Boolean,
     default: false
+  },
+  toolBarButtonType: {
+    type: String,
+    default: 'text'
   }
 };
 

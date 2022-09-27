@@ -127,6 +127,10 @@ export default {
       if (_.isEmpty(ret.width)) {
         ret.width = this.controlColumnWidth;
       }
+      if (_.isEmpty(ret.align)) {
+        ret.align = 'center';
+      }
+
       return ret;
     },
     innerSeqConfig() {
@@ -676,7 +680,7 @@ export default {
       return {
         title: innerControlColumnConfig.label,
         fixed: 'right',
-        align: 'center',
+        align: innerControlColumnConfig.align,
         width: innerControlColumnConfig.width,
         className: 'control-column',
         slots: {
