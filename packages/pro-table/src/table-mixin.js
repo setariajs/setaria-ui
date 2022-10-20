@@ -720,7 +720,8 @@ export default {
                     };
                   }
                   DELETE_BUTTON.disabled = (editingRow !== null);
-                  rowButtonList.unshift(DELETE_BUTTON);
+                  // 删除按钮移动到行尾
+                  rowButtonList.push(DELETE_BUTTON);
                 };
                 if (canDeleteRow) {
                   if (canDeleteRow(scope)) {
