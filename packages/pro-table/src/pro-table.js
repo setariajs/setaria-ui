@@ -116,6 +116,7 @@ export default Vue.extend({
       getColumnSettingRender,
       rowClassName,
       pagerScopedSlots,
+      showOverflow,
       pagerBackground
     } = this;
     this.$nextTick(() => {
@@ -150,6 +151,7 @@ export default Vue.extend({
             row-id={rowKey}
             merge-cells={innerMergeCells}
             edit-config={{}}
+            show-overflow={showOverflow}
             checkbox-config={innerCheckboxConfig}
             radio-config={innerRadioConfig}
             expand-config={innerExpandConfig}

@@ -1819,8 +1819,9 @@ export default {
 | force-edit-on-row  | 是否强制行内编辑 | Boolean | — | false  |
 | dialog-form-discard-change-message-setting  | 数据修改对话框的显示消息配置 | Object | — | { message: '是否放弃对数据的更改?', confirmButtonText: '是', cancelButtonText: '否' } |
 | default-require-rule-trigger-type  | 默认require rule的触发方式 | String | — | blur |
-| control-column-trigger  | 操作列的触发方式 | String | — | click,hover |
-| tool-bar-button-type  | 表格顶部操作按钮的显示样式 | String | text | text,button |
+| control-column-trigger  | 操作列的触发方式 | String | click,hover | click  |
+| show-overflow  | 单元格内容溢出是否显示省略号 | Boolean | — | true |
+| tool-bar-button-type  | 表格顶部操作按钮的显示样式 | String | text,button | text |
 
 
 

@@ -774,7 +774,8 @@ export default {
 | show-collapseall-btn    | 是否显示"全部收缩"按钮，：is-tree="true"时生效 | Boolean | — | true |
 | show-column-setting    | 是否显示右上角的列设置 | Boolean | — | true |
 | row-class-name    | 待补充 | String | — | —  |
-| control-column-trigger  | 操作列的触发方式 | String | — | click,hover |
+| control-column-trigger  | 操作列的触发方式 | String | click,hover | click  |
+| show-overflow  | 单元格内容溢出是否显示省略号 | Boolean | — | true |
 
 ### UI-Schema Attributes
 
