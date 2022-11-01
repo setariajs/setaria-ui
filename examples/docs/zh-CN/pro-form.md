@@ -677,7 +677,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | modal-attrs | `type` 为 `modalForm` 时有效，值为ElDialog的Props | object | — | — |
 | collapse | `type` 为 `queryFilter` 时有效，是否开启查询条件折叠功能 | boolean | — | true |
 | control-button-layout | 按钮组件布局| Array | `search`, `searchReset`, `submit` , `reset`, `cancel` , `slot`,`collapse`  | `type` 为 `queryFilter`默认值为['search','searchReset','collapse'] ,  `type` 为 空 默认值为['submit','reset'] ,  `type` 为 `modalForm` 默认值为['submit','cancel'] |
-| force-collapse-columns | 收起模式下，强制显示表单项的格式 | number | — | — |
+| force-collapse-columns | 收起模式下，强制显示表单项的个数 | number | — | — |
 | columns | 表单组件一行显示几个表单项 | number | — | 3 |
 
 
