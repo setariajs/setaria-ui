@@ -302,6 +302,12 @@ export default {
     // 获取各种按钮内容
     getControlButtons() {
 
+      const getExpandTextLabel = () => {
+        return this.innerExpand
+          ? (<div><i class="el-icon-arrow-up"></i><span>{this.t('el.proform.stow')}</span></div>)
+          : (<div><i class="el-icon-arrow-down"></i><span>{this.t('el.proform.expand')}</span></div>);
+      };
+
       const TEMPLATE_MAP = {
         // 搜索
         search: <el-button
@@ -323,7 +329,14 @@ export default {
         //  取消
         cancel: <el-button onClick={this.handleCancel}>{this.t('el.proform.cancel')}</el-button>,
         //  额外插槽
-        slot: this.$slots.controlButtons ? this.$slots.controlButtons : ''
+        slot: this.$slots.controlButtons ? this.$slots.controlButtons : '',
+        // 收起按钮
+        collapse: this.isQueryFilter && this.collapse ? (<el-button
+          type="text"
+          onClick={this.handleExpand}
+          class="control__expand-button">
+          {this.totalColSpan >= this.currentColumns ? getExpandTextLabel() : null}
+        </el-button>) : null
       };
 
       let innerLayout = [];
@@ -331,7 +344,7 @@ export default {
 
       if (isEmpty(this.controlButtonLayout)) {
         if (this.type === 'queryFilter') {
-          innerLayout = ['search', 'searchReset'];
+          innerLayout = ['search', 'searchReset', 'collapse'];
         } else if (this.type === 'modalForm') {
           innerLayout = ['submit', 'cancel'];
         } else {
@@ -357,7 +370,7 @@ export default {
       cardAttrs,
       currentColumns,
       dialogAttrs,
-      innerExpand,
+      // innerExpand,
       model,
       isMounted,
       // isSubmiting,
@@ -365,19 +378,19 @@ export default {
       innerUiSchema,
       queryFilterColumnConfig,
       schema,
-      totalColSpan,
+      // totalColSpan,
       type,
       title,
       submitter,
       labelPosition,
       labelSuffix,
-      handleExpand,
+      // handleExpand,
       handleSubmit,
       handleChange,
       handleModalButtonClick,
-      getControlButtons,
-      isQueryFilter,
-      collapse
+      getControlButtons
+      // isQueryFilter,
+      // collapse
     } = this;
     if (!isMounted) {
       return (<div></div>);
@@ -390,11 +403,6 @@ export default {
     // console.log('当前宽度', widthNumber);
     // console.log('当前每行列数', currentColumns);
     // console.log('元素所占列数总和', currentDisplayTotalColSpan, totalColSpan);
-    const getExpandTextLabel = () => {
-      return innerExpand
-        ? (<div><i class="el-icon-arrow-up"></i><span>{this.t('el.proform.stow')}</span></div>)
-        : (<div><i class="el-icon-arrow-down"></i><span>{this.t('el.proform.expand')}</span></div>);
-    };
 
     /**
      * 正常表单的操作区域
@@ -414,8 +422,8 @@ export default {
 
       return (
         <el-col
-          span={queryFilterColumnConfig.span}
-          offset={queryFilterColumnConfig.offset}
+          span={(queryFilterColumnConfig.span + queryFilterColumnConfig.offset).toFixed()}
+          // offset={}
           slot="formItems"
           class="el-pro-form__control">
           <el-form-item >
@@ -426,12 +434,12 @@ export default {
               getControlButtons()
             }
 
-            {isQueryFilter && collapse ? (<el-button
+            {/* {isQueryFilter && collapse ? (<el-button
               type="text"
               onClick={handleExpand}
               class="control__expand-button">
               {totalColSpan >= currentColumns ? getExpandTextLabel() : null}
-            </el-button>) : null}
+            </el-button>) : null} */}
           </el-form-item>
         </el-col>
       );
