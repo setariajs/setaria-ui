@@ -3,30 +3,30 @@ import ElDialog from 'setaria-ui/packages/dialog/src/component';
 import ElJsonForm from 'setaria-ui/packages/json-form/src/json-form';
 import Locale from 'setaria-ui/src/mixins/locale';
 import { getStyle } from 'setaria-ui/src/utils/dom';
-import { arrayFind, isEmpty } from 'setaria-ui/src/utils/util';
+import { isEmpty } from 'setaria-ui/src/utils/util';
 
 const NON_INITIAL = 'nonInitial';
 // const INITIALED = 'initialed';
 
 /** 配置表单列变化的容器宽度断点 */
-const BREAKPOINTS = {
-  vertical: [
-    // [breakpoint, cols, layout]
-    [513, 1, 'vertical'],
-    [785, 2, 'vertical'],
-    [1057, 3, 'vertical'],
-    // ! FIXME 4列情况下有错误，需要修正
-    [Infinity, 3, 'vertical']
-  ],
-  default: [
-    [513, 1, 'vertical'],
-    [701, 2, 'vertical'],
-    [1062, 3, 'horizontal'],
-    [1352, 3, 'horizontal'],
-    // ! FIXME 4列情况下有错误，需要修正
-    [Infinity, 3, 'horizontal']
-  ]
-};
+// const BREAKPOINTS = {
+//   vertical: [
+//     // [breakpoint, cols, layout]
+//     [513, 1, 'vertical'],
+//     [785, 2, 'vertical'],
+//     [1057, 3, 'vertical'],
+//     // ! FIXME 4列情况下有错误，需要修正
+//     [Infinity, 3, 'vertical']
+//   ],
+//   default: [
+//     [513, 1, 'vertical'],
+//     [701, 2, 'vertical'],
+//     [1062, 3, 'horizontal'],
+//     [1352, 3, 'horizontal'],
+//     // ! FIXME 4列情况下有错误，需要修正
+//     [Infinity, 3, 'horizontal']
+//   ]
+// };
 
 export default {
   name: 'ElProForm',
@@ -79,7 +79,13 @@ export default {
     },
     controlButtonLayout: {
       type: Array
-
+    },
+    forceCollapseColumns: {
+      type: Number
+    },
+    columns: {
+      type: Number,
+      default: 3
     }
 
   },
@@ -123,16 +129,17 @@ export default {
       return ret;
     },
     currentColumns() {
-      const { direction, widthNumber } = this;
-      const breakPoints = BREAKPOINTS[direction];
-      const breakPoint = arrayFind(breakPoints, item => widthNumber < item[0]);
-      const adjustColumns = breakPoint ? breakPoint[1] : 0;
-      const { columns } = this.$attrs;
-      if (typeof columns === 'number' && adjustColumns >= columns) {
-        return columns;
-      } else {
-        return adjustColumns;
-      }
+      return this.columns;
+      // const { direction, widthNumber } = this;
+      // const breakPoints = BREAKPOINTS[direction];
+      // const breakPoint = arrayFind(breakPoints, item => widthNumber < item[0]);
+      // const adjustColumns = breakPoint ? breakPoint[1] : 0;
+      // const { columns } = this.$attrs;
+      // if (typeof columns === 'number' && adjustColumns >= columns) {
+      //   return columns;
+      // } else {
+      //   return adjustColumns;
+      // }
     },
     widthNumber() {
       const { width } = this;
@@ -160,9 +167,14 @@ export default {
           propertyColspan = typeof propertyColspan === 'number' ? propertyColspan : 1;
           // 收起的场合
           if (!innerExpand && this.collapse) {
+
             if (currentColumns === 1 && index === 0) {
-              uiProperty['ui:hidden'] = false;
               // 只显示一行表单项目，其余的隐藏
+              uiProperty['ui:hidden'] = false;
+
+            } else if (this.forceCollapseColumns && this.forceCollapseColumns >= index + 1) {
+              // 强制在收起模式下显示几个字段
+              uiProperty['ui:hidden'] = false;
             } else if (this.currentDisplayTotalColSpan + propertyColspan + 1 > currentColumns) {
               uiProperty['ui:hidden'] = true;
             } else {
