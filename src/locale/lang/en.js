@@ -63,20 +63,20 @@ export default {
       giveUpUpdate: 'Do you want to abandon changes to the data?',
       onlyEditOne: 'Only one piece of data can be edited at the same time.',
       beforeCloseEdit: 'Please close the data in editing status first.',
-      addSibling: 'Add sibling',
-      addChild: 'Add child',
-      addData: 'Add data',
-      batchDelete: 'batch deletion',
-      allExpand: 'Expand all',
-      allStow: 'Shrink all',
+      addSibling: 'Add Sibling',
+      addChild: 'Add Child',
+      addData: 'Add Data',
+      batchDelete: 'Batch Deletion',
+      allExpand: 'Expand All',
+      allStow: 'Shrink All',
       save: 'Save',
       cancel: 'Cancel',
-      operation: 'Operate',
+      operation: 'Operation',
       update: 'Modify',
       delete: 'Delete',
       more: 'More',
-      allColumns: 'All columns',
-      settingColumns: 'Column settings',
+      allColumns: 'All Columns',
+      settingColumns: 'Column Settings',
       sheetName: 'data'
     },
     schema: {
@@ -115,7 +115,7 @@ export default {
       noMatch: 'No matching data',
       loading: 'Loading',
       placeholder: 'Select',
-      noData: 'No data'
+      noData: 'No Data'
     },
     pagination: {
       goto: 'Go to',
@@ -130,7 +130,7 @@ export default {
       error: 'Illegal input'
     },
     upload: {
-      deleteTip: 'press delete to remove',
+      deleteTip: 'Press delete to remove',
       delete: 'Delete',
       preview: 'Preview',
       continue: 'Continue'
@@ -147,7 +147,7 @@ export default {
     },
     transfer: {
       noMatch: 'No matching data',
-      noData: 'No data',
+      noData: 'No Data',
       titles: ['List 1', 'List 2'], // to be translated
       filterPlaceholder: 'Enter keyword', // to be translated
       noCheckedFormat: '{total} items', // to be translated
