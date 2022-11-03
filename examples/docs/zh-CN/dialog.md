@@ -240,6 +240,67 @@ Dialog 组件的内容可以是任意的，甚至可以是表格或表单，下�
 ```
 :::
 
+
+
+### Dialog对象添加到特定的DOM
+
+
+
+:::demo 通过`append-to-dom`属性来控制,当指定了`append-to-dom`属性且没有找到对应DOM时，会默认插入到`body`下
+
+```html
+<el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+<div id="test"></div>
+
+<el-dialog
+  title="提示"
+  :visible.sync="dialogVisible"
+  :append-to-dom="'#test'"
+  width="30%">
+  <span>这是一段信息</span>
+
+  <el-button type="text" @click="dialogVisible2 = true">点击打开 Dialog2</el-button>
+  <el-dialog
+    title="提示2"
+    :visible.sync="dialogVisible2"
+    :append-to-dom="'#test'"
+    width="30%">
+    <span>这是一段信息2</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible2 = false">取 消2</el-button>
+      <el-button type="primary" @click="dialogVisible2 = false">确 定2</el-button>
+    </span>
+  </el-dialog>
+
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
+
+<script>
+  export default {
+    data() {
+      return {
+        dialogVisible: false,
+        fullscreen: false,
+        dialogVisible2: false,
+      };
+    },
+    methods: {
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
+    }
+  };
+</script>
+```
+:::
+
 :::tip
 Dialog 的内容是懒渲染的，即在第一次被打开之前，传入的默认 slot 不会被渲染到 DOM 上。因此，如果需要执行 DOM 操作，或通过 `ref` 获取相应组件，请在 `open` 事件回调中进行。
 :::
@@ -259,6 +320,7 @@ Dialog 的内容是懒渲染的，即在第一次被打开之前，传入的默�
 | modal     | 是否需要遮罩层   | boolean   | — | true |
 | modal-append-to-body     | 遮罩层是否插入至 body 元素上，若为 false，则遮罩层会插入至 Dialog 的父元素上   | boolean   | — | true |
 | append-to-body     | Dialog 自身是否插入至 body 元素上。嵌套的 Dialog 必须指定该属性并赋值为 true   | boolean   | — | false |
+| append-to-dom     | Dialog 自身是否插入至 某个元素上。此属性优先级高于append-to-body   | String   | — | body |
 | lock-scroll | 是否在 Dialog 出现时将 body 滚动锁定 | boolean | — | true |
 | custom-class      | Dialog 的自定义类名 | string    | — | — |
 | close-on-click-modal | 是否可以通过点击 modal 关闭 Dialog | boolean    | — | true |
@@ -269,6 +331,7 @@ Dialog 的内容是懒渲染的，即在第一次被打开之前，传入的默�
 | dragable | 是否开启拖拽功能 | boolean    | — | true |
 | destroy-on-close | 关闭时销毁 Dialog 中的元素 | boolean | — | false |
 | browser-fullscreen | 是否显示浏览器全屏功能，当且仅当此属性为true并且浏览器支持exitFullscreen时有效 | boolean | — | true |
+
 
 ### Slot
 | name | 说明 |

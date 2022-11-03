@@ -78,6 +78,9 @@
         type: Boolean,
         default: false
       },
+      appendToDom: {
+        type: String
+      },
 
       lockScroll: {
         type: Boolean,
@@ -145,9 +148,11 @@
           this.$nextTick(() => {
             this.$refs.dialog.scrollTop = 0;
           });
-          if (this.appendToBody) {
-            document.body.appendChild(this.$el);
-          }
+          this.toDom();
+
+          // if (this.appendToBody) {
+          //   document.body.appendChild(this.$el);
+          // }
         } else {
           this.exitFullscreen();
           this.$el.removeEventListener('scroll', this.updatePopper);
@@ -266,6 +271,28 @@
       },
       afterLeave() {
         this.$emit('closed');
+      },
+      getDom() {
+        if (this.appendToDom) {
+          let dom = null;
+          try {
+            dom = document.querySelector(this.appendToDom);
+            if (!dom) {
+              dom = document.body;
+            }
+          } catch (e) {
+            dom = document.body;
+          }
+          return dom;
+        } else if (this.appendToBody) {
+          return document.body;
+        }
+        return null;
+      },
+      toDom() {
+        if (this.appendToBody || this.appendToDom) {
+          this.getDom().appendChild(this.$el);
+        }
       }
     },
 
@@ -273,15 +300,13 @@
       if (this.visible) {
         this.rendered = true;
         this.open();
-        if (this.appendToBody) {
-          document.body.appendChild(this.$el);
-        }
+        this.toDom();
       }
     },
 
     destroyed() {
       // if appendToBody is true, remove DOM node after destroy
-      if (this.appendToBody && this.$el && this.$el.parentNode) {
+      if ((this.appendToBody || this.appendToDom) && this.$el && this.$el.parentNode) {
         this.$el.parentNode.removeChild(this.$el);
       }
     }
