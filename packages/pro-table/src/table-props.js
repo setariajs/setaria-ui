@@ -25,7 +25,7 @@ export const COMMON_TABLE_PROPS = {
     default: false
   },
   border: {
-    type: [Boolean,String],
+    type: [Boolean, String],
     default: true
   },
   height: {
