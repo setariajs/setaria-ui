@@ -768,7 +768,7 @@ export default {
       CustomSlot: '装饰线条',
       Readonly: '信息不可修改'
     };
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 100; i += 1) {
       const data = {
         ...this.headInfoData
       };
@@ -1836,6 +1836,8 @@ export default {
 | control-column-trigger  | 操作列的触发方式 | String | click,hover | click  |
 | show-overflow  | 单元格内容溢出是否显示省略号 | Boolean | — | true |
 | tool-bar-button-type  | 表格顶部操作按钮的显示样式 | String | text,button | text |
+| scroll-x  | 横向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | — |
+| scroll-y  | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 20 } |
 
 
 

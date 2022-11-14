@@ -785,6 +785,8 @@ export default {
 | row-class-name    | 待补充 | String | — | —  |
 | control-column-trigger  | 操作列的触发方式 | String | click,hover | click  |
 | show-overflow  | 单元格内容溢出是否显示省略号 | Boolean | — | true |
+| scroll-x  | 横向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 15 } |
+| scroll-y  | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 20 } |
 
 ### UI-Schema Attributes
 

@@ -117,12 +117,17 @@ export default Vue.extend({
       rowClassName,
       pagerScopedSlots,
       showOverflow,
-      pagerBackground
+      pagerBackground,
+      scrollX,
+      scrollY
     } = this;
     this.$nextTick(() => {
       // 表格状态发生变化时，临时合并失效，需要重新合并
       this.refreshTempState();
     });
+
+    const innerScrollX = _.merge(scrollX, { gt: 15 });
+    const innerScrollY = _.merge(scrollY, { gt: 20 });
     return (
       <div class="el-table-container">
         <div class="el-pro-table__toolbar">
@@ -135,8 +140,8 @@ export default Vue.extend({
             class="el-pro-table"
             {...{ attrs: $attrs }}
             size="mini"
-            scroll-x={{ gt: 15 }}
-            scroll-y={{ gt: 20 }}
+            scroll-x={innerScrollX}
+            scroll-y={innerScrollY}
             border={border}
             stripe={stripe}
             resizable

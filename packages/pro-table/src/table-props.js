@@ -210,6 +210,14 @@ export const COMMON_TABLE_PROPS = {
   controlColumnTrigger: {
     type: String,
     default: 'click'
+  },
+  scrollY: {
+    type: Object,
+    default: null
+  },
+  scrollX: {
+    type: Object,
+    default: null
   }
 };
 

@@ -1272,7 +1272,10 @@ export default Vue.extend({
       editingRow,
       handleValidError,
       showOverflow,
-      toolBarButtonType
+      toolBarButtonType,
+      scrollY,
+      scrollX
+
     } = this;
     const dialogOnListener = {
       'update:visible': (val) => {
@@ -1442,6 +1445,8 @@ export default Vue.extend({
       />
     ) : null;
 
+    const innerScrollY = _.merge(scrollY, { gt: 20 });
+
     const grid = (
       <div class="el-table-container">
         {tableToolbar()}
@@ -1478,7 +1483,8 @@ export default Vue.extend({
             export-config={innerExportConfig}
             valid-config={validConfig}
             row-id={innerRowKey}
-            scroll-y={{ gt: 20 }}
+            scroll-y={innerScrollY}
+            scroll-x={scrollX}
             merge-cells={innerMergeCells}
             show-footer={showFooter}
             footer-method={footerMethod}
