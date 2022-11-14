@@ -489,6 +489,7 @@ export default {
       if (this.isMultipleSelect) {
         this.getTableActionRef().clearCheckboxRow();
         this.getTableActionRef().clearCheckboxReserve();
+        this.emitSelectionChange([], {});
       } else if (this.selectionType === 'radio') {
         this.getTableActionRef().clearRadioRow();
         this.getTableActionRef().clearRadioReserve();

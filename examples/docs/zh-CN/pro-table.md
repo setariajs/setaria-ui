@@ -30,6 +30,7 @@ Vue.component('el-pro-table', ProTable);
 ```html
 <div>
   <el-pro-table
+    ref="proTable"
     :schema="schema"
     :ui-schema="uiSchema"
     row-key="id"
@@ -44,6 +45,8 @@ Vue.component('el-pro-table', ProTable);
     @cell-mouseleave="cellMouseleave">
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
+      <el-button type="text"  @click="selectAll">设置全选</el-button>
+       <el-button type="text"  @click="selectAllR">设置全部反选</el-button>
     </template>
     <template slot="num1_filter" slot-scope="{ column, $panel }">
       <div style="padding: 0 5px;height: 40px;display: flex;align-items: center;">
@@ -230,6 +233,12 @@ Vue.component('el-pro-table', ProTable);
       this.data = tableData;
     },
     methods: {
+      selectAllR(){
+        this.$refs.proTable.clearSelection()
+      },
+      selectAll(){
+        this.$refs.proTable.setFullCheckboxRow()
+      },
       onRequest(params) {
         const { pageNum, pageSize } = params;
         const tableData = [];
