@@ -582,6 +582,9 @@ export default Vue.extend({
       // dialog的open在第一次打开窗口时不触发，所以在此处监听dialog显示状态，触发对话框打开逻辑
       if (val) {
         this.handleFormDialogOpen();
+      } else {
+        this.handleFormDialogClose();
+
       }
     },
     labelMode(val) {
@@ -1176,6 +1179,9 @@ export default Vue.extend({
     },
     handleFormDialogOpen() {
       this.$emit('dialog-open', this.currentFormData);
+    },
+    handleFormDialogClose() {
+      this.$emit('dialog-close', this.currentFormData);
     },
     handleValidError(scope) {
       this.$emit('valid-error', scope);

@@ -943,6 +943,7 @@ export default {
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
     @dialog-open="onDialogOpen"
+    @dialog-close="onDialogClose"
     :save="save"
     :tool-bar-button-type="'button'"
   >
@@ -1163,6 +1164,9 @@ export default {
     },
     onDialogOpen(data) {
       this.reactItem(data);
+    },
+    onDialogClose(){
+      console.log('onDialogClose')
     },
     onRowButtonClick(key, { row }) {
       this.$message.info(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);
@@ -1858,6 +1862,7 @@ export default {
 | page-change | 分页器内容变更 | val { currentPage, pageSize } |
 | data-change | 行项目修改后(原始组件change事件)触发 | key 表单字段的 Key, val 表单字段的值, data 当前修改的数据（行编辑模式时为行数据，弹窗编辑模式时为展开的表单数据）, originData 行编辑前数据，仅为行编辑模式时存在 |
 | dialog-open | 表单对话框显示时触发 | val 当前行数据 |
+| dialog-close | 表单对话框关闭时触发 | val 当前行数据 |
 | edit-actived | 行或单元格激活编辑状态时触发 | - |
 | edit-closed | 行或单元格编辑状态被关闭时触发 | - |
 | cell-mouseenter  | 当鼠标移动到单元格时会触发该事件 | val 当前值 |
