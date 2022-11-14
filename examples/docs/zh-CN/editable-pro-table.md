@@ -926,6 +926,7 @@ export default {
     <el-button type="primary" @click="() => { this.labelMode = !this.labelMode }">{{ labelMode ? '进入编辑' : '退出编辑' }}</el-button>
   </div>
   <el-editable-pro-table
+    ref="proTable"
     :label-mode="labelMode"
     column-width="auto"
     multiple-selection
@@ -951,6 +952,9 @@ export default {
       <el-button type="text" @click="canAdd=!canAdd">{{ canAdd ? '禁止' : '允许' }}新增</el-button>
       <el-button type="text" @click="canUpdate=!canUpdate">{{ canUpdate ? '禁止' : '允许' }}修改</el-button>
       <el-button type="text" @click="canDelete=!canDelete">{{ canDelete ? '禁止' : '允许' }}删除</el-button>
+      <el-button type="text"  @click="selectAll">设置全选</el-button>
+      <el-button type="text"  @click="selectAllR">设置全部取消选择</el-button>
+      
     </template>
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
@@ -1137,6 +1141,12 @@ export default {
     }
   },
   methods: {
+     selectAllR(){
+        this.$refs.proTable.clearSelection()
+      },
+      selectAll(){
+        this.$refs.proTable.setFullCheckboxRow()
+      },
     reactItem(data) {
       if (data.Enum === '2') {
         this.schema.properties.linkage.oneOf = this.lineageEnumArray;

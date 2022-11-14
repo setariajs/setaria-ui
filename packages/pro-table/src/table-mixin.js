@@ -1568,7 +1568,7 @@ export default {
      * 设置所有数据（包含分页场景下的其他页数据）的选择状态
      * @param val
      */
-    setFullCheckboxRow(val) {
+    setFullCheckboxRow(val = true) {
       const {
         data,
         getTableActionRef,

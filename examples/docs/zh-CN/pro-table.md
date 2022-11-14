@@ -46,7 +46,7 @@ Vue.component('el-pro-table', ProTable);
     <template slot="batchControl">
       <el-button type="text" :disabled="!isBatchButtonEnable">批量删除</el-button>
       <el-button type="text"  @click="selectAll">设置全选</el-button>
-       <el-button type="text"  @click="selectAllR">设置全部反选</el-button>
+       <el-button type="text"  @click="selectAllR">设置全部取消选择</el-button>
     </template>
     <template slot="num1_filter" slot-scope="{ column, $panel }">
       <div style="padding: 0 5px;height: 40px;display: flex;align-items: center;">
