@@ -98,7 +98,7 @@ export default {
       validate9: '请输入小于{0}的{1}'
     },
     proform: {
-      stow: '收起',
+      collapse: '收起',
       expand: '展开',
       submit: '提交',
       reset: '重置',

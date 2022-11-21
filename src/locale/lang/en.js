@@ -98,7 +98,7 @@ export default {
       validate9: 'Please enter {1} less than {0}'
     },
     proform: {
-      stow: 'Stow',
+      collapse: 'Collapse',
       expand: 'Expand',
       submit: 'Submit',
       reset: 'Reset',

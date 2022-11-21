@@ -97,7 +97,7 @@ export default {
       validate9: '{0}未満の{1}を入力してください'
     },
     proform: {
-      stow: 'ストウ',
+      collapse: 'ストウ',
       expand: '拡大する',
       submit: '提出する',
       reset: 'リセット',

@@ -304,7 +304,7 @@ export default {
 
       const getExpandTextLabel = () => {
         return this.innerExpand
-          ? (<div><i class="el-icon-arrow-up"></i><span>{this.t('el.proform.stow')}</span></div>)
+          ? (<div><i class="el-icon-arrow-up"></i><span>{this.t('el.proform.collapse')}</span></div>)
           : (<div><i class="el-icon-arrow-down"></i><span>{this.t('el.proform.expand')}</span></div>);
       };
 
