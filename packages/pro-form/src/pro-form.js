@@ -253,6 +253,7 @@ export default {
     },
     handleExpand() {
       this.innerExpand = !this.innerExpand;
+      this.$emit('expandChange', this.innerExpand);
     },
     /**
      * 表单提交事件处理

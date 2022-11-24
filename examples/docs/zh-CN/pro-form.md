@@ -165,7 +165,9 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     :ui-schema="uiSchema"
     label-width="100px"
     label-position="top"
-    :after-submit="onSubmit">
+    :after-submit="onSubmit"
+    :expand="expand"
+    @expandChange="hanlderExpand">
     
   </el-pro-form>
   <p>result:</p>
@@ -177,6 +179,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
   export default {
     data() {
       return {
+        expand:true,
         form1: {
           id: '',
           password: '',
@@ -268,6 +271,9 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
             resolve();
           }, 1000);
         });
+      },
+      hanlderExpand(val){
+        console.log('hanlderExpand',val)
       }
     }
   }
@@ -688,6 +694,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | visibleChange  | `type` 为 `modalForm` 时有效，对话框显示/隐藏状态变更时触发 | key 表单字段的Key, val 表单字段的值 |
 | clear  | 表单重置按钮点击后触发 | — |
 | change   | 表单字段值变更时回调 | key 表单字段的 Key, val 表单字段的值 |
+| expandChange   | 表单折叠状态变更 |  val 表单字段的值 |
 
 
 ### ProForm Slot
