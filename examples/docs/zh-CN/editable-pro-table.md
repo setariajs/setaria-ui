@@ -335,7 +335,7 @@ export default {
       <el-button size="mini">Custom Cancel</el-button>
     </template>
 
-        <!-- 行上自定义按钮 -->
+    <!-- 行上自定义按钮 -->
     <template slot="rowButtons" slot-scope="scope">
       <el-button size="mini" @click="onRowButtonClick('custom1',scope.row)">Custom1</el-button>
       <el-button size="mini" icon="el-icon-share"  @click="onRowButtonClick('custom2',scope.row)"/>
