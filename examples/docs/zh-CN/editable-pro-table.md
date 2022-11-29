@@ -280,6 +280,7 @@ export default {
 :::
 
 ### 自定义控制按钮
+通过 `addData`、`modifyData`、`deleteData` 等插槽来实现自定义按钮功能
 
 :::demo
 
@@ -301,27 +302,43 @@ export default {
     :data="data"
     :save="save"
     stripe
-    control-column-width="300px"
+    control-column-width="800px"
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
+    :row-buttons="getRowButton"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
     @row-button-click="onRowButtonClick"
   >
+    <!-- 添加数据按钮 -->
     <template slot="addData" slot-scope="scope">
       <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Add</el-button>
     </template>
+    <!-- 修改数据按钮 -->
     <template slot="modifyData" slot-scope="scope">
       <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Modify</el-button>
     </template>
+    <!-- 删除数据按钮 -->
     <template slot="deleteData" slot-scope="scope">
       <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Delete</el-button>
     </template>
+    <!-- 保存数据按钮 -->
+    <template slot="batchDeleteData" slot-scope="scope">
+      <el-button size="mini" >Custom Batch Delete</el-button>
+    </template>
+    <!-- 保存数据按钮 -->
     <template slot="saveData" slot-scope="scope">
       <el-button size="mini">Custom Save</el-button>
     </template>
+    <!-- 取消操作数据按钮 -->
     <template slot="cancelData" slot-scope="scope">
       <el-button size="mini">Custom Cancel</el-button>
+    </template>
+
+        <!-- 行上自定义按钮 -->
+    <template slot="rowButtons" slot-scope="scope">
+      <el-button size="mini" @click="onRowButtonClick('custom1',scope.row)">Custom1</el-button>
+      <el-button size="mini" icon="el-icon-share"  @click="onRowButtonClick('custom2',scope.row)"/>
     </template>
   </el-editable-pro-table>
   <div>
@@ -441,9 +458,7 @@ export default {
     onSelectionChange(val,currentItem) {
       console.log(val, currentItem);
     },
-    onRowButtonClick(key, row) {
-      console.log(key, row);
-    },
+   
     getTableIsEditStatus(){
       console.log(this.$refs.ept.getIsEditOnRow());
     },
@@ -452,6 +467,25 @@ export default {
     },
     onGetChangeData() {
       console.log(this.$refs.ept.getChangedRecords());
+    },
+    onRowButtonClick(key, row) {
+      console.log(key, row);
+    },
+    getRowButton({ rowIndex }) {
+      return [
+        {
+          key: '1',
+          label: `自定义按钮`,
+        },
+        {
+          key: '2',
+          label: 'el-icon-setting',
+        },
+        // {
+        //   key: '2',
+        //   label: `按钮B${rowIndex}`,
+        // },
+      ];
     },
     save(data, mode) {
       return new window.Promise((resolve, reject) => {
@@ -1838,6 +1872,8 @@ export default {
 | tool-bar-button-type  | 表格顶部操作按钮的显示样式 | String | text,button | text |
 | scroll-x  | 横向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | — |
 | scroll-y  | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 20 } |
+| is-show-default-batch-control  | 是否默认显示批量操作等按钮 | Boolean | — | true |
+
 
 
 
@@ -1854,8 +1890,11 @@ export default {
 | addData | 新增按钮插槽 |
 | modifyData | 修改按钮作用域插槽 |
 | deleteData | 删除按钮作用域插槽 |
+| batchDeleteData | 批量删除按钮作用域插槽 |
 | saveData | 保存按钮作用域插槽 |
 | cancelData | 保存取消按钮作用域插槽 |
+| rowButtons | 自定义行上按钮 |
+
 
 ### 事件
 

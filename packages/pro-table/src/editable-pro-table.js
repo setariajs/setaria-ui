@@ -1331,7 +1331,7 @@ export default Vue.extend({
             </el-button>
           );
           const addRowButton = addData ? (
-            <span on-click={()=>{onTableAddRowClick();}}>
+            <span class="pro-table__control_column_button" on-click={()=>{onTableAddRowClick();}}>
               { typeof addData === 'function' ? addData({
                 $tableDataEditing: !!editingRow
               }) : addData }
@@ -1378,22 +1378,34 @@ export default Vue.extend({
 
     const getCommonToolbarButtonByAfter = () => {
       const ret = [];
+
       if (isShowDefaultBatchControl && !labelMode) {
         const style = {
           display: innerCanDelete ? 'inline-block' : 'none'
         };
-        const deleteRowButton = (
-          // innerCanDelete ? (
-          <el-button
-            style={style}
-            type={toolBarButtonType}
-            on-click={onBatchDeleteData}
-          >
-            {t('el.protable.batchDelete')}
-          </el-button>
-          // ) : null
-        );
-        ret.push(deleteRowButton);
+
+        const deleteRowButton = () => {
+          if ($scopedSlots.batchDeleteData) {
+            return (
+              <span style={style} class="pro-table__control_column_button" on-click={onBatchDeleteData}>
+                { $scopedSlots.batchDeleteData() }
+              </span>
+            );
+          } else {
+            return (
+              <el-button
+                style={style}
+                type={toolBarButtonType}
+                on-click={onBatchDeleteData}
+              >
+                {t('el.protable.batchDelete')}
+              </el-button>
+            );
+          }
+
+        };
+
+        ret.push(deleteRowButton());
       }
       return ret;
     };

@@ -696,6 +696,14 @@ export default {
             if (typeof rowButtons === 'function' && !getIsEditOnRow()) {
               rowButtonList = rowButtons(scope) || [];
             }
+            if ($scopedSlots.rowButtons && !getIsEditOnRow()) {
+              rowButtonList.push({render: (scope) => {
+                return (
+                  $scopedSlots.rowButtons(scope)
+                );
+              }});
+            }
+
             if (!labelMode) {
               // 添加删除按钮
               // 当前编辑状态为激活状态时，需要隐藏删除按钮
