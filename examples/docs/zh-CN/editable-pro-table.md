@@ -322,7 +322,7 @@ export default {
     <template slot="deleteData" slot-scope="scope">
       <el-button size="mini" :disabled="scope.$tableDataEditing">Custom Delete</el-button>
     </template>
-    <!-- 保存数据按钮 -->
+    <!-- 批量删除数据按钮 -->
     <template slot="batchDeleteData" slot-scope="scope">
       <el-button size="mini" >Custom Batch Delete</el-button>
     </template>
