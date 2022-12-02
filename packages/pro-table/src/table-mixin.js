@@ -840,8 +840,11 @@ export default {
                     </el-button>
                   );
                 }
+                const onCommand = (key)=>{
+                  onCustomButtonClick(key, scope)();
+                };
                 const moreElt = (
-                  <el-dropdown style="margin-left: 15px">
+                  <el-dropdown style="margin-left: 15px" on-command={onCommand}>
                     <el-button type="text">
                       {t('el.protable.more')}<i class="el-icon-arrow-down el-icon--right" />
                     </el-button>
@@ -849,10 +852,11 @@ export default {
                       {rowButtonList.map(({ key, label }, index) => {
                         if (index >= i) {
                           return (
-                            <el-dropdown-item>
+                            <el-dropdown-item
+                              command={key}
+                            >
                               <el-button
                                 type="text"
-                                on-click={onCustomButtonClick(key, scope)}
                               >
                                 {label}
                               </el-button>
@@ -1061,8 +1065,10 @@ export default {
       } = this;
       const tableRef = this.getTableActionRef();
       return (event) => {
-        event.preventDefault();
-        event.stopPropagation();
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
         // 修改按钮点击事件处理
         if (key === MODIFY_BUTTON.key) {
           this.controlStatus = EDIT_TYPE.UPDATE;

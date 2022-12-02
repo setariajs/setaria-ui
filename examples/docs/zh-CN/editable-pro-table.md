@@ -849,10 +849,10 @@ export default {
           key: '1',
           label: `按钮A${rowIndex}`,
         },
-        // {
-        //   key: '2',
-        //   label: `按钮B${rowIndex}`,
-        // },
+        {
+          key: '2',
+          label: `按钮B${rowIndex}`,
+        },
       ];
     },
     onDataChange(key, val, data, originData) {
