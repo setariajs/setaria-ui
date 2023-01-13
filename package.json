@@ -30,7 +30,7 @@
     "pub": "npm run bootstrap && sh build/git-release.sh && sh build/release.sh && node build/bin/gen-indices.js",
     "test": "npm run lint && npm run build:theme && cross-env CI_ENV=/dev/ BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test:watch": "npm run build:theme && cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
-    "build-publish": "npm version patch && git push && npm publish --registry=https://registry.npmjs.org/"
+    "build-publish": "npm version patch  && git push && npm publish --registry=https://registry.npmjs.org/"
   },
   "faas": [
     {

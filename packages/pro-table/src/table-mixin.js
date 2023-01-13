@@ -1411,7 +1411,10 @@ export default {
       this.columnSettingKeys = [];
       // 多级表头场合，column为tree结构
       let settings = XEUtils.mapTree(val, (item) => {
-        let title = item.title;
+        let title = item.title || '';
+        if (!title && item.field) {
+          console.error(`[${item.field}]字段 未找到！请查看对应Schema并联系后端补全`);
+        }
         // 处理column title中的换行符
         if (title.indexOf('<br/>') !== -1) {
           title = title.replace('<br/>', '');

@@ -224,9 +224,9 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   let componentProps = {};
   // const componentChildren = [];
   // title为空的场合
-  if (isEmpty(property.title)) {
-    return componentProps;
-  }
+  // if (isEmpty(property.title)) {
+  //   return componentProps;
+  // }
   let componentTagName = '';
   const props = {
     value: model[key]

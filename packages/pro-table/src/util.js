@@ -44,7 +44,7 @@ export function getSchemaByKeyArray(schema, arr) {
   };
 }
 
-function byteLength(str) {
+function byteLength(str = '') {
   let length = 0;
   Array.from(str).forEach((char) => {
     if (char.charCodeAt(0) > 255) {
