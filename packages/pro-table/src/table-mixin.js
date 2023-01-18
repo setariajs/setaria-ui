@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { EDIT_TYPE, ORIGIN_UI_OPTION } from 'setaria-ui/src/constants/index';
+import { EDIT_TYPE, ORIGIN_UI_OPTION, JSON_UI_SCHEMA } from 'setaria-ui/src/constants/index';
 import { initialSetariaSchema } from 'setaria-ui/src/utils/schema';
 import { arrayFindIndex, callbackExec } from 'setaria-ui/src/utils/util';
 import XEUtils from 'xe-utils';
@@ -117,6 +117,23 @@ export default {
     },
     innerUiSchema() {
       return this.uiSchema || {};
+    },
+    innerUiSchemaForDialogJsonForm() {
+      console.log('innerUiSchemaForDialogJsonForm');
+      const uiSchema = _.cloneDeep(this.uiSchema || {});
+      Object.keys(uiSchema).forEach(key=>{
+        const uiItem = uiSchema[key];
+        if (uiItem[JSON_UI_SCHEMA.UI_FORM_ITEM_HIDDEN] === true) {
+          uiItem[JSON_UI_SCHEMA.UI_HIDDEN] = true;
+        } else if (typeof uiItem[JSON_UI_SCHEMA.UI_HIDDEN] === 'boolean') {
+          // 短路
+        } else {
+          uiItem[JSON_UI_SCHEMA.UI_HIDDEN] = false;
+
+        }
+
+      });
+      return uiSchema;
     },
     innerControlColumnConfig() {
       const { controlColumnConfig } = this;

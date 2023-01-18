@@ -685,6 +685,10 @@ export default {
             title: '搜索帮助',
             type: 'string'
           }, 
+          formItemHiddenField: {
+            title: '动态表单状态下隐藏与否字段',
+            type: 'string'
+          }, 
         },
         required: [ 'Name' ],
       },
@@ -753,6 +757,9 @@ export default {
             minWidth: '150px'
           },
         },
+        formItemHiddenField: {
+          'ui:formItemHidden':false,
+        },
         searchHelp: {
           'ui:options': {
             'suffix-icon': 'el-icon-search',
@@ -800,7 +807,8 @@ export default {
       'Boolean': true,
       CustomSlotCode: 4.3,
       CustomSlot: '装饰线条',
-      Readonly: '信息不可修改'
+      Readonly: '信息不可修改',
+      formItemHiddenField:''
     };
     for (let i = 0; i < 100; i += 1) {
       const data = {
@@ -857,6 +865,15 @@ export default {
     },
     onDataChange(key, val, data, originData) {
       console.log(`项目${key}修改为${val}`, data, originData);
+
+      if(key === 'Enum' ){
+        if(val === 1){
+          this.uiSchema.formItemHiddenField['ui:formItemHidden'] = true
+        }else{
+          this.uiSchema.formItemHiddenField['ui:formItemHidden'] = false
+
+        }
+      }
     },
     onRowButtonClick(key, { row }) {
       this.$message.info(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);

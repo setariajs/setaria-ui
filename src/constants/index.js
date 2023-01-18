@@ -3,6 +3,7 @@ export const JSON_UI_SCHEMA = {
   UI_OPTIONS: 'ui:options',
   UI_DISABLED: 'ui:disabled',
   UI_HIDDEN: 'ui:hidden',
+  UI_FORM_ITEM_HIDDEN: 'ui:formItemHidden',
   UI_FORMAT: 'ui:format',
   UI_ON: 'ui:on',
   UI_NATIVE_ON: 'ui:nativeOn',

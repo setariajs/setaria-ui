@@ -1212,7 +1212,8 @@ export default Vue.extend({
       height,
       maxHeight,
       innerSchema,
-      innerUiSchema,
+      // innerUiSchema,
+      innerUiSchemaForDialogJsonForm,
       onTableCheckboxChange,
       onTableRadioChange,
       onTableCheckboxAll,
@@ -1449,7 +1450,7 @@ export default Vue.extend({
         {...{ props: dialogFormProps }}
         schema={innerSchema}
         rules={innerRules}
-        ui-schema={innerUiSchema}
+        ui-schema={innerUiSchemaForDialogJsonForm}
         label-position={dialogFormProps['label-position']} // 不知道为啥，dialogFormProps直接label-position属性不好用。。。。所以补偿下
         label-width="auto"
         scopedSlots={$scopedSlots}
