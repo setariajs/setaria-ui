@@ -119,7 +119,6 @@ export default {
       return this.uiSchema || {};
     },
     innerUiSchemaForDialogJsonForm() {
-      console.log('innerUiSchemaForDialogJsonForm');
       const uiSchema = _.cloneDeep(this.uiSchema || {});
       Object.keys(uiSchema).forEach(key=>{
         const uiItem = uiSchema[key];
