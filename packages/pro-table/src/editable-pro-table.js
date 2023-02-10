@@ -1146,6 +1146,20 @@ export default Vue.extend({
             }
           }
         });
+      } else if (this.$scopedSlots.modifyDialog) {
+        this.isSaveLoading = true;
+        const res = save(currentFormData, controlStatus);
+        if (res.then) {
+          res.then(() => {
+            afterExec();
+          }).finally(() => {
+            // 关闭
+            this.isSaveLoading = false;
+          });
+        } else if (res) {
+          afterExec();
+        }
+
       } else {
         afterExec();
       }
@@ -1604,7 +1618,11 @@ export default Vue.extend({
             {...{ props: innerDialogProps }}
             {...{ on: dialogOnListener }}
           >
-            {jsonForm}
+            {
+              $scopedSlots.modifyDialog ? $scopedSlots.modifyDialog({
+                data: currentFormData
+              }) : jsonForm
+            }
             <span slot="footer" class="editable-pro-table__dialog-footer">
               <el-button type="primary" loading={isSaveLoading} on-click={onDialogSaveButtonClick}>
                 {t('el.protable.save')}

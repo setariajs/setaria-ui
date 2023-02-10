@@ -1298,7 +1298,7 @@ export default {
 
 ### 强制行内编辑
 
-通过属性`force-edit-on-row`来控制是否行内编辑
+通过属性`force-edit-on-row`和指定`editConfig`中`trigger`为`manual`的场合来控制是否行内编辑
 
 可配合`schema.properties[属性名].editable`为`false` 设置某个字段不可编辑模式
 
@@ -1310,6 +1310,7 @@ export default {
     :label-mode="false"
     column-width="auto"
     :force-edit-on-row="true"
+    :edit-config="{trigger: 'manual'}"
     multiple-selection
     :schema="schema"
     :ui-schema="uiSchema"
@@ -1808,6 +1809,7 @@ export default {
     },
     save(data, mode) {
       return new window.Promise((resolve) => {
+        debugger;
         setTimeout(() => {
           console.log(data, mode);
           resolve({});
