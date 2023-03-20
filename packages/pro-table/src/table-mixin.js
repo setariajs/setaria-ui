@@ -1480,6 +1480,7 @@ export default {
         onColumnSettingTreeCheckboxChange,
         onColumnSettingCheck,
         onColumnSettingTreeNodeCheck,
+        columnSettingDraggable,
         columnSettingDefaultCheckedKeys,
         isAllColumnShow,
         isParticalColumnShow,
@@ -1513,6 +1514,21 @@ export default {
             this.$emit('column-visible-reset');
           });
       };
+      const onColumnSettingNodeDragEnd = (e, t, n, a)=>{
+        // console.log(e, t, n, a);
+        const list = this.columnSettingKeys.map(item=>{
+          return item.key;
+        });
+
+        this.$emit('column-setting-node-drag-end', list, e, t, n, a);
+      };
+      const columnSettingAllowDrop = (draggingNode, dropNode, type)=>{
+        if (type === 'inner') {
+          return false;
+        }
+        return true;
+
+      };
       if (columnSettingKeys.length > 0) {
         this.refreshColumnSettingTopCheckboxStatus();
         return (
@@ -1544,14 +1560,17 @@ export default {
               node-key="key"
               ref="columnSettingTree"
               props={{ label: 'title' }}
-              icon-class="''"
+              icon-class={columnSettingDraggable ? 'el-icon-rank' : ''}
+              draggable={columnSettingDraggable}
               default-expand-all={true}
               expand-on-click-node={false}
               default-checked-keys={columnSettingDefaultCheckedKeys}
+              allow-drop={columnSettingAllowDrop}
               show-checkbox
               check-on-click-node
               on-check={onColumnSettingCheck}
               on-check-change={onColumnSettingTreeNodeCheck}
+              on-node-drag-end={onColumnSettingNodeDragEnd}
               render-content={renderContent}
             />
             <el-button icon="el-icon-setting" type="text" slot="reference">

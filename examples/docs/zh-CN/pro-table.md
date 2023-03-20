@@ -787,6 +787,8 @@ export default {
 | show-overflow  | 单元格内容溢出是否显示省略号 | Boolean | — | true |
 | scroll-x  | 横向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 15 } |
 | scroll-y  | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 20 } |
+| column-setting-draggable  | 是否开启在列设置的Item拖拽功能 | Boolean | — | false |
+
 
 ### UI-Schema Attributes
 
@@ -821,6 +823,7 @@ export default {
 | cell-mouseleave  | 当鼠标移开单元格时会触发该事件 | val 当前值 |
 | column-visible-change  | 当用户操作右上角显示列功能时的回调 | checkedKeys 显示列的key数组 |
 | column-visible-reset  | 当用户操作右上角显示列功能的重置按钮回调 | -  |
+| column-setting-node-drag-end  | 当用户操作右上角拖动列功能Item时的回调，需配合`column-setting-draggable`属性一起使用 | list 被拖拽之后的list key数组 |
 
 
 ### ProTable Methods

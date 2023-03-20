@@ -549,6 +549,7 @@ export default {
     :label-mode="labelMode"
     multiple-selection
     column-width="auto"
+    columnSettingDraggable
     :row-buttons="getRowButton"
     :schema="schema"
     :ui-schema="uiSchema"
@@ -1822,6 +1823,293 @@ export default {
 ```
 :::
 
+
+
+### 列控制的拖动和显示
+
+- 拖动功能通过`columnSettingDraggable`属性并配合`column-setting-node-drag-end`事件来获取拖拽之后的相关数据
+
+- 用户点击了列控制中的checkbox时，通过`column-visible-change`和`column-visible-reset`两个事件来获取相关数据
+
+
+:::demo
+```html
+<template>
+  <el-editable-pro-table
+    :label-mode="true"
+    multiple-selection
+    column-width="auto"
+    columnSettingDraggable
+    :schema="schema"
+    :ui-schema="uiSchema"
+    :data="data"
+    :form-label-suffix="':'"
+    :control-column-config="{
+      align:'left'
+    }"
+    ref="editTable"
+    @column-visible-change="onColumnVisibleChange"
+    @column-visible-reset="onColumnVisibleReset"
+    @column-setting-node-drag-end="onColumnSettingNodeDragEnd"
+  >
+    <template slot="index" slot-scope="scope">
+      <el-button type="text">{{ scope.rowIndex }}{{scope.data.test}}</el-button>
+    </template>
+    <template slot="CustomSlot" slot-scope="scope">
+      <el-rate :disabled="scope.status !== 'edit'"
+               v-model="scope.data.CustomSlotCode"></el-rate>
+    </template>
+  </el-editable-pro-table>
+  <div>
+    <el-json-viewer :data="data"></el-json-viewer>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      labelMode: true,
+      schema: {
+        properties: {
+          index: {
+            title: '序号',
+            type: 'index'
+          },
+          Name: {
+            title: '名称',
+            type: 'string',
+          },
+          Enum: {
+            title: '枚举值',
+            type: 'number',
+            oneOf: [
+              {
+                const: '1',
+                title: '枚举值一'
+              },
+              {
+                const: '2',
+                title: '枚举值二'
+              }
+            ],
+          },
+          AnyOf: {
+            title: '多选枚举值',
+            type: 'array',
+            anyOf: [
+              {
+                const: '1',
+                title: '枚举值一'
+              },
+              {
+                const: '2',
+                title: '枚举值二'
+              }
+            ],
+          },
+          Number: {
+            title: '数字',
+            type: 'number',
+          },
+          Price: {
+            title: '价格',
+            type: 'number',
+            precision: '16',
+            scale: '2',
+            format: 'price',
+          },
+          Comment: {
+            title: '备注',
+            type: 'string',
+          },
+          Date: {
+            title: '日期',
+            type: 'string',
+            format: 'date',
+          },
+          Time: {
+            title: '时间',
+            type: 'string',
+            format: 'time',
+          },
+          Boolean: {
+            title: '布尔值',
+            type: 'boolean',
+          },
+          CustomSlot: {
+            title: '自定义插槽',
+            type: 'string',
+          },
+          Readonly: {
+            title: '只读项目',
+            type: 'string',
+            editable: false,
+          },
+          searchHelp: {
+            title: '搜索帮助',
+            type: 'string'
+          }, 
+          formItemHiddenField: {
+            title: '动态表单状态下隐藏与否字段',
+            type: 'string'
+          }, 
+        },
+        required: [ 'Name' ],
+      },
+      uiSchema: {
+        index: {
+          'ui:options': {
+            fixed: 'left',
+            width: '100px'
+          }
+        },
+        Name: {
+          'ui:options': {
+            fixed: 'left',
+          },
+        },
+        Enum: {
+          'ui:options': {
+            fixed: 'left',
+            width: '150px'
+          },
+        },
+        AnyOf: {
+          'ui:options': {
+            minWidth: '300px'
+          },
+        },
+        Number: {
+          'ui:options': {
+            minWidth: '100px'
+          },
+        },
+        Price: {
+          'ui:options': {
+            minWidth: '100px'
+          },
+        },
+        Date: {
+          'ui:options': {
+            minWidth: '100px'
+          },
+        },
+        Time: {
+          'ui:options': {
+            minWidth: '100px'
+          },
+        },
+        Comment: {
+          'ui:options': {
+            minWidth: '300px',
+            visible: false
+          },
+          // 'ui:hidden':true
+        },
+        Boolean: {
+          'ui:options': {
+            minWidth: '90px'
+          },
+        },
+        CustomSlot: {
+          'ui:options': {
+            minWidth: '230px'
+          },
+        },
+        Readonly: {
+          'ui:options': {
+            minWidth: '150px'
+          },
+        },
+        formItemHiddenField: {
+          'ui:formItemHidden':false,
+        },
+        searchHelp: {
+          'ui:options': {
+            'suffix-icon': 'el-icon-search',
+            readonly: true,
+          },
+          'ui:nativeOn': {
+            click: () => {
+              this.$message.info('searchHelp click')
+            },
+          },
+        }, 
+      },
+      rules:{
+        Price: [
+            { 
+              validator:(rule, value, callback) => {
+                if (value === '') {
+                  callback(new Error('请输入内容'));
+                } else if (value < 0 ){
+                  callback(new Error('请输入大于0的数'));
+                } else {
+                   callback();
+                }
+              },  
+            }
+        ],
+      },
+      data: [],
+    };
+  },
+  created() {
+    this.headInfoData = {
+      Name: 'XXX',
+      Price: '22345',
+      Enum: 2,
+      AnyOf: ['1', '2'],
+      MaxLengthString: null,
+      Number: 98765,
+      Date: '2021-08-31',
+      Time: '17:18:00',
+      Comment: 'setaria-ui',
+      'Boolean': true,
+      CustomSlotCode: 4.3,
+      CustomSlot: '装饰线条',
+      Readonly: '信息不可修改',
+      formItemHiddenField:''
+    };
+    for (let i = 0; i < 100; i += 1) {
+      const data = {
+        ...this.headInfoData
+      };
+      data.Name = `${data.Name}-${i}`;
+      this.data.push({
+        id: i,
+        ...data
+      }); 
+    }
+  },
+  methods: {
+    onSelectionChange(val) {
+      console.log(val);
+    },
+    onColumnVisibleChange(keys){
+      console.log(keys)
+    },
+    onColumnVisibleReset(){
+      console.log('onColumnVisibleReset')
+    },
+    onColumnSettingNodeDragEnd(newList){
+      console.log(newList)
+      // 通过反写scehma来实现排序的功能
+      const schema = {
+        properties:{}
+      }
+      newList.forEach(item=>{
+        schema.properties[item.key] = this.schema.properties[item.key]
+      })
+      this.schema = schema
+    },
+
+  }
+};
+</script>
+```
+:::
+
 ### 属性
 
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
@@ -1892,6 +2180,7 @@ export default {
 | scroll-x  | 横向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | — |
 | scroll-y  | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api) | Object | — | { gt: 20 } |
 | is-show-default-batch-control  | 是否默认显示批量操作等按钮 | Boolean | — | true |
+| column-setting-draggable  | 是否开启在列设置的Item拖拽功能 | Boolean | — | false |
 
 
 
@@ -1939,6 +2228,7 @@ export default {
 | cell-mouseleave  | 当鼠标移开单元格时会触发该事件 | val 当前值 |
 | column-visible-change  | 当用户操作右上角显示列功能时的回调 | checkedKeys 显示列的key数组 |
 | column-visible-reset  | 当用户操作右上角显示列功能的重置按钮回调 | - |
+| column-setting-node-drag-end  | 当用户操作右上角拖动列功能Item时的回调，需配合`column-setting-draggable`属性一起使用 | list 被拖拽之后的list key数组 |
 
 
 

@@ -336,6 +336,10 @@ export const EDIT_TABLE_PROPS = {
     required: false,
     default: true
   },
+  columnSettingDraggable: {
+    type: Boolean,
+    default: false
+  },
   canAdd: {
     type: Boolean,
     default: true
