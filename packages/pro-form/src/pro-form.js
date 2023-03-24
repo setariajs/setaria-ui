@@ -4,7 +4,7 @@ import ElJsonForm from 'setaria-ui/packages/json-form/src/json-form';
 import Locale from 'setaria-ui/src/mixins/locale';
 import { getStyle } from 'setaria-ui/src/utils/dom';
 import { isEmpty } from 'setaria-ui/src/utils/util';
-
+import { cloneDeep } from 'lodash';
 const NON_INITIAL = 'nonInitial';
 // const INITIALED = 'initialed';
 
@@ -156,8 +156,9 @@ export default {
       this.totalColSpan = 0;
       this.currentDisplayTotalColSpan = 0;
       const { currentColumns, innerExpand, schema, type, uiSchema } = this;
+      console.log(uiSchema);
       Object.keys(schema.properties).forEach((schemaKey, index) => {
-        let uiProperty = uiSchema[schemaKey];
+        let uiProperty = cloneDeep(uiSchema[schemaKey]);
         if (isEmpty(uiSchema[schemaKey])) {
           uiProperty = {};
         }
@@ -165,24 +166,27 @@ export default {
         if (type === 'queryFilter') {
           let propertyColspan = uiProperty['ui:colspan'];
           propertyColspan = typeof propertyColspan === 'number' ? propertyColspan : 1;
+          // 如果业务端未定义的清空下的话
+          if (uiProperty['ui:hidden'] === null || uiProperty['ui:hidden'] === undefined) {
           // 收起的场合
-          if (!innerExpand && this.collapse) {
+            if (!innerExpand && this.collapse) {
 
-            if (currentColumns === 1 && index === 0) {
+              if (currentColumns === 1 && index === 0) {
               // 只显示一行表单项目，其余的隐藏
-              uiProperty['ui:hidden'] = false;
+                uiProperty['ui:hidden'] = false;
 
-            } else if (this.forceCollapseColumns && this.forceCollapseColumns >= index + 1) {
+              } else if (this.forceCollapseColumns && this.forceCollapseColumns >= index + 1) {
               // 强制在收起模式下显示几个字段
-              uiProperty['ui:hidden'] = false;
-            } else if (this.currentDisplayTotalColSpan + propertyColspan + 1 > currentColumns) {
-              uiProperty['ui:hidden'] = true;
+                uiProperty['ui:hidden'] = false;
+              } else if (this.currentDisplayTotalColSpan + propertyColspan + 1 > currentColumns) {
+                uiProperty['ui:hidden'] = true;
+              } else {
+                uiProperty['ui:hidden'] = false;
+              }
+            // 展开的场合
             } else {
               uiProperty['ui:hidden'] = false;
             }
-            // 展开的场合
-          } else {
-            uiProperty['ui:hidden'] = false;
           }
           const isCurrentRowEnough = currentColumns - (this.currentDisplayTotalColSpan % currentColumns) < propertyColspan;
           if (propertyColspan > currentColumns) {

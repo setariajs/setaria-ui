@@ -251,6 +251,9 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
           }
         },
         uiSchema: {
+          "id":{
+            
+          },
           "interest": {
             "ui:colspan": 2
           },
