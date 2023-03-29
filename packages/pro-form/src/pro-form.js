@@ -86,6 +86,10 @@ export default {
     columns: {
       type: Number,
       default: 3
+    },
+    submitPropagation: {
+      type: Boolean,
+      default: true
     }
 
   },
@@ -389,6 +393,7 @@ export default {
       submitter,
       labelPosition,
       labelSuffix,
+      submitPropagation,
       // handleExpand,
       handleSubmit,
       handleChange,
@@ -478,6 +483,7 @@ export default {
         schema={schema}
         uiSchema={innerUiSchema}
         columns={currentColumns}
+        submitPropagation={submitPropagation}
         scopedSlots={$scopedSlots}
         on-submit={handleSubmit}
         on-change={handleChange}

@@ -609,41 +609,45 @@
 
 ### Form Attributes
 
-| 参数                    | 说明                                                                                                         | 类型    | 可选值         | 默认值 |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | -------------- | ------ |
-| model                   | 表单数据对象                                                                                                 | object  | —              | —      |
-| rules                   | 表单验证规则                                                                                                 | object  | —              | —      |
-| inline                  | 行内表单模式                                                                                                 | boolean | —              | false  |
+| 参数                    | 说明                                                                                                       | 类型    | 可选值         | 默认值 |
+|-------------------------|----------------------------------------------------------------------------------------------------------|---------|----------------|--------|
+| model                   | 表单数据对象                                                                                               | object  | —              | —      |
+| rules                   | 表单验证规则                                                                                               | object  | —              | —      |
+| inline                  | 行内表单模式                                                                                               | boolean | —              | false  |
 | disabled                | 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效                            | boolean | —              | false  |
-| label-position          | 表单域标签的位置                                                                                             | string  | right/left/top | top    |
-| label-width             | 表单域标签的宽度，作为 Form 直接子元素的 form-item 会继承该值                                                | string  | —              | —      |
-| label-suffix            | 表单域标签的后缀                                                                                             | string  | —              | —      |
-| show-message            | 是否显示校验错误信息                                                                                         | boolean | —              | true   |
-| schema                  | JSON Schema 对象                                                                                             | Object  | —              | -      |
-| ui-schema               | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表)                          | Object  | —              | -      |
-| columns                 | 表单的列数。分辨率在 768 像素以下时表单列数固定为 1                                                          | Number  | —              | 5      |
+| label-position          | 表单域标签的位置                                                                                           | string  | right/left/top | top    |
+| label-width             | 表单域标签的宽度，作为 Form 直接子元素的 form-item 会继承该值                                               | string  | —              | —      |
+| label-suffix            | 表单域标签的后缀                                                                                           | string  | —              | —      |
+| show-message            | 是否显示校验错误信息                                                                                       | boolean | —              | true   |
+| schema                  | JSON Schema 对象                                                                                           | Object  | —              | -      |
+| ui-schema               | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表)                         | Object  | —              | -      |
+| columns                 | 表单的列数。分辨率在 768 像素以下时表单列数固定为 1                                                         | Number  | —              | 5      |
 | column-max-label-length | 以 col 为单位的 form-label 的最大长度，超过的部分则截取省略。此时 Label 外增加 `el-TOOLTIP` 可查看全部 Label | Number  | -              | -      |
+| submit-propagation      | 是否开启回车事件冒泡                                                                                       | Boolean | -              | true   |
+
+
 
 ### UI-Schema Attributes
 
-| 参数        | 说明                   | 类型    | 可选值                                      | 默认值 |
-| ----------- | ---------------------- | ------- | ------------------------------------------- | ------ |
-| ui:widget   | 表单字段的组件类型     | string  | password, textarea, select, checkbox, radio | —      |
-| ui:disabled | 表单字段的组件是否可用 | boolean | -                                           | false  |
+| 参数        | 说明                   | 类型             | 可选值                                      | 默认值 |
+|-------------|----------------------|------------------|---------------------------------------------|--------|
+| ui:widget   | 表单字段的组件类型     | string           | password, textarea, select, checkbox, radio | —      |
+| ui:disabled | 表单字段的组件是否可用 | boolean          | -                                           | false  |
 | ui:hidden   | 表单字段的组件是否可见 | boolean/function | -                                           | false  |
-| ui:options  | 表单字段的组件独有属性 | object  | UI 组件独有属性                             | -      |
-| ui:colspan  | 跨越的列数             | number  | -                                           | -      |
+| ui:options  | 表单字段的组件独有属性 | object           | UI 组件独有属性                             | -      |
+| ui:colspan  | 跨越的列数             | number           | -                                           | -      |
 
 ### Form Events
 
 | 事件名称 | 说明                 | 回调参数                             |
-| -------- | -------------------- | ------------------------------------ |
+|----------|--------------------|----------------------------------|
 | change   | 表单字段值变更时回调 | key 表单字段的 Key, val 表单字段的值 |
+| submit   | 表单提交             | val 表单字段的值                     |
 
 ### Form Methods
 
-| 方法名        | 说明                                                       | 参数                                                             |
-| ------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
-| validate      | 对整个表单进行校验的方法                                   | Function(callback: Function(boolean))                            |
-| validateField | 对部分表单字段进行校验的方法                               | Function(prop: string, callback: Function(errorMessage: string)) |
+| 方法名        | 说明                                                      | 参数                                                             |
+|---------------|---------------------------------------------------------|------------------------------------------------------------------|
+| validate      | 对整个表单进行校验的方法                                  | Function(callback: Function(boolean))                            |
+| validateField | 对部分表单字段进行校验的方法                              | Function(prop: string, callback: Function(errorMessage: string)) |
 | resetFields   | 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果 | -                                                                |

@@ -45,6 +45,10 @@ export default {
     requiredTriggerType: {
       type: String,
       default: 'change'
+    },
+    submitPropagation: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -222,7 +226,9 @@ export default {
       on: {}
     };
     formEvents.on.submit = () => {
-      this.handleSubmit();
+      if (this.submitPropagation) {
+        this.handleSubmit();
+      }
     };
     const model = this.model;
     const { innerSchema } = this;
