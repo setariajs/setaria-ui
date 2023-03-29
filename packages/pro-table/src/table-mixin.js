@@ -1560,14 +1560,14 @@ export default {
               node-key="key"
               ref="columnSettingTree"
               props={{ label: 'title' }}
-              icon-class={columnSettingDraggable ? 'el-icon-rank' : ''}
+              icon-class={columnSettingDraggable ? 'el-icon-rank' : ' '}
               draggable={columnSettingDraggable}
               default-expand-all={true}
               expand-on-click-node={false}
               default-checked-keys={columnSettingDefaultCheckedKeys}
               allow-drop={columnSettingAllowDrop}
               show-checkbox
-              check-on-click-node
+              check-on-click-node={!columnSettingDraggable}
               on-check={onColumnSettingCheck}
               on-check-change={onColumnSettingTreeNodeCheck}
               on-node-drag-end={onColumnSettingNodeDragEnd}

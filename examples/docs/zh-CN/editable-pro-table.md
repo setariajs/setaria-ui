@@ -2093,14 +2093,16 @@ export default {
       console.log('onColumnVisibleReset')
     },
     onColumnSettingNodeDragEnd(newList){
-      console.log(newList)
+      console.log(newList,this.schema)
       // 通过反写scehma来实现排序的功能
       const schema = {
         properties:{}
       }
-      newList.forEach(item=>{
-        schema.properties[item.key] = this.schema.properties[item.key]
+      newList.forEach(key=>{
+        schema.properties[key] = this.schema.properties[key]
       })
+      schema.requried =  this.schema.requried
+      console.log(schema)
       this.schema = schema
     },
 
