@@ -81,6 +81,10 @@ export default Vue.extend({
         sortData,
         showPagination
       } = this;
+      // 数据变更时需要清空选择的数据
+      if (!this.isReserve) {
+        this.emitSelectionChange([]);
+      }
       if (_.isEmpty(data)) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.innerTotal = 0;

@@ -581,6 +581,7 @@ export default {
       <el-button type="text" @click="canUpdate=!canUpdate">{{ canUpdate ? '禁止' : '允许' }}修改</el-button>
       <el-button type="text" @click="canDelete=!canDelete">{{ canDelete ? '禁止' : '允许' }}删除</el-button>
       <el-button type="text" @click="addDataByManual">手动控制新增</el-button>
+      <el-button type="text" @click="mockGetData">刷新数据</el-button>
     </template>
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}{{scope.data.test}}</el-button>
@@ -813,16 +814,7 @@ export default {
       Readonly: '信息不可修改',
       formItemHiddenField:''
     };
-    for (let i = 0; i < 100; i += 1) {
-      const data = {
-        ...this.headInfoData
-      };
-      data.Name = `${data.Name}-${i}`;
-      this.data.push({
-        id: i,
-        ...data
-      }); 
-    }
+    this.mockGetData()
     this.dialogAttrs.beforeClose = (val) => {
       if (val.Name === 'XXX-1') {
         this.$message({
@@ -835,6 +827,20 @@ export default {
     }
   },
   methods: {
+    mockGetData(){
+      const res = []
+    for (let i = 0; i < 100; i += 1) {
+        const data = {
+          ...this.headInfoData
+        };
+        data.Name = `${data.Name}-${i}`;
+        res.push({
+          ...data,
+          id: i+100,
+        }); 
+      }
+      this.data = res
+    },
     addDataByManual(){
       this.$refs.editTable.triggerAddRow({
          Name: 'XXX',
