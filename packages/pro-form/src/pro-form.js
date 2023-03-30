@@ -338,7 +338,7 @@ export default {
         //  取消
         cancel: <el-button onClick={this.handleCancel}>{this.t('el.proform.cancel')}</el-button>,
         //  额外插槽
-        slot: this.$slots.controlButtons ? this.$slots.controlButtons : '',
+        slot: this.$scopedSlots.controlButtons ? this.$scopedSlots.controlButtons() : this.$slots.controlButtons ? this.$slots.controlButtons : '',
         // 收起按钮
         collapse: this.isQueryFilter && this.collapse ? (<el-button
           type="text"
