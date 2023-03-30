@@ -12,6 +12,60 @@ import merge from 'setaria-ui/src/utils/merge';
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
 const MAX_EXPORT_DATA_LENGTH = 10000;
+const visibleStorageKey = 'VXE_TABLE_CUSTOM_COLUMN_VISIBLE';
+const dragSortStorageKey = 'VXE_TABLE_CUSTOM_COLUMN_DRAG_SORT';
+
+function getCustomStorageMap(key) {
+  // const version = GlobalConfig.version
+  const rest = XEUtils.toStringJSON(localStorage.getItem(key));
+  return rest;
+  // return rest && rest._v === version ? rest : { _v: version }
+}
+
+function saveCustomDragSort(tableId, list) {
+  if (tableId) {
+    const columnDragSortStorageMap = getCustomStorageMap(dragSortStorageKey);
+    columnDragSortStorageMap[tableId] = list.join(',');
+    localStorage.setItem(dragSortStorageKey, XEUtils.toJSONString(columnDragSortStorageMap));
+  }
+}
+
+function saveCustomVisible(tableId, collectColumn) {
+  // const { id, collectColumn, customConfig, customOpts } = this
+  // const { checkMethod, storage } = customOpts
+  // const isAllStorage = customOpts.storage === true
+  // const isVisible = isAllStorage || (storage && storage.visible)
+  if (tableId) {
+    const columnVisibleStorageMap = getCustomStorageMap(visibleStorageKey);
+    const colHides = [];
+    const colShows = [];
+    XEUtils.eachTree(collectColumn, column => {
+      // if (!checkMethod || checkMethod({ column })) {
+
+      if (!column.visible) {
+        colHides.push(column.field);
+      }
+      // else if (column.visible && !column.defaultVisible) {
+      //   const colKey = column.getKey()
+      //   if (colKey) {
+      //     colShows.push(colKey)
+      //   }
+      // }
+      // }
+    });
+    // if (!targetTableColumn.visible) {
+    //   colHides.push(targetTableColumn.field);
+    // } else {
+    //   // 勾选上的逻辑：现在操作的这条数据需要在隐藏列表中移除
+    //   const index = colHides.findIndex(field=>field === targetTableColumn.field);
+    //   if (index !== -1) {
+    //     colHides.splice(index, 1);
+    //   }
+    // }
+    columnVisibleStorageMap[tableId] = [_.uniq(colHides).join(',')].concat(colShows.length ? [colShows.join(',')] : []).join('|') || undefined;
+    localStorage.setItem(visibleStorageKey, XEUtils.toJSONString(columnVisibleStorageMap));
+  }
+}
 
 export default {
   mixins: [Locale],
@@ -40,6 +94,7 @@ export default {
       columnSettingKeys: [],
       columnSettingCheckedKeys: [],
       columnSettingDefaultCheckedKeys: [],
+      columnSettingSortKeys: [], // 表格开启可拖拽之后，存放顺序的拖拽内容
       isParticalColumnShow: false,
       isAllColumnShow: true,
       innerSchema: null,
@@ -51,7 +106,16 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
-        this.innerSchema = initialSetariaSchema(val);
+        this.initInnerSchema();
+        // this.innerSchema = initialSetariaSchema(val);
+      }
+    },
+    columnSettingSortKeys: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.initInnerSchema();
+        // this.innerSchema = initialSetariaSchema(val);
       }
     },
     pageNum: {
@@ -349,6 +413,40 @@ export default {
           treeColumn.treeNode = true;
         }
       }
+      if (this.tableId) {
+        const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
+
+        if (columnVisibleStorage) {
+          const colVisibles = columnVisibleStorage.split('|');
+          const colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
+          const colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
+
+          ret.forEach(item=>{
+            if (colHides.find(field=>item.field === field)) {
+              item.visible = false;
+            }
+            if (colShows.find(field=>item.field === field)) {
+              item.visible = true;
+            }
+          });
+        }
+      }
+      // colHides.forEach(field => {
+      //     if (customMap[field]) {
+      //       customMap[field].visible = false;
+      //     } else {
+      //       customMap[field] = { field, visible: false };
+      //     }
+      // });
+      //   // colShows.forEach(field => {
+      //   //   if (customMap[field]) {
+      //   //     customMap[field].visible = true
+      //   //   } else {
+      //   //     customMap[field] = { field, visible: true }
+      //   //   }
+      //   // })
+      // }
+
       return ret;
     },
     /**
@@ -476,8 +574,38 @@ export default {
         order
       });
     }
+    this.initDragSortStorage();
+
   },
   methods: {
+    // 初始化获取表格拖拽排序内容
+    initDragSortStorage() {
+      if (this.tableId) {
+
+        const sortKeys = getCustomStorageMap(dragSortStorageKey)[this.tableId];
+        if (sortKeys) {
+          this.columnSettingSortKeys = sortKeys.split(',');
+        }
+
+      }
+
+    },
+    initInnerSchema() {
+      let innerSchema = initialSetariaSchema(this.schema);
+      // 排序逻辑
+      if (this.columnSettingSortKeys.length) {
+        const schema = {
+          properties: {},
+          requried: innerSchema.requried
+        };
+        this.columnSettingSortKeys.forEach(key=>{
+          schema.properties[key] = innerSchema.properties[key];
+        });
+        innerSchema = schema;
+      }
+
+      this.innerSchema = innerSchema;
+    },
     // 获取当前表格是否在行上编辑模式
     getIsEditOnRow() {
       const {
@@ -1386,6 +1514,7 @@ export default {
         } else {
           targetTableColumn.visible = checked;
         }
+        saveCustomVisible(this.tableId, this.getTableActionRef().getTableColumn().collectColumn);
       }
       // 更新表格列状态
       this.getTableActionRef()
@@ -1515,10 +1644,12 @@ export default {
           });
       };
       const onColumnSettingNodeDragEnd = (e, t, n, a)=>{
-        // console.log(e, t, n, a);
         const list = this.columnSettingKeys.map(item=>{
           return item.key;
         });
+        this.columnSettingSortKeys = list;
+        // 保存自定义的拖拽表格列信息
+        saveCustomDragSort(this.tableId, list);
 
         this.$emit('column-setting-node-drag-end', list, e, t, n, a);
       };
