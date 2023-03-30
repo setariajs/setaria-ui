@@ -392,6 +392,10 @@ export const EDIT_TABLE_PROPS = {
   toolBarButtonType: {
     type: String,
     default: 'text'
+  },
+  maxEditOnRow: {
+    type: Number,
+    default: 3
   }
 };
 

@@ -48,7 +48,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     control-column-width="300px"
     :control-column-config="{collapseButton:false}"
     :valid-config="{message: 'inline'}"
-    :edit-config="{trigger: 'manual'}"
+    :force-edit-on-row="false"
     control-column-trigger="hover"
     @cell-dblclick="cellDblclick"
     @selection-change="onSelectionChange"
@@ -2193,6 +2193,7 @@ export default {
 | scroll-y                                   | 纵向虚拟滚动配置,配置信息请[vxe-table文档](https://vxetable.cn/v3/#/table/api)                                      | Object   | —                       | { gt: 20 }                                                                             |
 | is-show-default-batch-control              | 是否默认显示批量操作等按钮                                                                                          | Boolean  | —                       | true                                                                                   |
 | column-setting-draggable                   | 是否开启在列设置的Item拖拽功能                                                                                      | Boolean  | —                       | false                                                                                  |
+| max-edit-on-row                            | 行内编辑模式字段临界值数量(如不想行内编辑，可设置成0即Dialog模式编辑)                                                | Nubmer   | —                       | 3                                                                                      |
 
 
 

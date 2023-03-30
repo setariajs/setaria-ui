@@ -9,7 +9,7 @@ import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
 import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
 
 // 可编辑列在三列以上的场合，弹窗编辑
-const MAX_ROW_EDIT = 3;
+// const MAX_ROW_EDIT = 3;
 const PRIMARY_ROW_KEY = '_XID';
 
 const BEFORE_CLOSE_PROP_KEY = 'before-close';
@@ -155,7 +155,7 @@ export default Vue.extend({
       if (this.forceEditOnRow) {
         return this.forceEditOnRow;
       }
-      return this.editableColumnCount <= MAX_ROW_EDIT;
+      return this.editableColumnCount <= this.maxEditOnRow;
     },
     isEditingOnRow() {
       return !this.labelMode && this.isEditOnRow && this.isRowManualEditing;
