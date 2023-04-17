@@ -100,6 +100,10 @@ export default {
     maskClosable: {
       type: Boolean,
       default: true
+    },
+    infinite: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -107,7 +111,7 @@ export default {
     return {
       index: this.initialIndex,
       isShow: false,
-      infinite: true,
+      // infinite: true,
       loading: false,
       mode: Mode.CONTAIN,
       transform: {

@@ -1,5 +1,5 @@
 <template>
-  <el-description :columns="columns" :label-suffix="labelSuffix" :bordered="bordered">
+  <el-description :columns="columns" :label-suffix="labelSuffix" :bordered="bordered" :direction="direction">
     <el-description-item
       v-for="key in Object.keys(innerItems)"
       :key="key"
@@ -32,6 +32,10 @@ export default {
     labelSuffix: {
       type: String,
       default: ':'
+    },
+    direction: {
+      type: String,
+      default: null
     },
     bordered: {
       type: Boolean,
