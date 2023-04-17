@@ -1,5 +1,5 @@
 <template>
-  <el-description :columns="columns" :label-suffix="labelSuffix" :bordered="bordered" :direction="direction">
+  <el-description :columns="columns" :label-suffix="labelSuffix" :bordered="bordered">
     <el-description-item
       v-for="key in Object.keys(innerItems)"
       :key="key"
