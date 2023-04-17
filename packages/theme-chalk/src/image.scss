@@ -68,6 +68,10 @@
     cursor: pointer;
     box-sizing: border-box;
     user-select: none;
+    &.is-disabled{
+      cursor: not-allowed;
+      color: #ababab;
+    }
   }
 
   @include e(close) {
