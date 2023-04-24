@@ -608,7 +608,7 @@ export default {
                 if (titleDom && titleDom.innerHTML === findObj.title) {
 
                   const iconDom = domItem.querySelector(`.vxe-sort--${sortItem.order}-btn`);
-                  console.log('iconDom', iconDom);
+                  // console.log('iconDom', iconDom);
                   this.$nextTick(()=>{
                     iconDom.classList.add('sort--active');
                   });
