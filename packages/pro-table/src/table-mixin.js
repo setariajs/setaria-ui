@@ -149,6 +149,9 @@ export default {
     innerPageSize(val) {
       this.$emit('size-change', val);
       this.$emit('update:page-size', val);
+    },
+    innerDataList() {
+      this.setSortIconActive();
     }
   },
   computed: {
@@ -571,6 +574,7 @@ export default {
       const { field, order } = defaultSort;
       this.sortList.push({
         property: field,
+        field,
         order
       });
     }
@@ -578,6 +582,46 @@ export default {
 
   },
   methods: {
+    // 修复开启排序时，用户点击排序UI没响应对应UI的问题
+    setSortIconActive() {
+      this.$nextTick(()=>{
+        // 当有排序项时，且是后端排序时才处理
+        if (this.sortList && this.sortList.length && this.innerSortConfig.remote) {
+          const xTable = this.getTableRef();
+          // console.log('xTable', xTable);
+          const domList = Array.from(xTable.$el.querySelectorAll('.vxe-header--row .is--sortable:not(.fixed--hidden)'));
+          // 先移除之前设置激活状态的
+          Array.from(xTable.$el.querySelectorAll('.vxe-header--row .is--sortable:not(.fixed--hidden) .sort--active')).forEach(domItem=>{
+            domItem.classList.remove('sort--active');
+          });
+
+          this.sortList.forEach(sortItem=>{
+
+            const findObj = this.vxeTableColumnArray.find(sourceItem =>{
+              return sourceItem.field === sortItem.field;
+            });
+
+            if (findObj && findObj.title) {
+              domList.forEach(domItem=>{
+                const titleDom = domItem.querySelector('.vxe-cell--title');
+
+                if (titleDom && titleDom.innerHTML === findObj.title) {
+
+                  const iconDom = domItem.querySelector(`.vxe-sort--${sortItem.order}-btn`);
+                  console.log('iconDom', iconDom);
+                  this.$nextTick(()=>{
+                    iconDom.classList.add('sort--active');
+                  });
+
+                }
+              });
+            }
+
+          });
+        }
+      });
+    },
+
     // 初始化获取表格拖拽排序内容
     initDragSortStorage() {
       if (this.tableId) {

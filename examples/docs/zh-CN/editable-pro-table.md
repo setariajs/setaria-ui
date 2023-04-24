@@ -570,6 +570,14 @@ export default {
     :control-column-config="{
       align:'left'
     }"
+    :sort-config="{
+      remote:true,
+      defaultSort:{
+      field:'Date',
+      order:'desc',
+    }
+    }"
+    @sort-change="onSortChange"
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
@@ -726,17 +734,20 @@ export default {
         },
         Price: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
+             sortable: true,  
           },
         },
         Date: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
+            sortable: true,  
           },
         },
         Time: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
+             sortable: true,  
           },
         },
         Comment: {
@@ -886,6 +897,9 @@ export default {
     },
     onRowButtonClick(key, { row }) {
       this.$message.info(`点击按钮的key为:${key}, 行数据为${JSON.stringify(row)}`);
+    },
+    onSortChange(){
+      this.mockGetData()
     },
     onSelectionChange(val) {
       console.log(val);
