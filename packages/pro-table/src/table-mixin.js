@@ -588,7 +588,6 @@ export default {
         // 当有排序项时，且是后端排序时才处理
         if (this.sortList && this.sortList.length && this.innerSortConfig.remote) {
           const xTable = this.getTableRef();
-          // console.log('xTable', xTable);
           const domList = Array.from(xTable.$el.querySelectorAll('.vxe-header--row .is--sortable:not(.fixed--hidden)'));
           // 先移除之前设置激活状态的
           Array.from(xTable.$el.querySelectorAll('.vxe-header--row .is--sortable:not(.fixed--hidden) .sort--active')).forEach(domItem=>{
@@ -608,10 +607,11 @@ export default {
                 if (titleDom && titleDom.innerHTML === findObj.title) {
 
                   const iconDom = domItem.querySelector(`.vxe-sort--${sortItem.order}-btn`);
-                  // console.log('iconDom', iconDom);
-                  this.$nextTick(()=>{
-                    iconDom.classList.add('sort--active');
-                  });
+                  if (iconDom) {
+                    this.$nextTick(()=>{
+                      iconDom.classList.add('sort--active');
+                    });
+                  }
 
                 }
               });
