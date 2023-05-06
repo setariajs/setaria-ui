@@ -113,7 +113,7 @@ export function createFormRulesBySchema(schema, uiSchema, requiredTriggerType = 
           if (typeof minLength === 'number') {
             rule.message = t('el.schema.validate3', [minLength, maxLength]);
           } else {
-            rule.message = t('el.schema.validate4', [minLength]);
+            rule.message = t('el.schema.validate4', [maxLength]);
           }
         }
         if (rule.message !== '' && rule.message !== undefined) {
