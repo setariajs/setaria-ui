@@ -98,7 +98,8 @@ export default {
       isParticalColumnShow: false,
       isAllColumnShow: true,
       innerSchema: null,
-      editingRow: null
+      editingRow: null,
+      columnVisibleChangeTimestamp: null // 用户在改变当前页面是否隐藏时的时间戳用于刷新底层computed
     };
   },
   watch: {
@@ -398,6 +399,7 @@ export default {
         innerSchema,
         treeNode,
         uiSchema = {},
+        columnVisibleChangeTimestamp,
         $scopedSlots
       } = this;
       const ret = convertSchemaToColumns(
@@ -417,12 +419,38 @@ export default {
         }
       }
       if (this.tableId) {
+        // 这个属性 会在用户设置完可见字段之后赋值，用于刷新响应内容
+        // 方法名为：onColumnSettingTreeNodeCheck
+        columnVisibleChangeTimestamp;
         const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
 
         if (columnVisibleStorage) {
+          // vxetable底层获取数据
           const colVisibles = columnVisibleStorage.split('|');
-          const colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
-          const colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
+          let colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
+          let colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
+
+          // 需要再次merge现有的显示和隐藏逻辑
+
+          // Object.keys(uiSchema).forEach(key=>{
+          //   if (
+          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_OPTIONS}.visible`) === true ||
+          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_FORM_ITEM_HIDDEN}`) === true
+          //   ) {
+          //     colShows.push(key);
+          //   }
+
+          //   if (
+          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_OPTIONS}.visible`) === false ||
+          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_FORM_ITEM_HIDDEN}`) === false
+          //   ) {
+          //     colHides.push(key);
+          //   }
+
+          // });
+
+          // colShows = _.uniq(colShows);
+          // colHides = _.uniq(colHides);
 
           ret.forEach(item=>{
             if (colHides.find(field=>item.field === field)) {
@@ -1559,6 +1587,7 @@ export default {
           targetTableColumn.visible = checked;
         }
         saveCustomVisible(this.tableId, this.getTableActionRef().getTableColumn().collectColumn);
+        this.columnVisibleChangeTimestamp = Date.now();
       }
       // 更新表格列状态
       this.getTableActionRef()

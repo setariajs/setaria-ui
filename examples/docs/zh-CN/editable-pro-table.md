@@ -1876,6 +1876,12 @@ export default {
     @column-visible-reset="onColumnVisibleReset"
     @column-setting-node-drag-end="onColumnSettingNodeDragEnd"
   >
+
+    <template slot="batchControl">
+      <el-button type="text"  @click="reloadData">重新获取数据</el-button>
+      
+    </template>
+
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}{{scope.data.test}}</el-button>
     </template>
@@ -2015,18 +2021,18 @@ export default {
         },
         Date: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
           },
+          // 'ui:hidden':true,
         },
         Time: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
           },
         },
         Comment: {
           'ui:options': {
             minWidth: '300px',
-            visible: false
           },
           // 'ui:hidden':true
         },
@@ -2095,18 +2101,23 @@ export default {
       Readonly: '信息不可修改',
       formItemHiddenField:''
     };
-    for (let i = 0; i < 100; i += 1) {
-      const data = {
-        ...this.headInfoData
-      };
-      data.Name = `${data.Name}-${i}`;
-      this.data.push({
-        id: i,
-        ...data
-      }); 
-    }
+    this.reloadData();
+   
   },
   methods: {
+    reloadData(){
+       for (let i = 0; i < 100; i += 1) {
+        const data = {
+          ...this.headInfoData
+        };
+        data.Name = `${data.Name}-${i}`;
+        this.data.push({
+          id: i,
+          ...data
+        }); 
+      }
+
+    },
     onSelectionChange(val) {
       console.log(val);
     },
