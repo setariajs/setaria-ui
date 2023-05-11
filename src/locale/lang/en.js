@@ -81,6 +81,7 @@ export default {
     },
     schema: {
       placeholder: 'Please enter {0}',
+      placeholderBySelect: 'Please Select {0}',
       int: 'Integer',
       number: 'Number',
       yes: 'Yes',

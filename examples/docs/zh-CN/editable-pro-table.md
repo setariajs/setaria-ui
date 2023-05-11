@@ -614,7 +614,7 @@ export default {
         'label-suffix': '：'
       },
       dialogAttrs:{
-        title:'自定义标题',
+        title:'自定义标题11111',
         width:'90%'
       },
       schema: {
@@ -687,6 +687,7 @@ export default {
           CustomSlot: {
             title: '自定义插槽',
             type: 'string',
+            requiredTip:'select'
           },
           Readonly: {
             title: '只读项目',
@@ -702,7 +703,7 @@ export default {
             type: 'string'
           }, 
         },
-        required: [ 'Name' ],
+        required: [ 'Name','Enum','AnyOf','Number','CustomSlot','Date','Time' ],
       },
       uiSchema: {
         index: {
@@ -735,7 +736,7 @@ export default {
         Price: {
           'ui:options': {
             minWidth: '100px',
-             sortable: true,  
+            sortable: true,  
           },
         },
         Date: {
@@ -990,7 +991,6 @@ export default {
 </script>
 ```
 :::
-
 ### 项目间联动
 
 :::demo

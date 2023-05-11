@@ -81,6 +81,7 @@ export default {
     },
     schema: {
       placeholder: '请输入{0}',
+      placeholderBySelect: '请选择{0}',
       int: '整数',
       number: '数字',
       yes: '是',

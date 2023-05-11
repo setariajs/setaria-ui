@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils';
 import Locale from 'setaria-ui/src/mixins/locale';
 import { EDIT_TYPE, JSON_UI_SCHEMA } from 'setaria-ui/src/constants/index';
 import { callbackExec, looseEqual } from 'setaria-ui/src/utils/util';
+import { getComponentPlaceholder } from 'setaria-ui/src/utils/schema';
 import tableMixin from './table-mixin';
 import { COMMON_TABLE_PROPS, EDIT_TABLE_PROPS } from './table-props';
 import { getEditRenderByProperty, getSchemaDefaultObjectByFormSchema } from './util';
@@ -429,7 +430,6 @@ export default Vue.extend({
         rules = {},
         innerSchema = {},
         uiSchema = {},
-        t,
         defaultRequireRuleTriggerType
       } = this;
       const { required = [], properties = {} } = innerSchema;
@@ -475,7 +475,7 @@ export default Vue.extend({
           const property = properties[key] || {};
           const requireRule = {
             required: true,
-            message: t('el.schema.placeholder', [property.title]),
+            message: getComponentPlaceholder(property, property.title),
             trigger: defaultRequireRuleTriggerType
           };
           if (Array.isArray(rules[key])) {

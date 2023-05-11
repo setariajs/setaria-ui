@@ -64,7 +64,13 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
         },
         schema: {
           "required": [
-            "id"
+            "id",
+            'gender',
+            'birth',
+            'time',
+            'dateTime',
+            'interest',
+            'age'
           ],
           "properties": {
             "id": {

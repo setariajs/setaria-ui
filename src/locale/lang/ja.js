@@ -81,6 +81,7 @@ export default {
     },
     schema: {
       placeholder: '{0}と入力してください',
+      placeholderBySelect: '{0}選択してください',
       int: '整数',
       number: '番号',
       yes: 'はい',

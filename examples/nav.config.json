@@ -36,6 +36,10 @@
           "groupName": "Special Feature",
           "list": [
             {
+              "path": "/schema-props",
+              "title": "Schema属性说明"
+            },
+            {
               "path": "/json-form",
               "title": "[特色]JsonForm Json表单"
             },
@@ -403,6 +407,10 @@
         {
           "groupName": "Special Feature",
           "list": [
+            {
+              "path": "/schema-props",
+              "title": "Schema属性说明"
+            },
             {
               "path": "/json-form",
               "title": "[特色]JsonForm Json表单"

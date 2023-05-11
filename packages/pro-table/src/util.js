@@ -249,7 +249,7 @@ export function getEditRenderByProperty(key, property = {}, uiProperty = {}) {
   } else if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLED] === 'boolean') {
     props.disabled = uiProperty[JSON_UI_SCHEMA.UI_DISABLED];
   }
-  const component = createElementByProperty(key, property, uiProperty, {}, () => {});
+  const component = createElementByProperty(key, property, uiProperty, {}, () => { });
   props = Object.assign({}, props, component.componentProps.props);
   if (uiProperty[JSON_UI_SCHEMA.UI_ON]) {
     const uiOn = uiProperty[JSON_UI_SCHEMA.UI_ON];

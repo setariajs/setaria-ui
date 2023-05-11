@@ -668,7 +668,7 @@ export default {
       if (this.columnSettingSortKeys.length) {
         const schema = {
           properties: {},
-          requried: innerSchema.requried
+          required: innerSchema.required
         };
         this.columnSettingSortKeys.forEach(key=>{
           schema.properties[key] = innerSchema.properties[key];

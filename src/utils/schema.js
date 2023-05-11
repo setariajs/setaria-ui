@@ -69,7 +69,7 @@ export function createFormRulesBySchema(schema, uiSchema, requiredTriggerType = 
     if (required.includes(key)) {
       ret[key].push({
         required: true,
-        message: t('el.schema.placeholder', [itemName]),
+        message: getComponentPlaceholder(item, itemName),
         trigger: requiredTriggerType
       });
     }
@@ -416,7 +416,7 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   if (isEmpty(attrs.placeholder)) {
     let placeholder = uiProperty[JSON_UI_SCHEMA.UI_PLACEHOLDER];
     if (isEmpty(placeholder) && !props.disabled) {
-      placeholder = t('el.schema.placeholder', [property.title]);
+      placeholder = getComponentPlaceholder(property, property.title);
     }
     attrs.placeholder = placeholder;
   }
@@ -617,8 +617,32 @@ export function createDefaultObjectBySchema(schema = {}) {
   return ret;
 }
 
+/**
+ * 不同组件渲染时的提示信息
+ * @param {Object} property
+ * @returns
+ */
+export function getComponentPlaceholder(property, title) {
+  if (property.enum ||
+    property.oneOf ||
+    property.anyOf ||
+    property.format === 'date' ||
+    property.format === 'date-time' ||
+    property.format === 'time' ||
+    property.format === 'date-range' ||
+    property.format === 'date-time-range' ||
+    property.format === 'time-range' ||
+    property.type === 'boolean' ||
+    property.requiredTip === 'select') {
+    return t('el.schema.placeholderBySelect', [title]);
+  }
+  return t('el.schema.placeholder', [title]);
+
+}
+
 export default {
   createElementByProperty,
   createFormRulesBySchema,
-  createDefaultObjectBySchema
+  createDefaultObjectBySchema,
+  getComponentPlaceholder
 };
