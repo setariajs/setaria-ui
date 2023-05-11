@@ -16,6 +16,7 @@ const schema = {
     Name: {
       title: '名称',
       type: 'string',
+      trim:true,
     },
     Enum: {
       title: '枚举值',
@@ -52,7 +53,6 @@ const schema = {
     Price: {
       title: '价格',
       type: 'number',
-      precision: '16',
       scale: '2',
       format: 'price',
     },
