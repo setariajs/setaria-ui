@@ -115,4 +115,5 @@ const schema = {
 | minLength   | 属性值的最小长度校验                  | Number  | —                                                               | —                                                                                                                  |
 | maxLength   | 属性值的最大长度校验                  | Number  | —                                                               | —                                                                                                                  |
 | requiredTip | 必填校验时的提示类型                  | String  | input,select                                                    | 有时必填校验提示的内容会有问题，可使用此属性来指定提示类型                                                         |
+| trim        | 是否开启自动删除前后空格功能          | Boolean | —                                                               | —                                                                                                                  |
 

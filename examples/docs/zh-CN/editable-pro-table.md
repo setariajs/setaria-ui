@@ -626,6 +626,7 @@ export default {
           Name: {
             title: '名称',
             type: 'string',
+            trim:true,
           },
           Enum: {
             title: '枚举值',
@@ -658,6 +659,7 @@ export default {
           Number: {
             title: '数字',
             type: 'number',
+            trim:true,
           },
           Price: {
             title: '价格',
@@ -665,10 +667,12 @@ export default {
             precision: '16',
             scale: '2',
             format: 'price',
+            trim:true,
           },
           Comment: {
             title: '备注',
             type: 'string',
+            trim:true,
           },
           Date: {
             title: '日期',
@@ -693,6 +697,7 @@ export default {
             title: '只读项目',
             type: 'string',
             editable: false,
+               
           },
           searchHelp: {
             title: '搜索帮助',
@@ -716,6 +721,7 @@ export default {
           'ui:options': {
             fixed: 'left',
           },
+          trim:true,
         },
         Enum: {
           'ui:options': {

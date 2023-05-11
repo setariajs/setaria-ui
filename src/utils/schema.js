@@ -250,8 +250,18 @@ export function createElementByProperty(key, property, uiProperty, model, emit) 
   } else {
     // 因render 函数中没有与 v-model 相应的 api, 实现v-model逻辑。
     events.on.input = (val) => {
-      model[key] = val;
-      emit('input', key, val, model);
+      let newVal = null;
+      if (property.trim && val) {
+        if (typeof val === 'string') {
+          newVal = val.trim();
+        } else if (typeof val === 'number') {
+          newVal = +(`${val}`.trim());
+        }
+      } else {
+        newVal = val;
+      }
+      model[key] = newVal;
+      emit('input', key, newVal, model);
     };
     events.on.change = (val) => {
       emit('change', key, val, model);
