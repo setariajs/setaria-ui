@@ -760,7 +760,7 @@ export default {
         Comment: {
           'ui:options': {
             minWidth: '300px',
-            visible: false
+            // visible: false
           },
           // 'ui:hidden':true
         },

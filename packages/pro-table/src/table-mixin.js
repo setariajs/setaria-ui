@@ -1620,13 +1620,12 @@ export default {
       this.isAllColumnShow = visibleColumnCount === settingColumnTotalCount;
     },
     initialColumnSettingKeys(val) {
+      this.columnSettingKeys = [];
       if (_.isEmpty(val)) {
-        this.columnSettingKeys = [];
         return;
       }
       const { defaultVisibleColumnKeys } = this;
       this.cloneVxeTableColumnArray = _.cloneDeep(val);
-      this.columnSettingKeys = [];
       // 多级表头场合，column为tree结构
       let settings = XEUtils.mapTree(val, (item) => {
         let title = item.title || '';
@@ -1701,21 +1700,25 @@ export default {
         );
         return ret;
       };
-      const onReset = () => {
-        this.getTableActionRef()
-          .resetColumn()
-          .then(() => {
-            // 更新列设置树的checkbox状态
-            this.initialColumnSettingKeys(this.cloneVxeTableColumnArray);
-            // 更新列设置树的checkbox状态
-            this.$refs.columnSettingTree.setCheckedKeys(
-              this.columnSettingDefaultCheckedKeys,
-              true
-            );
-            this.$emit('column-visible-change', this.columnSettingDefaultCheckedKeys);
-            this.$emit('column-visible-reset');
-          });
-      };
+      // const onReset = () => {
+      //   this.getTableActionRef()
+      //     .resetColumn()
+      //     .then(() => {
+
+      //       // 更新列设置树的checkbox状态
+      //       this.initialColumnSettingKeys(this.cloneVxeTableColumnArray.map(item=>{
+      //         item.visible = true;
+      //         return item;
+      //       }));
+      //       // 更新列设置树的checkbox状态
+      //       this.$refs.columnSettingTree.setCheckedKeys(
+      //         this.columnSettingDefaultCheckedKeys,
+      //         true
+      //       );
+      //       this.$emit('column-visible-change', this.columnSettingDefaultCheckedKeys);
+      //       this.$emit('column-visible-reset');
+      //     });
+      // };
       const onColumnSettingNodeDragEnd = (e, t, n, a)=>{
         const list = this.columnSettingKeys.map(item=>{
           return item.key;
@@ -1751,13 +1754,13 @@ export default {
               >
                 {t('el.protable.allColumns')}
               </el-checkbox>
-              <el-button
+              {/* <el-button
                 type="text"
                 class="column-setting__reset-button"
                 on-click={onReset}
               >
                 {t('el.proform.reset')}
-              </el-button>
+              </el-button> */}
             </div>
             <el-tree
               data={columnSettingKeys}
