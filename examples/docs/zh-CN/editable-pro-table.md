@@ -2040,6 +2040,7 @@ export default {
           'ui:options': {
             minWidth: '300px',
           },
+          visible:false,
           // 'ui:hidden':true
         },
         Boolean: {

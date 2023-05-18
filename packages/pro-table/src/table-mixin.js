@@ -92,14 +92,15 @@ export default {
       /* 分页有关属性 END */
       cloneVxeTableColumnArray: [],
       columnSettingKeys: [],
-      columnSettingCheckedKeys: [],
+      // columnSettingCheckedKeys: [],
       columnSettingDefaultCheckedKeys: [],
       columnSettingSortKeys: [], // 表格开启可拖拽之后，存放顺序的拖拽内容
       isParticalColumnShow: false,
       isAllColumnShow: true,
       innerSchema: null,
       editingRow: null,
-      columnVisibleChangeTimestamp: null // 用户在改变当前页面是否隐藏时的时间戳用于刷新底层computed
+      isFirstSetColumnSettingDefaultCheckedKeys: false
+      // columnVisibleChangeTimestamp: null // 用户在改变当前页面是否隐藏时的时间戳用于刷新底层computed
     };
   },
   watch: {
@@ -399,7 +400,7 @@ export default {
         innerSchema,
         treeNode,
         uiSchema = {},
-        columnVisibleChangeTimestamp,
+        // columnVisibleChangeTimestamp,
         $scopedSlots
       } = this;
       const ret = convertSchemaToColumns(
@@ -421,7 +422,7 @@ export default {
       if (this.tableId) {
         // 这个属性 会在用户设置完可见字段之后赋值，用于刷新响应内容
         // 方法名为：onColumnSettingTreeNodeCheck
-        columnVisibleChangeTimestamp;
+        // columnVisibleChangeTimestamp;
         const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
 
         if (columnVisibleStorage) {
@@ -1587,7 +1588,15 @@ export default {
           targetTableColumn.visible = checked;
         }
         saveCustomVisible(this.tableId, this.getTableActionRef().getTableColumn().collectColumn);
-        this.columnVisibleChangeTimestamp = Date.now();
+
+        if (checked) {
+          this.columnSettingDefaultCheckedKeys.push(data.key);
+        } else {
+          _.remove(this.columnSettingDefaultCheckedKeys, item=>{
+            return item === data.key;
+          });
+        }
+        // this.columnVisibleChangeTimestamp = Date.now();
       }
       // 更新表格列状态
       this.getTableActionRef()
@@ -1668,12 +1677,15 @@ export default {
         (item) => !_.isEmpty(item.key) && item.title !== this.COLUMN_CONTROL_TITLE
       );
       this.columnSettingKeys = settings;
-      const visibleKeys = this.columnSettingKeys.filter(
-        (item) => item.isColumnVisible
-      );
-      this.columnSettingDefaultCheckedKeys = visibleKeys.map(
-        (item) => item.key
-      );
+      if (!this.isFirstSetColumnSettingDefaultCheckedKeys) {
+        const visibleKeys = this.columnSettingKeys.filter(
+          (item) => item.isColumnVisible
+        );
+        this.columnSettingDefaultCheckedKeys = visibleKeys.map(
+          (item) => item.key
+        );
+        this.isFirstSetColumnSettingDefaultCheckedKeys = true;
+      }
     },
     getColumnSettingRender() {
       const {
