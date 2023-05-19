@@ -201,9 +201,10 @@ export default {
               this.currentDisplayTotalColSpan += currentColumns - (this.currentDisplayTotalColSpan % currentColumns);
             }
             this.currentDisplayTotalColSpan += propertyColspan;
-          } else {
-            propertyColspan = 0;
           }
+          // else {
+          //   propertyColspan = 0;
+          // }
           if (isCurrentRowEnough) {
             this.totalColSpan += currentColumns - (this.totalColSpan % currentColumns);
           }
