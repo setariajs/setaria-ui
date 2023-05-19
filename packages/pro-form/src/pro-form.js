@@ -160,18 +160,16 @@ export default {
       this.totalColSpan = 0;
       this.currentDisplayTotalColSpan = 0;
       const { currentColumns, innerExpand, schema, type, uiSchema } = this;
-      console.log(uiSchema);
       Object.keys(schema.properties).forEach((schemaKey, index) => {
         let uiProperty = cloneDeep(uiSchema[schemaKey]);
         if (isEmpty(uiSchema[schemaKey])) {
           uiProperty = {};
         }
-        ret[schemaKey] = uiProperty;
         if (type === 'queryFilter') {
           let propertyColspan = uiProperty['ui:colspan'];
           propertyColspan = typeof propertyColspan === 'number' ? propertyColspan : 1;
           // 如果业务端未定义的清空下的话
-          if (uiProperty['ui:hidden'] === null || uiProperty['ui:hidden'] === undefined) {
+          if (uiProperty['ui:hidden'] !== true) {
           // 收起的场合
             if (!innerExpand && this.collapse) {
 
@@ -203,12 +201,16 @@ export default {
               this.currentDisplayTotalColSpan += currentColumns - (this.currentDisplayTotalColSpan % currentColumns);
             }
             this.currentDisplayTotalColSpan += propertyColspan;
+          } else {
+            propertyColspan = 0;
           }
           if (isCurrentRowEnough) {
             this.totalColSpan += currentColumns - (this.totalColSpan % currentColumns);
           }
           this.totalColSpan += propertyColspan;
         }
+
+        ret[schemaKey] = uiProperty;
       });
       return ret;
     },

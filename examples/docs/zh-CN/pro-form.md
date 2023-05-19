@@ -173,7 +173,8 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     label-position="top"
     :after-submit="onSubmit"
     :expand="expand"
-    @expandChange="hanlderExpand">
+    @expandChange="hanlderExpand"
+    @change="dataChange">
     
   </el-pro-form>
   <p>result:</p>
@@ -203,6 +204,15 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
             "id"
           ],
           "properties": {
+            "interest": {
+              "type": "array",
+              "title": "兴趣",
+              "oneOf": [
+                {"const": "1", "title": "游戏"},
+                {"const": "2", "title": "音乐"},
+                {"const": "3", "title": "运动"}
+              ]
+            },
             "id": {
               "description": "此处可定义额外辅助信息",
               "type": "string",
@@ -241,15 +251,7 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
               "title": "日期时间",
               "format": "date-time"
             },
-            "interest": {
-              "type": "array",
-              "title": "兴趣",
-              "anyOf": [
-                {"const": "1", "title": "游戏"},
-                {"const": "2", "title": "音乐"},
-                {"const": "3", "title": "运动"}
-              ]
-            },
+            
             "comment": {
               "type": "string",
               "title": "备注"
@@ -257,18 +259,38 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
           }
         },
         uiSchema: {
-          "id":{
-            
-          },
-          "interest": {
-            "ui:colspan": 2
-          },
-          "comment": {
-            "ui:options": {
+           "id": {
+             
+            },
+            "password": {
+              'ui:hidden':false,
+            },
+            "age": {
+             'ui:hidden':false,
+            },
+            "gender": {
+              'ui:hidden':false,
+            },
+            "birth": {
+            'ui:hidden':false,
+            },
+            "time": {
+              'ui:hidden':false,
+            },
+            "dateTime": {
+              'ui:hidden':false,
+            },
+            "interest": {
+              // "ui:colspan": 2
+            },
+            "comment": {
+                "ui:options": {
               type: 'textarea'
             },
             "ui:colspan": 2
-          }
+            }
+
+
         }
       }
     },
@@ -283,6 +305,31 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
       },
       hanlderExpand(val){
         console.log('hanlderExpand',val)
+      },
+      dataChange(key,value){
+        if(key === 'interest'){
+          if(value === '1'){
+
+            this.uiSchema.password['ui:hidden']= true
+            this.uiSchema.age['ui:hidden']= true
+            this.uiSchema.gender['ui:hidden']= true
+            this.uiSchema.birth['ui:hidden']= true
+            this.uiSchema.time['ui:hidden']= true
+            this.uiSchema.dateTime['ui:hidden']= true
+            this.uiSchema.comment['ui:hidden']= true
+
+          }else{
+            this.uiSchema.password['ui:hidden']= false
+            this.uiSchema.age['ui:hidden']= false
+            this.uiSchema.gender['ui:hidden']= false
+            this.uiSchema.birth['ui:hidden']= false
+            this.uiSchema.time['ui:hidden']= false
+            this.uiSchema.dateTime['ui:hidden']= false
+            this.uiSchema.comment['ui:hidden']= false
+          }
+
+        }
+
       }
     }
   }
