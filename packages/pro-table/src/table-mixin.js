@@ -904,6 +904,8 @@ export default {
         slots: {
           default(scope) {
             const controlColumnDefaultSlot = [];
+            const maxDisplayCount = innerControlColumnConfig.maxDisplayCount ? innerControlColumnConfig.maxDisplayCount + 1 : innerControlColumnConfig.maxDisplayCount;
+
             if ($scopedSlots.controlColumn) {
               controlColumnDefaultSlot.push($scopedSlots.controlColumn(scope));
               return controlColumnDefaultSlot;
@@ -1016,7 +1018,7 @@ export default {
               }
             }
             if (!_.isEmpty(rowButtonList)) {
-              if (rowButtonList.length <= innerControlColumnConfig.maxDisplayCount ||
+              if (rowButtonList.length <= (maxDisplayCount) ||
                   !innerControlColumnConfig.collapseButton) {
                 rowButtonList.forEach(({ key, label, render, disabled }) => {
                   let ret = {};
@@ -1046,7 +1048,7 @@ export default {
                 });
               } else {
                 let i;
-                for (i = 0; i < innerControlColumnConfig.maxDisplayCount; i += 1) {
+                for (i = 0; i < (maxDisplayCount - 1); i += 1) {
                   const btnFirst = rowButtonList[i];
                   controlColumnDefaultSlot.push(
                     <el-button

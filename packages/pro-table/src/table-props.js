@@ -104,6 +104,8 @@ export const COMMON_TABLE_PROPS = {
     required: false,
     default: false
   },
+  // 合并功能
+  spanMethod: Function,
   mergeFooterItems: Array,
   footerMethod: Function,
   // 是否显示页脚

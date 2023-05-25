@@ -888,6 +888,10 @@ export default {
           key: '2',
           label: `按钮B${rowIndex}`,
         },
+         {
+          key: '3',
+          label: `按钮C${rowIndex}`,
+        },
       ];
     },
     onDataChange(key, val, data, originData) {
