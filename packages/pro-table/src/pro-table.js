@@ -115,6 +115,7 @@ export default Vue.extend({
       showPagination,
       getColumnSettingRender,
       rowClassName,
+      cellClassName,
       pagerScopedSlots,
       showOverflow,
       pagerBackground,
@@ -178,6 +179,7 @@ export default Vue.extend({
             footer-method={footerMethod}
             merge-footer-items={mergeFooterItems}
             row-class-name={rowClassName}
+            cell-class-name={cellClassName}
             scopedSlots={$scopedSlots}
           />
         </div>

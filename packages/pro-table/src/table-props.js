@@ -203,6 +203,7 @@ export const COMMON_TABLE_PROPS = {
     default: true
   },
   rowClassName: null,
+  cellClassName: null,
   showControlColumn: {
     type: Boolean,
     default: true

@@ -1276,6 +1276,7 @@ export default Vue.extend({
       showCollapseAllBtn,
       onGridNativeClick,
       rowClassName,
+      cellClassName,
       isSaveLoading,
       canAdd,
       innerCanDelete,
@@ -1522,6 +1523,7 @@ export default Vue.extend({
             merge-footer-items={mergeFooterItems}
             nativeOnClick={onGridNativeClick}
             row-class-name={rowClassName}
+            cell-class-name={cellClassName}
             on-cell-click={onCellClick}
             on-cell-dblclick={onCellDblClick}
             on-cell-mouseenter={onCellMouseenter}
@@ -1612,6 +1614,7 @@ export default Vue.extend({
             footer-method={footerMethod}
             merge-footer-items={mergeFooterItems}
             row-class-name={rowClassName}
+            cell-class-name={cellClassName}
             scopedSlots={$scopedSlots}
           />
         </div>
