@@ -116,89 +116,100 @@ export default {
     resetFields() {
       this.formRef.resetFields();
     },
-    getFormLabelSlot(h, property, columnMaxLabelLength, colSpan) {
-      const { componentPrefix } = this;
+    getFormLabelSlot(h, key, model, property, columnMaxLabelLength, colSpan) {
+      const { componentPrefix
+        , $scopedSlots
+      } = this;
       let span = typeof colSpan === 'number' ? colSpan : 1;
       let ret = null;
       let textSpan = null;
       let tooltip = null;
       const slotChildren = [];
-      if (typeof columnMaxLabelLength === 'number') {
-        const ellipsis = h(
-          `${componentPrefix}-ellipsis`,
-          {
-            props: {
-              tooltip: true,
-              'full-width-recognition': true,
-              length: columnMaxLabelLength * span
-            }
-          },
-          [property.title]
-        );
-        textSpan = h(
-          'div',
-          {
-            'class': ['label-inner__ellipsis']
-          },
-          [ellipsis]
-        );
-      }
-      if (!isEmpty(property.description)) {
-        if (textSpan === null) {
-          textSpan = h(
-            'span',
+
+      if (typeof $scopedSlots[`label.${key}`] === 'function') {
+        const labelCustomSlot = $scopedSlots[`label.${key}`]({
+          data: model,
+          status: 'edit'
+        });
+        slotChildren.push(labelCustomSlot);
+      } else {
+        if (typeof columnMaxLabelLength === 'number') {
+          const ellipsis = h(
+            `${componentPrefix}-ellipsis`,
             {
-              domProps: {
-                innerHTML: property.title
+              props: {
+                tooltip: true,
+                'full-width-recognition': true,
+                length: columnMaxLabelLength * span
+              }
+            },
+            [property.title]
+          );
+          textSpan = h(
+            'div',
+            {
+              'class': ['label-inner__ellipsis']
+            },
+            [ellipsis]
+          );
+        }
+        if (!isEmpty(property.description)) {
+          if (textSpan === null) {
+            textSpan = h(
+              'span',
+              {
+                domProps: {
+                  innerHTML: property.title
+                }
+              }
+            );
+          }
+          const icon = h(
+            `${componentPrefix}-icon`,
+            {
+              props: {
+                name: 'warning-outline',
+                tooltip: false
+              },
+              style: {
+                cursor: 'auto'
               }
             }
           );
+          tooltip = h(
+            `${componentPrefix}-tooltip`,
+            {
+              props: {
+                placement: 'top'
+              },
+              style: {
+                marginLeft: '5px'
+              }
+            },
+            [icon, h('span', {
+              domProps: {
+                innerHTML: property.description
+              },
+              slot: 'content',
+              style: {
+                display: 'inline-block',
+                maxWidth: '400px'
+              }
+            })]
+          );
         }
-        const icon = h(
-          `${componentPrefix}-icon`,
-          {
-            props: {
-              name: 'warning-outline',
-              tooltip: false
-            },
-            style: {
-              cursor: 'auto'
-            }
+        if (textSpan) {
+          slotChildren.push(textSpan);
+        }
+        if (tooltip) {
+          slotChildren.push(tooltip);
+          if (this.labelSuffix) {
+            slotChildren.push(h('span', {
+              domProps: {
+                innerHTML: this.labelSuffix
+              }
+            }));
           }
-        );
-        tooltip = h(
-          `${componentPrefix}-tooltip`,
-          {
-            props: {
-              placement: 'top'
-            },
-            style: {
-              marginLeft: '5px'
-            }
-          },
-          [icon, h('span', {
-            domProps: {
-              innerHTML: property.description
-            },
-            slot: 'content',
-            style: {
-              display: 'inline-block',
-              maxWidth: '400px'
-            }
-          })]
-        );
-      }
-      if (textSpan) {
-        slotChildren.push(textSpan);
-      }
-      if (tooltip) {
-        slotChildren.push(tooltip);
-        if (this.labelSuffix) {
-          slotChildren.push(h('span', {
-            domProps: {
-              innerHTML: this.labelSuffix
-            }
-          }));
         }
       }
       if (slotChildren.length > 0) {
@@ -314,7 +325,7 @@ export default {
               formItemChildren.push(h(componentTagName, componentProps, componentChildren));
             }
           }
-          const labelSlot = self.getFormLabelSlot(h, property, self.columnMaxLabelLength, colSpan);
+          const labelSlot = self.getFormLabelSlot(h, key, model, property, self.columnMaxLabelLength, colSpan);
           const colSpan = ui[JSON_UI_SCHEMA.UI_COLSPAN];
           formItem = h(
             `${componentPrefix}-form-item`,

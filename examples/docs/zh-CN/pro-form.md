@@ -27,6 +27,11 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
     <template slot="comment" slot-scope="scope">
       <el-input v-model="scope.data.comment" suffix-icon="el-icon-search"/>
     </template>
+
+
+    <template slot="label.comment" slot-scope="scope">
+     <p style="width:100px;">我是自定义的Label{{scope.data.comment}}</p>
+    </template>
   </el-pro-form>
   <p>result:</p>
   <div>
@@ -723,41 +728,41 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 
 **此处只列出ElProForm独有属性，其他属性请参考ElJsonForm**
 
-| 参数                   | 说明                                                                                                     | 类型     | 可选值                                                                    | 默认值                                                                                                                                                             |
-|------------------------|--------------------------------------------------------------------------------------------------------|----------|---------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| model                  | 表单数据对象                                                                                             | object   | —                                                                         | —                                                                                                                                                                  |
-| rules                  | 表单验证规则                                                                                             | object   | —                                                                         | —                                                                                                                                                                  |
-| type                   | 高级表单的类型                                                                                           | string   | queryFilter/modalForm/cardForm                                            | —                                                                                                                                                                  |
-| schema                 | JSON Schema对象                                                                                          | object   | —                                                                         | -                                                                                                                                                                  |
+| 参数                   | 说明                                                                                                      | 类型     | 可选值                                                                    | 默认值                                                                                                                                                             |
+| ---------------------- | --------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| model                  | 表单数据对象                                                                                              | object   | —                                                                         | —                                                                                                                                                                  |
+| rules                  | 表单验证规则                                                                                              | object   | —                                                                         | —                                                                                                                                                                  |
+| type                   | 高级表单的类型                                                                                            | string   | queryFilter/modalForm/cardForm                                            | —                                                                                                                                                                  |
+| schema                 | JSON Schema对象                                                                                           | object   | —                                                                         | -                                                                                                                                                                  |
 | ui-schema              | 用于设置各个表单字段的组件类型(ui:widget)、是否可用(ui:disabled)等属性 (请参照下表)                       | Object   | —                                                                         | —                                                                                                                                                                  |
 | before-submit          | 表单提交前回调，支持返回Promise                                                                           | Function | —                                                                         | —                                                                                                                                                                  |
 | after-submit           | 表单提交时回调，需要返回Promise                                                                           | Function | —                                                                         | —                                                                                                                                                                  |
-| expand                 | `type` 为 `queryFilter` 时有效，是否显示全部查询条件。                                                     | Boolean  | false                                                                     | -                                                                                                                                                                  |
+| expand                 | `type` 为 `queryFilter` 时有效，是否显示全部查询条件。                                                    | Boolean  | false                                                                     | -                                                                                                                                                                  |
 | title                  | `type` 为 `cardForm` 或 `modalForm` 时有效，优先级比 `card-attrs` 或 `modal-attrs` 内定义对应的标题属性低 | string   | —                                                                         | —                                                                                                                                                                  |
-| submitter              | 提交按钮相关配置                                                                                         | Boolean  | —                                                                         | true                                                                                                                                                               |
+| submitter              | 提交按钮相关配置                                                                                          | Boolean  | —                                                                         | true                                                                                                                                                               |
 | card-attrs             | `type` 为 `cardForm` 时有效，值为ElCard的Props                                                            | object   | —                                                                         | —                                                                                                                                                                  |
 | modal-attrs            | `type` 为 `modalForm` 时有效，值为ElDialog的Props                                                         | object   | —                                                                         | —                                                                                                                                                                  |
 | collapse               | `type` 为 `queryFilter` 时有效，是否开启查询条件折叠功能                                                  | boolean  | —                                                                         | true                                                                                                                                                               |
-| control-button-layout  | 按钮组件布局                                                                                             | Array    | `search`, `searchReset`, `submit` , `reset`, `cancel` , `slot`,`collapse` | `type` 为 `queryFilter`默认值为['search','searchReset','collapse'] ,  `type` 为 空 默认值为['submit','reset'] ,  `type` 为 `modalForm` 默认值为['submit','cancel'] |
+| control-button-layout  | 按钮组件布局                                                                                              | Array    | `search`, `searchReset`, `submit` , `reset`, `cancel` , `slot`,`collapse` | `type` 为 `queryFilter`默认值为['search','searchReset','collapse'] ,  `type` 为 空 默认值为['submit','reset'] ,  `type` 为 `modalForm` 默认值为['submit','cancel'] |
 | force-collapse-columns | 收起模式下，强制显示表单项的个数                                                                          | number   | —                                                                         | —                                                                                                                                                                  |
-| columns                | 表单组件一行显示几个表单项                                                                               | number   | —                                                                         | 3                                                                                                                                                                  |
-| submit-propagation     | 是否开启回车事件冒泡                                                                                     | Boolean  | -                                                                         | true                                                                                                                                                               |
+| columns                | 表单组件一行显示几个表单项                                                                                | number   | —                                                                         | 3                                                                                                                                                                  |
+| submit-propagation     | 是否开启回车事件冒泡                                                                                      | Boolean  | -                                                                         | true                                                                                                                                                               |
 
 
 ### ProForm Events
 
-| 事件名称      | 说明                                                       | 回调参数                             |
-|---------------|----------------------------------------------------------|--------------------------------------|
+| 事件名称      | 说明                                                        | 回调参数                             |
+| ------------- | ----------------------------------------------------------- | ------------------------------------ |
 | visibleChange | `type` 为 `modalForm` 时有效，对话框显示/隐藏状态变更时触发 | key 表单字段的Key, val 表单字段的值  |
-| clear         | 表单重置按钮点击后触发                                     | —                                    |
-| change        | 表单字段值变更时回调                                       | key 表单字段的 Key, val 表单字段的值 |
-| expandChange  | 表单折叠状态变更                                           | val 表单字段的值                     |
-| submit        | 表单提交                                                   | val 表单字段的值                     |
+| clear         | 表单重置按钮点击后触发                                      | —                                    |
+| change        | 表单字段值变更时回调                                        | key 表单字段的 Key, val 表单字段的值 |
+| expandChange  | 表单折叠状态变更                                            | val 表单字段的值                     |
+| submit        | 表单提交                                                    | val 表单字段的值                     |
 
 
 ### ProForm Slot
 | name           | 说明                                              |
-|----------------|-------------------------------------------------|
+| -------------- | ------------------------------------------------- |
 | —              | 默认的内容                                        |
 | controlButtons | 需要配合`control-button-layout`来显示插槽中的内容 |
-
+| label.[字段名] | label区域自定义插槽                               |
