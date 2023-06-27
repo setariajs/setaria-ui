@@ -9,9 +9,16 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
 ```html
 <template>
   <div>
-    <el-pro-description :schema="schema" :ui-schema="uiSchema" :data="data" :bordered="false">
+    <el-pro-description :schema="schema"  :ui-schema="uiSchema" :data="data" >
       <span slot="CustomSlot" slot-scope="{data}">
         <el-button type="text">{{ data }}</el-button>
+      </span>
+      <!-- 自定义插槽中可自定义label -->
+      <span slot="label.CustomSlot"  slot-scope="{data}" >
+        我是自定义label
+      </span>
+     <span slot="label.Name" slot-scope="{data}">
+        我是自定义Name{{data.Name}}
       </span>
     </el-pro-description>
   </div>
@@ -72,8 +79,16 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
               // scale: '2',
               format: 'price',
             },
+             
             Price3: {
               title: '价格3',
+              type: 'number',
+              // scale: '2',
+              format: 'price',
+            },
+           
+            Price4: {
+              title: '价格4',
               type: 'number',
               // scale: '2',
               format: 'price',
@@ -104,7 +119,7 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
         },
         uiSchema: {
           Comment: {
-            'ui:colspan': 3,
+            'ui:colspan': 4,
           }
         },
         data: {},
@@ -124,6 +139,7 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
           Price: 12345.678,
           Price2: '12345',
           Price3: '啊啊啊',
+           Price4: '啊啊啊22',
           Enum: '2',
           AnyOf: ['1', '2'],
           Number: 98765,
@@ -141,37 +157,23 @@ ProDescriptions 的诞生是为了解决项目中需要写很多 Descriptions �
 :::
 
 
-### DetailForm 属性
+###  属性
 
-| 参数      | 说明          | 类型      | 可选值                           | 默认值  |
-|---------- |-------------- |---------- |--------------------------------  |-------- |
-| tab-list     | 页签列表，当需要使用页签的场合，可传入 { label: '', key: '' } 结构的数组           | Array | — | — |
-| active-tab     | `sync` 默认显示的页签  | String | — | — |
-| label-mode     | 是否为编辑模式           | Boolean | — | true |
-| bordered   | 是否展示边框 | Boolean | — | true |
-| force-content-render     | Tab页签内容被隐藏时是否渲染 DOM 结构    | Boolean | — | true |
-| before-tab-leave | 切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。    | Function | — |  — |
-| before-return | 点击返回按钮后的回调函数，可返回reject状态promise或false以阻止页面返回。  | Function | — |  — |
-| custom-validator | 自定义校验函数。需返回 Promise 且 resolve 数组，数组元素格式为 { field, message }。    | Function | — |  — |
-
-### DetailForm 插槽
-
-| 名称 | 描述 |
-|------|--------|
-| title | 标题的内容 |
-| titleBar | 标题右侧操作按钮插槽 |
-
-### DetailForm 事件
+| 参数         | 说明             | 类型   | 可选值                | 默认值     |
+| ------------ | ---------------- | ------ | --------------------- | ---------- |
+| data         | 对象数据         | Object | —                     | —          |
+| columns      | 一行要显示列数   | Number | —                     | 3          |
+| label-suffix | 表单域标签的后缀 | String | —                     | :          |
+| schema       | schema信息       | Object | —                     | —          |
+| ui-schema    | ui信息           | Object | —                     | —          |
+| direction    | 排列的方向       | String | vertical / horizontal | horizontal |
 
 
-| 事件名称 | 说明 | 回调参数 |
-|---------- |-------- |---------- |
-| close | 关闭alert时触发的事件 | — |
 
-### DetailForm 方法
+###  插槽
 
+| name           | 说明                |
+| -------------- | ------------------- |
+| label.[字段名] | label区域自定义插槽 |
+| [字段名]       | 对应字段自定义插槽  |
 
-| 方法名称    | 说明           | 入参   | 返回参数 |
-| ----------- | -------------- | ------ | -------- |
-| customValidate   | 仅执行自定义校验函数 | — |  是否校验通过  |
-| validate   | 执行校验（含form-card, table-card, 自定义校验函数） | — |  是否校验通过  |

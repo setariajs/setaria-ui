@@ -95,6 +95,7 @@ import Popconfirm from '../packages/popconfirm/index.js';
 import Ellipsis from '../packages/ellipsis/index.js';
 import QueryFilter from '../packages/query-filter/index.js';
 import Description from '../packages/description/index.js';
+import DescriptionItem from '../packages/description-item/index.js';
 import TagSelect from '../packages/tag-select/index.js';
 import TagSelectItem from '../packages/tag-select-item/index.js';
 import Statistics from '../packages/statistics/index.js';
@@ -202,6 +203,7 @@ const components = [
   Ellipsis,
   QueryFilter,
   Description,
+  DescriptionItem,
   TagSelect,
   TagSelectItem,
   Statistics,
@@ -251,7 +253,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.8.64',
+  version: '1.8.65',
   locale: locale.use,
   i18n: locale.i18n,
   install,
@@ -351,6 +353,7 @@ export default {
   Ellipsis,
   QueryFilter,
   Description,
+  DescriptionItem,
   TagSelect,
   TagSelectItem,
   Statistics,

@@ -1,8 +1,8 @@
-import DescriptionItem from '../description/src/description-item';
+import DescriptionsItem from '../description/src/descriptions-item';
 
 /* istanbul ignore next */
-DescriptionItem.install = function(Vue) {
-  Vue.component(DescriptionItem.name, DescriptionItem);
+DescriptionsItem.install = function install(Vue) {
+  Vue.component(DescriptionsItem.name, DescriptionsItem);
 };
 
-export default DescriptionItem;
+export default DescriptionsItem;

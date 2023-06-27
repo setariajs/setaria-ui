@@ -766,3 +766,4 @@ ProForm 在原来的 JsonForm 的基础上增加一些语法糖和更多的布�
 | —              | 默认的内容                                        |
 | controlButtons | 需要配合`control-button-layout`来显示插槽中的内容 |
 | label.[字段名] | label区域自定义插槽                               |
+| [字段名]       | 对应字段自定义插槽                                |

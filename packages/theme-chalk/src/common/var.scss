@@ -1075,14 +1075,13 @@ $--condition-filter-label-width: 100px !default;
 $--condition-filter-expander-width: 50px !default;
 $--condition-filter-small-font-size: $--font-size-small !default;
 
-/* Description
+/* Descriptions
 -------------------------- */
-$--description-border: 1px solid #e9eff2 !default;
-$--description-font-size: $--font-size-base !default;
-$--description-item-height: 40px !default;
-$--description-item-medium-height: 36px !default;
-$--description-item-small-height: 32px !default;
-$--description-item-mini-height: 28px !default;
+$--descriptions-header-margin-bottom: 20px !default;
+$--descriptions-title-font-size: 16px !default;
+$--descriptions-table-border: 1px solid $--border-color-lighter !default;
+$--descriptions-item-bordered-label-background: #fafafa !default;
+
 
 /* TagSelect
 -------------------------- */

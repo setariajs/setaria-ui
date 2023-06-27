@@ -1,105 +1,111 @@
-@import "mixins/mixins";
-@import "common/var";
+@import 'mixins/mixins';
+@import 'common/var';
+@import 'description-item';
 
-@include b(description) {
-  text-align: left;
-  table {
-    width: 100%;
-    &.is-bordered {
-      border-top: $--description-border;
-      tbody {
-        border: $--description-border;
-        tr {
-          th {
-            &:first-child {
-              border-left: $--description-border;
-            }
-          }
-          th, td {
-            border-right: $--description-border;
-            border-bottom: $--description-border;
-          }
-        }
-      }
+@include b(descriptions) {
+  box-sizing: border-box;
+  font-size: $--font-size-base;
+  color: $--color-text-primary;
+
+  @include e(header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $--descriptions-header-margin-bottom;
+
+    @include e(title) {
+      font-size: $--descriptions-title-font-size;
+      font-weight: bold;
     }
-    
-    thead {
-      tr {
-        th {
-          padding: 0 10px;
+  }
+
+  @include e(body) {
+    color: $--color-text-regular;
+    background-color: $--color-white;
+
+    .el-descriptions__table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+
+      .el-descriptions-item__cell {
+        box-sizing: border-box;
+        text-align: left;
+        font-weight: normal;
+        line-height: 1.5;
+
+        @include when(left) {
           text-align: left;
-          background-color: #fafafa;
-          border: 1px solid #e9eff2;
-          color: $--color-text-regular;
+        }
+
+        @include when(center) {
+          text-align: center;
+        }
+
+        @include when(right) {
+          text-align: right;
         }
       }
-    }
-    
-    tbody {
-      font-size: $--description-font-size;
-      
-      tr {
-        th {
-          padding: 0 10px;
-          font-weight: 400;
-        }
-        td {
-          padding: 0 10px;
-        }
-        th, td {
-          color: $--color-text-regular;
-        }
-        th,
-        td {
-          word-break: break-all;
-        }
-      }
-    }
-  }
-  .el-description-title {
-    height: $--description-item-height;
-    line-height: $--description-item-height;
-  }
-  .el-description-item-label {
-    background-color: #fafafa;
-    text-align: right;
-    height: $--description-item-height;
-    line-height: $--description-item-height;
-  }
-  @include m(medium) {
-    .el-description-item-label {
-      height: $--description-item-medium-height;
-      line-height: $--description-item-medium-height;
-    }
-    .el-description-title {
-      height: $--description-item-medium-height;
-      line-height: $--description-item-medium-height;
-    }
-  }
-  @include m(small) {
-    .el-description-item-label {
-      height: $--description-item-small-height;
-      line-height: $--description-item-small-height;
-    }
-    .el-description-title {
-      height: $--description-item-small-height;
-      line-height: $--description-item-small-height;
-    }
-  }
-  @include m(mini) {
-    .el-description-item-label {
-      height: $--description-item-mini-height;
-      line-height: $--description-item-mini-height;
-    }
-    .el-description-title {
-      height: $--description-item-mini-height;
-      line-height: $--description-item-mini-height;
-    }
-  }
-  .has-title {
-    table {
-      border-top: none;
     }
   }
 
+  .is-bordered {
+    table-layout: auto;
+    .el-descriptions-item__cell {
+      border: $--descriptions-table-border;
+      padding: 12px 10px;
+    }
+  }
+
+  :not(.is-bordered) {
+    .el-descriptions-item__cell {
+      padding-bottom: 12px;
+    }
+  }
+
+  @include m(medium) {
+    &.is-bordered {
+      .el-descriptions-item__cell {
+        padding: 10px;
+      }
+    }
+
+    &:not(.is-bordered) {
+      .el-descriptions-item__cell {
+        padding-bottom: 10px;
+      }
+    }
+  }
+
+  @include m(small) {
+    font-size: 12px;
+
+    &.is-bordered {
+      .el-descriptions-item__cell {
+        padding: 8px 10px;
+      }
+    }
+
+    &:not(.is-bordered) {
+      .el-descriptions-item__cell {
+        padding-bottom: 8px;
+      }
+    }
+  }
+
+  @include m(mini) {
+    font-size: 12px;
+
+    &.is-bordered {
+      .el-descriptions-item__cell {
+        padding: 6px 10px;
+      }
+    }
+
+    &:not(.is-bordered) {
+      .el-descriptions-item__cell {
+        padding-bottom: 6px;
+      }
+    }
+  }
 }

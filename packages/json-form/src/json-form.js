@@ -132,6 +132,14 @@ export default {
           status: 'edit'
         });
         slotChildren.push(labelCustomSlot);
+
+        if (this.labelSuffix) {
+          slotChildren.push(h('span', {
+            domProps: {
+              innerHTML: this.labelSuffix
+            }
+          }));
+        }
       } else {
         if (typeof columnMaxLabelLength === 'number') {
           const ellipsis = h(

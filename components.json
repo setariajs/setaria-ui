@@ -94,6 +94,7 @@
   "ellipsis": "./packages/ellipsis/index.js",
   "query-filter": "./packages/query-filter/index.js",
   "description": "./packages/description/index.js",
+  "description-item": "./packages/description-item/index.js",
   "tag-select": "./packages/tag-select/index.js",
   "tag-select-item": "./packages/tag-select-item/index.js",
   "statistics": "./packages/statistics/index.js",

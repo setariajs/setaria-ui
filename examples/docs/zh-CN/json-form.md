@@ -219,6 +219,7 @@
     :schema="schema"
     :ui-schema="uiSchema"
     label-width="auto"
+    :label-suffix="':'"
     @submit="onSubmitForm2"
     @change="handleChange"
     :columns="3"
@@ -661,3 +662,4 @@
 | name           | 说明                |
 | -------------- | ------------------- |
 | label.[字段名] | label区域自定义插槽 |
+| [字段名]       | 对应字段自定义插槽  |

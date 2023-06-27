@@ -1,8 +1,8 @@
-import Description from './src/description';
+import Descriptions from './src/index';
 
 /* istanbul ignore next */
-Description.install = function(Vue) {
-  Vue.component(Description.name, Description);
+Descriptions.install = function install(Vue) {
+  Vue.component(Descriptions.name, Descriptions);
 };
 
-export default Description;
+export default Descriptions;

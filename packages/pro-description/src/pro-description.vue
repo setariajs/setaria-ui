@@ -1,16 +1,25 @@
 <template>
-  <el-description :columns="columns" :label-suffix="labelSuffix" :bordered="bordered">
-    <el-description-item
-      v-for="key in Object.keys(innerItems)"
+  <el-description :column="columns"
+    :label-suffix="labelSuffix"
+    :border="bordered"
+    :direction="direction">
+    <el-description-item v-for="key in Object.keys(innerItems)"
       :key="key"
       :span="getDescriptionSpan(key)"
       :label="innerItems[key].title"
-      :label-class="`pro-description__label-${key.toLowerCase()}`"
-      :content-class="`pro-description__content-${key.toLowerCase()}`"
-    >
-      <slot :name="key" :data="innerData[key]">
+      :label-class-name="`pro-description__label pro-description__label-${key.toLowerCase()}`"
+      :content-class-name="`pro-description__content-${key.toLowerCase()}`">
+      <slot :name="key"
+        :data="innerData[key]">
         {{ innerData[key] }}
       </slot>
+      <template v-if="$scopedSlots[`label.${key}`]"
+        slot="label">
+        <slot :name="`label.${key}`"
+          :data="innerData">
+        </slot>
+      </template>
+
     </el-description-item>
   </el-description>
 </template>
@@ -35,7 +44,7 @@ export default {
     },
     direction: {
       type: String,
-      default: null
+      default: 'horizontal'
     },
     bordered: {
       type: Boolean,
@@ -59,7 +68,9 @@ export default {
       }
       Object.keys(schema.properties).forEach((key) => {
         // 隐藏的项目不显示
-        if (!(uiSchema[key] && uiSchema[key][JSON_UI_SCHEMA.UI_HIDDEN] === true)) {
+        if (
+          !(uiSchema[key] && uiSchema[key][JSON_UI_SCHEMA.UI_HIDDEN] === true)
+        ) {
           ret[key] = schema.properties[key];
         }
       });
@@ -84,8 +95,16 @@ export default {
   },
   methods: {
     getDescriptionSpan(key) {
+      console.log(
+        this.$slots,
+        this.$scopedSlots,
+        this.$slots['label.CustomSlot']
+      );
       const { uiSchema } = this;
-      if (uiSchema[key] && typeof uiSchema[key][JSON_UI_SCHEMA.UI_COLSPAN] === 'number') {
+      if (
+        uiSchema[key] &&
+        typeof uiSchema[key][JSON_UI_SCHEMA.UI_COLSPAN] === 'number'
+      ) {
         return uiSchema[key][JSON_UI_SCHEMA.UI_COLSPAN];
       }
       return DEFAULT_COL_SPAN;
