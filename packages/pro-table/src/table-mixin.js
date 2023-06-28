@@ -1406,9 +1406,11 @@ export default {
       if (innerRadioConfig && _.isFunction(innerRadioConfig.checkMethod)) {
         if (val && innerRadioConfig.checkMethod(val)) {
           this.emitSelectionChange([val.row], val.row);
+          this.$emit('radio-change', val);
         }
       } else {
         this.emitSelectionChange([val.row], val.row);
+        this.$emit('radio-change', val);
       }
     },
     /** CheckBox 选中事件 */
@@ -1416,6 +1418,7 @@ export default {
       // !FIXME vxe-table bug - 不存在checkbox多选列的情况下，仍然触发了checkbox-change事件
       if (this.isMultipleSelect) {
         this.emitSelectionChange(val.records, val.row);
+        this.$emit('checkbox-change', val);
       }
     },
     // 所有的都被check

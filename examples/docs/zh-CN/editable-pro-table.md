@@ -581,6 +581,7 @@ export default {
     @data-change="onDataChange"
     @row-button-click="onRowButtonClick"
     @selection-change="onSelectionChange"
+    @checkbox-change="onCheckboxChange"
     :save="save"
     ref="editTable"
   >
@@ -918,6 +919,9 @@ export default {
     },
     onSelectionChange(val) {
       console.log(val);
+    },
+    onCheckboxChange(val){
+       console.log(val);
     },
     // beforeAddRow(scope) {
     //   console.log(scope);
