@@ -95,11 +95,6 @@ export default {
   },
   methods: {
     getDescriptionSpan(key) {
-      console.log(
-        this.$slots,
-        this.$scopedSlots,
-        this.$slots['label.CustomSlot']
-      );
       const { uiSchema } = this;
       if (
         uiSchema[key] &&

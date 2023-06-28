@@ -180,7 +180,6 @@ export default {
       return getOperatorListByField(properties[field], exclude);
     },
     getSchemaPropertyBykey(key) {
-      console.log(key, this.schema.properties[key]);
       return this.schema.properties[key];
     },
     isShowCriteriaValue(operator) {
