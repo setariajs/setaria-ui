@@ -73,161 +73,163 @@ export function convertSchemaToColumns(
   const currentUiSchema = uiSchema || {};
   Object.keys(properties).forEach((key) => {
     const property = properties[key];
-    const uiProperty = currentUiSchema[key] || {};
-    const column = new VxeColumn();
-    // 列字段名
-    column.field = key;
-    if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID])) {
-      column.srParentField = uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID];
-    }
-    // 列提示
-    if (!_.isEmpty(property.description)) {
-      column.titleHelp = {
-        message: property.description
-      };
-    }
-    // INDEX序号列的场合
-    if (property.type === COLUMN_TYPE.INDEX) {
-      column.type = 'seq';
-    }
-    column.headerAlign = 'left';
-    // 列标题
-    column.title = property.title;
-    // if (property.type === 'number' || property.type === 'integer') {
-    //   column.headerAlign = 'right';
-    //   column.align = 'right';
-    // }
-    // 列宽度
-    let { width } = uiProperty;
-    if (!_.isEmpty(width) && width.indexOf('px')) {
-      width = width.replace('px', '');
+    if (property) {
+      const uiProperty = currentUiSchema[key] || {};
+      const column = new VxeColumn();
+      // 列字段名
+      column.field = key;
+      if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID])) {
+        column.srParentField = uiProperty[JSON_UI_SCHEMA.UI_PARENT_COLUMN_ID];
+      }
+      // 列提示
+      if (!_.isEmpty(property.description)) {
+        column.titleHelp = {
+          message: property.description
+        };
+      }
+      // INDEX序号列的场合
+      if (property.type === COLUMN_TYPE.INDEX) {
+        column.type = 'seq';
+      }
+      column.headerAlign = 'left';
+      // 列标题
+      column.title = property.title;
+      // if (property.type === 'number' || property.type === 'integer') {
+      //   column.headerAlign = 'right';
+      //   column.align = 'right';
+      // }
+      // 列宽度
+      let { width } = uiProperty;
+      if (!_.isEmpty(width) && width.indexOf('px')) {
+        width = width.replace('px', '');
       // 根据字符数量计算列的宽度 FIXME 列和标题字数较少时的处理
-    } else if (columnWidth === 'auto') {
-      let defaultMinWidth = byteLength(column.title) * 20;
-      if (defaultMinWidth < 100) {
-        defaultMinWidth = 100;
+      } else if (columnWidth === 'auto') {
+        let defaultMinWidth = byteLength(column.title) * 20;
+        if (defaultMinWidth < 100) {
+          defaultMinWidth = 100;
+        }
+        column.minWidth = `${defaultMinWidth}px`;
+      } else if (!_.isEmpty(columnWidth)) {
+        width = columnWidth;
       }
-      column.minWidth = `${defaultMinWidth}px`;
-    } else if (!_.isEmpty(columnWidth)) {
-      width = columnWidth;
-    }
-    if (width) {
-      column.width = `${width}`;
-    }
-    // 序号列不进行排序
-    if (column.field !== 'index') {
+      if (width) {
+        column.width = `${width}`;
+      }
+      // 序号列不进行排序
+      if (column.field !== 'index') {
       // 排序
-      let { sortable } = property;
-      const uiSchemaOptionsSortable = _.get(uiProperty, [
-        JSON_UI_SCHEMA.UI_OPTIONS,
-        'sortable'
-      ]);
-      // ui-schema内的属性最优先
-      if (typeof uiSchemaOptionsSortable === 'boolean') {
-        sortable = uiSchemaOptionsSortable;
+        let { sortable } = property;
+        const uiSchemaOptionsSortable = _.get(uiProperty, [
+          JSON_UI_SCHEMA.UI_OPTIONS,
+          'sortable'
+        ]);
+        // ui-schema内的属性最优先
+        if (typeof uiSchemaOptionsSortable === 'boolean') {
+          sortable = uiSchemaOptionsSortable;
         // 默认排序设置次优先
-      } else if (config.defaultAllColumnSort) {
-        sortable = true;
+        } else if (config.defaultAllColumnSort) {
+          sortable = true;
+        }
+        // metadata内的sortable优先级最低
+        column.sortable = sortable;
       }
-      // metadata内的sortable优先级最低
-      column.sortable = sortable;
-    }
-    // 格式化显示内容
-    const { formatter } = uiProperty;
-    if (property.type !== COLUMN_TYPE.INDEX) {
-      if (typeof formatter === 'function') {
+      // 格式化显示内容
+      const { formatter } = uiProperty;
+      if (property.type !== COLUMN_TYPE.INDEX) {
+        if (typeof formatter === 'function') {
         // eslint-disable-next-line no-shadow
-        column.formatter = ({ row, col, cellValue }) =>
-          formatter(row, col, cellValue);
-      } else if (formatter && typeof formatter === 'string') {
-        if (formatter === 'date') {
-          column.formatter = dateFormatter;
-        } else if (formatter === 'datetime') {
-          column.formatter = dateTimeFormatter;
-        } else if (formatter === 'boolean') {
-          column.formatter = booleanFormatter;
-        }
-      } else {
+          column.formatter = ({ row, col, cellValue }) =>
+            formatter(row, col, cellValue);
+        } else if (formatter && typeof formatter === 'string') {
+          if (formatter === 'date') {
+            column.formatter = dateFormatter;
+          } else if (formatter === 'datetime') {
+            column.formatter = dateTimeFormatter;
+          } else if (formatter === 'boolean') {
+            column.formatter = booleanFormatter;
+          }
+        } else {
         // 设置默认formatter
-        const formatter = createFormatter(property);
-        if (formatter) {
-          column.formatter = ({ cellValue }) => {
-            return formatter(cellValue);
-          };
+          const formatter = createFormatter(property);
+          if (formatter) {
+            column.formatter = ({ cellValue }) => {
+              return formatter(cellValue);
+            };
+          }
         }
       }
-    }
-    if (uiProperty.fixed) {
-      column.fixed = uiProperty.fixed;
-    }
-    // 列插槽处理
-    column.slots = {};
-    if (scopedSlots[key]) {
-      column.hasCustomSlot = true;
-      const defaultSlot = (scope) => {
-        const s = scope;
-        s.data = s.row;
-        s.status = 'default';
-        const render = scopedSlots[key](s);
-        return render;
-      };
-      const editSlot = (scope) => {
-        const s = scope;
-        s.data = s.row;
-        s.status = 'edit';
-        const render = scopedSlots[key](s);
-        return render;
-      };
-      // 单元格内容渲染配置项
-      column.slots = {
-        default: defaultSlot,
-        srScopedDefault: defaultSlot,
-        // 默认设置编辑状态插槽
-        // 默认插槽内容可通过formatter进行设置
-        edit: editSlot,
-        srScopedEdit: editSlot
-      };
-    }
-    const headerSlotKey = `${SLOT_NAME_HEADER_PREFIX}${key}`;
-    // 表格头部自定义插槽
-    if (scopedSlots[headerSlotKey]) {
-      const headerSlot = (scope) => {
-        const s = scope;
-        const render = scopedSlots[headerSlotKey](s);
-        return render;
-      };
-      column.slots.header = headerSlot;
-    }
-    // 展开行
-    if (
-      scopedSlots[SLOT_NAME_EXPAND_CONTENT] &&
+      if (uiProperty.fixed) {
+        column.fixed = uiProperty.fixed;
+      }
+      // 列插槽处理
+      column.slots = {};
+      if (scopedSlots[key]) {
+        column.hasCustomSlot = true;
+        const defaultSlot = (scope) => {
+          const s = scope;
+          s.data = s.row;
+          s.status = 'default';
+          const render = scopedSlots[key](s);
+          return render;
+        };
+        const editSlot = (scope) => {
+          const s = scope;
+          s.data = s.row;
+          s.status = 'edit';
+          const render = scopedSlots[key](s);
+          return render;
+        };
+        // 单元格内容渲染配置项
+        column.slots = {
+          default: defaultSlot,
+          srScopedDefault: defaultSlot,
+          // 默认设置编辑状态插槽
+          // 默认插槽内容可通过formatter进行设置
+          edit: editSlot,
+          srScopedEdit: editSlot
+        };
+      }
+      const headerSlotKey = `${SLOT_NAME_HEADER_PREFIX}${key}`;
+      // 表格头部自定义插槽
+      if (scopedSlots[headerSlotKey]) {
+        const headerSlot = (scope) => {
+          const s = scope;
+          const render = scopedSlots[headerSlotKey](s);
+          return render;
+        };
+        column.slots.header = headerSlot;
+      }
+      // 展开行
+      if (
+        scopedSlots[SLOT_NAME_EXPAND_CONTENT] &&
       config &&
       config.expand &&
       config.expand.labelField &&
       config.expand.labelField === key
-    ) {
-      column.slots.content = scopedSlots[SLOT_NAME_EXPAND_CONTENT];
-    }
-    if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS])) {
-      Object.keys(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS]).forEach((optionKey) => {
-        if (_.has(column, optionKey)) {
-          column[optionKey] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS][optionKey];
-        }
-      });
-      if (typeof uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].visible === 'boolean') {
-        column[ORIGIN_UI_OPTION] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS];
+      ) {
+        column.slots.content = scopedSlots[SLOT_NAME_EXPAND_CONTENT];
       }
-    }
-    // 禁止手动更改列的显示/隐藏
-    if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL] === 'boolean') {
-      column.disableColumnControl = uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL];
-    }
-    if (!uiProperty[JSON_UI_SCHEMA.UI_HIDDEN]) {
-      ret.push(column);
-    }
-    if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] && uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots) {
-      if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter) {
-        column.slots.filter = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter;
+      if (!_.isEmpty(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS])) {
+        Object.keys(uiProperty[JSON_UI_SCHEMA.UI_OPTIONS]).forEach((optionKey) => {
+          if (_.has(column, optionKey)) {
+            column[optionKey] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS][optionKey];
+          }
+        });
+        if (typeof uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].visible === 'boolean') {
+          column[ORIGIN_UI_OPTION] = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS];
+        }
+      }
+      // 禁止手动更改列的显示/隐藏
+      if (typeof uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL] === 'boolean') {
+        column.disableColumnControl = uiProperty[JSON_UI_SCHEMA.UI_DISABLE_COLUMN_CONTROL];
+      }
+      if (!uiProperty[JSON_UI_SCHEMA.UI_HIDDEN]) {
+        ret.push(column);
+      }
+      if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS] && uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots) {
+        if (uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter) {
+          column.slots.filter = uiProperty[JSON_UI_SCHEMA.UI_OPTIONS].slots.filter;
+        }
       }
     }
   });
