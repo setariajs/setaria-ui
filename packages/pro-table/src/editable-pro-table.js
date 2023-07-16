@@ -762,6 +762,7 @@ export default Vue.extend({
         return;
       }
       this.xTableRef.clearCheckboxRow();
+      this.innerSelection = [];
     },
     /**
      * 设置展开树形节点
