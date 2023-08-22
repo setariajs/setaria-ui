@@ -1751,7 +1751,12 @@ export default {
           return false;
         }
         return true;
-
+      };
+      const onColumnSettingShow = ()=>{
+        this.$emit('column-setting-show');
+      };
+      const onColumnSettingHide = ()=>{
+        this.$emit('column-setting-hide');
       };
       if (columnSettingKeys.length > 0) {
         this.refreshColumnSettingTopCheckboxStatus();
@@ -1762,6 +1767,8 @@ export default {
             width="240"
             trigger={controlColumnTrigger}
             popper-class="pro-table__column-setting-tree"
+            on-show={onColumnSettingShow}
+            on-hide={onColumnSettingHide}
           >
             <div class="column-setting__toolbar">
               <el-checkbox
@@ -1904,6 +1911,21 @@ export default {
         // 用于单元格内按钮点击后，同时触发行选中的问题排查
         this.$emit('cell-link-click', evt);
       }
+    },
+    // 获取之前用户设置隐藏的表格列Key
+    getTableHiddenColumn() {
+      if (this.tableId) {
+        const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
+        if (columnVisibleStorage) {
+          // vxetable底层获取数据
+          const colVisibles = columnVisibleStorage.split('|');
+          let colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
+          // let colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
+          return colHides;
+        }
+      }
+      return [];
+
     }
   }
 };

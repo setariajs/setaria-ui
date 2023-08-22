@@ -58,7 +58,7 @@ Vue.component('el-editable-pro-table', EditableProTable);
     @valid-error="onValidError"
     @column-visible-change="onColumnVisibleChange"
     @column-visible-reset="onColumnVisibleReset"
-  >
+>
     <template slot="index" slot-scope="scope">
       <el-button type="text">{{ scope.rowIndex }}</el-button>
     </template>
@@ -1893,6 +1893,8 @@ export default {
     @column-visible-change="onColumnVisibleChange"
     @column-visible-reset="onColumnVisibleReset"
     @column-setting-node-drag-end="onColumnSettingNodeDragEnd"
+    @column-setting-show="testColumnSettingToggle('1')"
+    @column-setting-hide="testColumnSettingToggle('2')"
   >
 
     <template slot="batchControl">
@@ -2159,6 +2161,10 @@ export default {
       // console.log(schema)
       // this.schema = schema
     },
+    testColumnSettingToggle(type) {
+      console.log('testColumnSettingToggle',type);
+      console.log(this.$refs.editTable.getTableHiddenColumn());
+    },
 
   }
 };
@@ -2286,18 +2292,23 @@ export default {
 | column-visible-change        | 当用户操作右上角显示列功能时的回调                                                   | checkedKeys 显示列的key数组                                                                                                                                      |
 | column-visible-reset         | 当用户操作右上角显示列功能的重置按钮回调                                             | -                                                                                                                                                                |
 | column-setting-node-drag-end | 当用户操作右上角拖动列功能Item时的回调，需配合`column-setting-draggable`属性一起使用 | list 被拖拽之后的list key数组                                                                                                                                    |
+| column-setting-show          | 列设置显示回调                                                                           |                                                                                                                                                                  |
+| column-setting-hide          | 列设置隐藏回调                                       |                                                                                                                                                                  |
 
 
 
 ### 方法
 
-| 方法名              | 说明                                       | 参数                                                             |
-| ------------------- | ------------------------------------------ | ---------------------------------------------------------------- |
-| getChangedRecords   | 获取有变更的所有记录（含新增、删除、修改） | Function(callback: {insert,update,delete})                       |
-| setActiveRowByIndex | 按照下标激活行                             | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
-| getIsEditOnRow      | 获取当前表格是否在行上编辑模式             | Function():Boolean)                                              |
-| cancelRowEdit       | 移除表格编辑状态                           | Function()                                                       |
-| triggerAddRow       | 手动触发新增按钮逻辑                       | Function(appendItem：手动初始化的Item)                           |
+| 方法名               | 说明                                                       | 参数                                                             |
+| -------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| getChangedRecords    | 获取有变更的所有记录（含新增、删除、修改）                 | Function(callback: {insert,update,delete})                       |
+| setActiveRowByIndex  | 按照下标激活行                                             | Function(index,setActiveRowByIndex:激活模式(add,update) 默认add) |
+| getIsEditOnRow       | 获取当前表格是否在行上编辑模式                             | Function():Boolean)                                              |
+| cancelRowEdit        | 移除表格编辑状态                                           | Function()                                                       |
+| triggerAddRow        | 手动触发新增按钮逻辑                                       | Function(appendItem：手动初始化的Item)                           |
+| getTableHiddenColumn | 当开启保存列设置的时候，可通过此方法获取当前表格被隐藏的列 | Function():list                                                  |
+
+
 
 
 ### UI-Schema Attributes
