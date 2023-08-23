@@ -41,11 +41,12 @@ function saveCustomVisible(tableId, collectColumn) {
     const colShows = [];
     XEUtils.eachTree(collectColumn, column => {
       // if (!checkMethod || checkMethod({ column })) {
-
-      if (column.visible === false) {
-        colHides.push(column.field);
-      } else if (column.visible) { // || column.defaultVisible) {
-        colShows.push(column.field);
+      if (column.field) {
+        if (column.visible === false) {
+          colHides.push(column.field);
+        } else if (column.visible) { // || column.defaultVisible) {
+          colShows.push(column.field);
+        }
       }
       //
       //   const colKey = column.getKey()
