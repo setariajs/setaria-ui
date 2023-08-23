@@ -1743,12 +1743,13 @@ export default {
         },
         AnyOf: {
           'ui:options': {
-            minWidth: '300px'
+            minWidth: '300px',
           },
         },
         Number: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
+            
           },
         },
         Price: {
@@ -2026,12 +2027,14 @@ export default {
         },
         AnyOf: {
           'ui:options': {
-            minWidth: '300px'
+            minWidth: '300px',
+             visible: false,
           },
         },
         Number: {
           'ui:options': {
-            minWidth: '100px'
+            minWidth: '100px',
+             visible: false,
           },
         },
         Price: {
@@ -2163,7 +2166,7 @@ export default {
     },
     testColumnSettingToggle(type) {
       console.log('testColumnSettingToggle',type);
-      console.log(this.$refs.editTable.getTableHiddenColumn());
+      console.log(this.$refs.editTable.getColumnVisibleStatus());
     },
 
   }
@@ -2306,7 +2309,7 @@ export default {
 | getIsEditOnRow       | 获取当前表格是否在行上编辑模式                             | Function():Boolean)                                              |
 | cancelRowEdit        | 移除表格编辑状态                                           | Function()                                                       |
 | triggerAddRow        | 手动触发新增按钮逻辑                                       | Function(appendItem：手动初始化的Item)                           |
-| getTableHiddenColumn | 当开启保存列设置的时候，可通过此方法获取当前表格被隐藏的列 | Function():list                                                  |
+| getColumnVisibleStatus | 当开启保存列设置的时候，可通过此方法获取当前表格用户设置的显示&隐藏的列 | Function():{colShows,colHides}                                                  |
 
 
 

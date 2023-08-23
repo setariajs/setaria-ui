@@ -42,10 +42,12 @@ function saveCustomVisible(tableId, collectColumn) {
     XEUtils.eachTree(collectColumn, column => {
       // if (!checkMethod || checkMethod({ column })) {
 
-      if (!column.visible) {
+      if (column.visible === false) {
         colHides.push(column.field);
+      } else if (column.visible && !column.defaultVisible) {
+        colShows.push(column.field);
       }
-      // else if (column.visible && !column.defaultVisible) {
+      //
       //   const colKey = column.getKey()
       //   if (colKey) {
       //     colShows.push(colKey)
@@ -1912,16 +1914,19 @@ export default {
         this.$emit('cell-link-click', evt);
       }
     },
-    // 获取之前用户设置隐藏的表格列Key
-    getTableHiddenColumn() {
+    // 获取之前用户设置显示&隐藏的表格列Key
+    getColumnVisibleStatus() {
       if (this.tableId) {
         const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
         if (columnVisibleStorage) {
           // vxetable底层获取数据
           const colVisibles = columnVisibleStorage.split('|');
-          let colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
-          // let colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
-          return colHides;
+          let colHides = colVisibles[0] ? colVisibles[0].split(',') : null;
+          let colShows = colVisibles[1] ? colVisibles[1].split(',') : null;
+          return {
+            colHides,
+            colShows
+          };
         }
       }
       return [];
