@@ -44,7 +44,7 @@ function saveCustomVisible(tableId, collectColumn) {
 
       if (column.visible === false) {
         colHides.push(column.field);
-      } else if (column.visible && !column.defaultVisible) {
+      } else if (column.visible) { // || column.defaultVisible) {
         colShows.push(column.field);
       }
       //
