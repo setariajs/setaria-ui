@@ -101,8 +101,8 @@ export default {
       isParticalColumnShow: false,
       isAllColumnShow: true,
       innerSchema: null,
-      editingRow: null,
-      isFirstSetColumnSettingDefaultCheckedKeys: false
+      editingRow: null
+      // isFirstSetColumnSettingDefaultCheckedKeys: false
       // columnVisibleChangeTimestamp: null // 用户在改变当前页面是否隐藏时的时间戳用于刷新底层computed
     };
   },
@@ -1656,7 +1656,18 @@ export default {
         if (title.indexOf('\n') !== -1) {
           title = title.replace('\n', '');
         }
-        let isColumnVisible = item.visible;
+        let isColumnVisible = null;
+        console.log(this.columnSettingDefaultCheckedKeys);
+        if (this.columnSettingDefaultCheckedKeys.length) {
+          if (this.columnSettingDefaultCheckedKeys.includes(item.field)) {
+            isColumnVisible = true;
+          } else {
+            isColumnVisible = false;
+          }
+        } else {
+          isColumnVisible = item.visible;
+        }
+
         // ui-schema内的定义最优先
         if (item[ORIGIN_UI_OPTION] && typeof item[ORIGIN_UI_OPTION].visible === 'boolean') {
           isColumnVisible = item[ORIGIN_UI_OPTION].visible;
@@ -1685,15 +1696,14 @@ export default {
         (item) => !_.isEmpty(item.key) && item.title !== this.COLUMN_CONTROL_TITLE
       );
       this.columnSettingKeys = settings;
-      if (!this.isFirstSetColumnSettingDefaultCheckedKeys) {
-        const visibleKeys = this.columnSettingKeys.filter(
-          (item) => item.isColumnVisible
-        );
-        this.columnSettingDefaultCheckedKeys = visibleKeys.map(
-          (item) => item.key
-        );
-        this.isFirstSetColumnSettingDefaultCheckedKeys = true;
-      }
+      // if (!this.isFirstSetColumnSettingDefaultCheckedKeys) {
+      this.columnSettingDefaultCheckedKeys = this.columnSettingKeys.filter(
+        (item) => item.isColumnVisible
+      ).map(
+        (item) => item.key
+      );
+      //   this.isFirstSetColumnSettingDefaultCheckedKeys = true;
+      // }
     },
     getColumnSettingRender() {
       const {
