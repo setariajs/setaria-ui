@@ -1657,7 +1657,6 @@ export default {
           title = title.replace('\n', '');
         }
         let isColumnVisible = null;
-        console.log(this.columnSettingDefaultCheckedKeys);
         if (this.columnSettingDefaultCheckedKeys.length) {
           if (this.columnSettingDefaultCheckedKeys.includes(item.field)) {
             isColumnVisible = true;
