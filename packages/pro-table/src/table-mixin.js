@@ -93,7 +93,7 @@ export default {
       innerTotal: 0,
       innerPageSizes: DEFAULT_PAGE_SIZES,
       /* 分页有关属性 END */
-      cloneVxeTableColumnArray: [],
+      // cloneVxeTableColumnArray: [],
       columnSettingKeys: [],
       // columnSettingCheckedKeys: [],
       columnSettingDefaultCheckedKeys: [],
@@ -102,7 +102,7 @@ export default {
       isAllColumnShow: true,
       innerSchema: null,
       editingRow: null
-      // isFirstSetColumnSettingDefaultCheckedKeys: false
+      // isFirstSetColumnSettingDefaultCheckedKeys: false,
       // columnVisibleChangeTimestamp: null // 用户在改变当前页面是否隐藏时的时间戳用于刷新底层computed
     };
   },
@@ -424,7 +424,7 @@ export default {
       }
       if (this.tableId) {
         // 这个属性 会在用户设置完可见字段之后赋值，用于刷新响应内容
-        // 方法名为：onColumnSettingTreeNodeCheck
+        // 方法名为： onColumnSettingTreeNodeCheck
         // columnVisibleChangeTimestamp;
         const columnVisibleStorage = getCustomStorageMap(visibleStorageKey)[this.tableId];
 
@@ -433,28 +433,6 @@ export default {
           const colVisibles = columnVisibleStorage.split('|');
           let colHides = colVisibles[0] ? colVisibles[0].split(',') : [];
           let colShows = colVisibles[1] ? colVisibles[1].split(',') : [];
-
-          // 需要再次merge现有的显示和隐藏逻辑
-
-          // Object.keys(uiSchema).forEach(key=>{
-          //   if (
-          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_OPTIONS}.visible`) === true ||
-          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_FORM_ITEM_HIDDEN}`) === true
-          //   ) {
-          //     colShows.push(key);
-          //   }
-
-          //   if (
-          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_OPTIONS}.visible`) === false ||
-          //     _.get(uiSchema, `${key}.${JSON_UI_SCHEMA.UI_FORM_ITEM_HIDDEN}`) === false
-          //   ) {
-          //     colHides.push(key);
-          //   }
-
-          // });
-
-          // colShows = _.uniq(colShows);
-          // colHides = _.uniq(colHides);
 
           ret.forEach(item=>{
             if (colHides.find(field=>item.field === field)) {
@@ -465,22 +443,8 @@ export default {
             }
           });
         }
+        // this.isFirstSetColumnSettingDefaultCheckedKeys = true;
       }
-      // colHides.forEach(field => {
-      //     if (customMap[field]) {
-      //       customMap[field].visible = false;
-      //     } else {
-      //       customMap[field] = { field, visible: false };
-      //     }
-      // });
-      //   // colShows.forEach(field => {
-      //   //   if (customMap[field]) {
-      //   //     customMap[field].visible = true
-      //   //   } else {
-      //   //     customMap[field] = { field, visible: true }
-      //   //   }
-      //   // })
-      // }
 
       return ret;
     },
@@ -1589,8 +1553,7 @@ export default {
         // vxe-table在分组表头的场合，父表头的显示隐藏需要通过子表头的状态进行控制
         if (!_.isEmpty(targetTableColumn.children)) {
           targetTableColumn.children.forEach((col) => {
-            const colItem = col;
-            colItem.visible = checked;
+            col.visible = checked;
           });
         } else {
           targetTableColumn.visible = checked;
@@ -1604,6 +1567,8 @@ export default {
             return item === data.key;
           });
         }
+        // 用于解决底层数据未刷新，导致顶层数据获取错误的问题
+        // 查看路径为 vxeTableColumnArray  innerTableColumns vxeColumns
         // this.columnVisibleChangeTimestamp = Date.now();
       }
       // 更新表格列状态
@@ -1642,7 +1607,7 @@ export default {
         return;
       }
       const { defaultVisibleColumnKeys } = this;
-      this.cloneVxeTableColumnArray = _.cloneDeep(val);
+      // this.cloneVxeTableColumnArray = _.cloneDeep(val);
       // 多级表头场合，column为tree结构
       let settings = XEUtils.mapTree(val, (item) => {
         let title = item.title || '';
@@ -1696,7 +1661,7 @@ export default {
       );
       this.columnSettingKeys = settings;
       // if (!this.isFirstSetColumnSettingDefaultCheckedKeys) {
-      this.columnSettingDefaultCheckedKeys = this.columnSettingKeys.filter(
+      this.columnSettingDefaultCheckedKeys = settings.filter(
         (item) => item.isColumnVisible
       ).map(
         (item) => item.key

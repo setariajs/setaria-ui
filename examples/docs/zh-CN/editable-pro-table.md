@@ -1878,6 +1878,7 @@ export default {
 ```html
 <template>
   <el-editable-pro-table
+    v-if="reloadComponent"
     :label-mode="true"
     table-id="helloWould1"
     multiple-selection
@@ -1895,11 +1896,12 @@ export default {
     @column-visible-reset="onColumnVisibleReset"
     @column-setting-node-drag-end="onColumnSettingNodeDragEnd"
     @column-setting-show="testColumnSettingToggle('1')"
-    @column-setting-hide="testColumnSettingToggle('2')"
+    @column-setting-hide="testColumnSettingHidde('2')"
   >
 
     <template slot="batchControl">
       <el-button type="text"  @click="reloadData">重新获取数据</el-button>
+      <el-button type="text"  @click="updateNubmerVisible">手动修改Nubmer的状态</el-button>
       
     </template>
 
@@ -1919,6 +1921,8 @@ export default {
 export default {
   data() {
     return {
+      reloadComponent:true,
+      isChangeColumnVisible:false,
       labelMode: true,
       schema: {
         properties: {
@@ -2028,7 +2032,7 @@ export default {
         AnyOf: {
           'ui:options': {
             minWidth: '300px',
-             visible: false,
+            visible: false,
           },
         },
         Number: {
@@ -2129,6 +2133,9 @@ export default {
    
   },
   methods: {
+    updateNubmerVisible(){
+      this.uiSchema.Number['ui:options'].visible = !this.uiSchema.Number['ui:options'].visible
+    },
     reloadData(){
        for (let i = 0; i < 100; i += 1) {
         const data = {
@@ -2144,9 +2151,6 @@ export default {
     },
     onSelectionChange(val) {
       console.log(val);
-    },
-    onColumnVisibleChange(keys){
-      console.log(keys)
     },
     onColumnVisibleReset(){
       console.log('onColumnVisibleReset')
@@ -2168,6 +2172,21 @@ export default {
       console.log('testColumnSettingToggle',type);
       console.log(this.$refs.editTable.getColumnVisibleStatus());
     },
+     onColumnVisibleChange(keys){
+      console.log(keys)
+      this.isChangeColumnVisible = true;
+    },
+    testColumnSettingHidde(){
+      // 此写法用于修复底层勾选完列设置之后再次刷新数据时列设置的勾选数据都被重置的问题
+      if(this.isChangeColumnVisible){
+        this.reloadComponent = false;
+        setTimeout(() =>{
+          this.reloadComponent = true;
+          this.isChangeColumnVisible = false;
+        },500)
+      }
+
+    }
 
   }
 };
