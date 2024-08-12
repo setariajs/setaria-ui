@@ -60,6 +60,54 @@ export default {
         dec: 'Dez'
       }
     },
+    protable: {
+      confirmDelete: 'Möchten Sie die Daten wirklich löschen?',
+      giveUpUpdate: 'Änderungen an den Daten verwerfen?',
+      onlyEditOne: 'Sie können gleichzeitig nur einen Datensatz bearbeiten.',
+      beforeCloseEdit: 'Bitte schließen Sie zuerst den bearbeiteten Datensatz.',
+      addSibling: 'Gleiche Ebene hinzufügen',
+      addChild: 'Unterebene hinzufügen',
+      addData: 'Daten hinzufügen',
+      batchDelete: 'Stapellöschung',
+      allExpand: 'Alle aufklappen',
+      allStow: 'Alle zuklappen',
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      operation: 'Operation',
+      update: 'Ändern',
+      delete: 'Löschen',
+      more: 'Mehr',
+      allColumns: 'Alle Spalten',
+      settingColumns: 'Spalteneinstellung',
+      sheetName: 'Daten'
+    },
+    schema: {
+      placeholder: '{0} eingeben',
+      placeholderBySelect: '{0} auswählen',
+      int: 'Ganzzahl',
+      number: 'Zahl',
+      yes: 'Ja',
+      no: 'Nein',
+      edit: 'Bearbeiten',
+      add: 'Hinzufügen',
+      validate1: 'Eingabe muss dem Format {0} entsprechen',
+      validate2: 'Muss länger als {0} Zeichen sein',
+      validate3: 'Muss zwischen {0}-{1} Zeichen lang sein',
+      validate4: 'Muss kürzer als {0} Zeichen sein',
+      validate5: '{0} muss eine Zahl sein',
+      validate6: '{0} muss eine Ganzzahl sein',
+      validate7: 'Bitte geben Sie eine {1} größer als {0} ein',
+      validate8: 'Bitte geben Sie eine {2} zwischen {0} und {1} ein',
+      validate9: 'Bitte geben Sie eine {1} kleiner als {0} ein'
+    },
+    proform: {
+      collapse: 'Zuklappen',
+      expand: 'Aufklappen',
+      submit: 'Absenden',
+      reset: 'Zurücksetzen',
+      search: 'Suchen',
+      cancel: 'Abbrechen'
+    },
     select: {
       loading: 'Lädt.',
       noMatch: 'Nichts gefunden.',
@@ -79,6 +127,7 @@ export default {
       pageClassifier: ''
     },
     messagebox: {
+      title: 'Hinweis',
       confirm: 'OK',
       cancel: 'Abbrechen',
       error: 'Fehler'
@@ -106,6 +155,12 @@ export default {
       filterPlaceholder: 'Einträge filtern',
       noCheckedFormat: '{total} Einträge',
       hasCheckedFormat: '{checked}/{total} ausgewählt'
+    },
+    jsonviewer: {
+      childrenSizeUnit: 'Element'
+    },
+    list: {
+      emptyText: 'Keine Daten vorhanden'
     },
     image: {
       error: 'FAILED' // to be translated
