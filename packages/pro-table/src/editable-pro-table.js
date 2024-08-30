@@ -1418,6 +1418,7 @@ export default Vue.extend({
                 style={style}
                 type={toolBarButtonType}
                 on-click={onBatchDeleteData}
+                disabled={!!editingRow}
               >
                 {t('el.protable.batchDelete')}
               </el-button>
