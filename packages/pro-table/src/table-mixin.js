@@ -1302,12 +1302,17 @@ export default {
         checkedKeys = remainCheckedKeyArray;
       } else {
         const keys = [];
-        plainColumnSettingKeyList.forEach(({ key, disabled }) => {
+        plainColumnSettingKeyList.forEach((column) => {
+          const { key, children, disabled } = column;
           if (!disabled) {
             this.getTableActionRef().showColumn(key);
-            keys.push(key);
+            if (_.isEmpty(children)) {
+              keys.push(key);
+            }
           } else if (this.columnSettingDefaultCheckedKeys.findIndex((k) => k === key) !== -1) {
-            keys.push(key);
+            if (_.isEmpty(children)) {
+              keys.push(key);
+            }
           }
         });
         this.columnSettingDefaultCheckedKeys = keys;
@@ -1361,13 +1366,12 @@ export default {
         });
     },
     refreshColumnSettingTopCheckboxStatus() {
+      // 获取所有子节点的列（不包含分组表头）
       const columnFlatArray = XEUtils.toTreeArray(this.columnSettingKeys)
-        .filter((item) => item.disabled === false);
+        .filter((item) => item.disabled === false && _.isEmpty(item.children));
       const settingColumnTotalCount = columnFlatArray.length;
-      // const visibleColumnCount = _.filter(columnFlatArray,
-      //   (item) => item.isColumnVisible).length;
       let visibleColumnCount = 0;
-      this.columnSettingKeys.forEach((cs) => {
+      columnFlatArray.forEach((cs) => {
         if (this.getTableActionRef()) {
           const column = this.getTableActionRef().getColumnByField(cs.key);
           if (column && column.visible && cs.disabled === false) {
@@ -1428,8 +1432,9 @@ export default {
         (item) => !_.isEmpty(item.key) && item.title !== this.COLUMN_CONTROL_TITLE
       );
       this.columnSettingKeys = settings;
-      const visibleKeys = this.columnSettingKeys.filter(
-        (item) => item.isColumnVisible
+      // 不包含父节点
+      const visibleKeys = XEUtils.toTreeArray(this.columnSettingKeys).filter(
+        (item) => item.isColumnVisible && _.isEmpty(item.children)
       );
       this.columnSettingDefaultCheckedKeys = visibleKeys.map(
         (item) => item.key

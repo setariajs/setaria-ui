@@ -726,6 +726,154 @@ export default {
 ```
 :::
 
+
+### 表头分组
+
+表头分组
+
+:::demo
+```html
+<template>
+  <div class="pro-table__row-select">
+    <el-radio-group v-model="currentSelectionType" @change="onChangeRowSelectionType">
+      <el-radio label="radio">单选框</el-radio>
+      <el-radio label="checkbox">复选框</el-radio>
+    </el-radio-group>
+    <el-button type="primary" @click="onSelectRow">选择第三行</el-button>
+    <el-button type="primary" @click="onUnSelectRow">取消选择第三行</el-button>
+    <el-button type="primary" @click="onSelectMultiRow" :disabled="currentSelectionType === 'radio'">选择第四行和第五行</el-button>
+    <el-button type="primary" @click="onSelectAll" :disabled="currentSelectionType === 'radio'">选择所有</el-button>
+    <el-button type="primary" @click="onClearMultiRow">清空选择行</el-button>
+  </div>
+  <div style="margin-bottom: 10px;" v-if="selectionArray.length > 0">
+    <el-alert :title="selectionResult" type="info"></el-alert>
+  </div>
+  <el-pro-table
+    ref="table"
+    show-overflow
+    :selectable="selectable"
+    :schema="schema"
+    :ui-schema="uiSchema"
+    :data="data"
+    row-key="id"
+    :checkbox-config="{ reserve: true }"
+    :selection-type="selectionType"
+    @selection-change="onSelectionChange"
+  >
+  </el-pro-table>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      currentSelectionType: 'checkbox',
+      selectionType: 'checkbox',
+      schema: {
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "ID"
+          },
+          "parentItem": {
+            "type": "string",
+            "title": "父表头",
+          },
+          "subItem1": {
+            "type": "string",
+            "title": "子项目一",
+          },
+          "subItem2": {
+            "type": "string",
+            "title": "子项目二",
+          },
+          "item3": {
+            "type": "string",
+            "title": "项目三",
+          },
+        }
+      },
+      uiSchema: {
+        "id": {
+          'ui:options': {
+            visible: false,
+          }
+        },
+        "parentItem": {
+          "ui:options": {
+            "headerAlign": "center"
+          }
+        },
+        "subItem1": {
+          "ui:parentColumnId": "parentItem"
+        },
+        "subItem2": {
+          "ui:parentColumnId": "parentItem",
+          'ui:options': {
+            visible: false,
+          }
+        }
+      },
+      data: [],
+      selectionArray: [],
+    };
+  },
+  computed: {
+    selectionResult() {
+      return `已选择 ${this.selectionArray.length} 条数据。`;
+    }
+  },
+  created() {
+    let parentId = 0;
+    for (let i = 0; i < 5000; i += 1) {
+      this.data.push({
+        id: i,
+        item1: `项目一-${i}`,
+        item2: `项目二-${i}`
+      });
+    }
+  },
+  methods: {
+    selectable({ row }) {
+      if (row.id === 0) {
+        return false;
+      }
+      return true;
+    },
+    onChangeRowSelectionType() {
+      this.selectionType = this.currentSelectionType;
+      this.$nextTick(() => {
+        this.$refs.table.reloadColumn();
+      });
+    },
+    onSelectRow() {
+      this.$refs.table.setSelection(this.data[2]);
+    },
+    onUnSelectRow() {
+      this.$refs.table.setSelection(this.data[2], false);
+    },
+    onSelectMultiRow() {
+      this.$refs.table.setSelection([this.data[3], this.data[4]]);
+    },
+    onSelectionChange(val) {
+      console.log(val);
+      this.selectionArray = val;
+    },
+    onClearMultiRow() {
+      this.$refs.table.getTableActionRef().clearSelection();
+      this.selectionArray = [];
+    },
+    onSelectAll() {
+      this.$refs.table.getTableActionRef().setFullCheckboxRow(true);
+      this.$nextTick(() => {
+        console.log(this.$refs.table.getTableActionRef().getAllCheckboxRecords());  
+      });
+    }
+  },
+};
+</script>
+```
+:::
+
 ### ProTable Attributes
 
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
